@@ -1,0 +1,15 @@
+{
+  "name": "ini",
+  "version": "1.0.0",
+  "description": "",
+  "main": "adresser.js",
+  "dependencies": {
+    "ethers": "^4.0.38"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
