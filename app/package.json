@@ -1,0 +1,29 @@
+{
+  "name": "svelte-simple-template",
+  "version": "0.0.1",
+  "description": "A simple template to get you started with Svelte",
+  "main": "index.js",
+  "scripts": {
+    "start": "rollup --watch --config",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "vrde",
+  "license": "BSD-3-Clause",
+  "devDependencies": {
+    "chokidar": "^3.2.2",
+    "rollup": "^1.21.4",
+    "rollup-plugin-copy": "^3.1.0",
+    "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-livereload": "^1.0.3",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-serve": "^1.0.1",
+    "rollup-plugin-svelte": "^5.1.0",
+    "svelte": "^3.12.1"
+  },
+  "dependencies": {
+    "ethers": "^4.0.38",
+    "jsqr": "^1.2.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "svelte-spa-router": "^1.2.1"
+  }
+}
