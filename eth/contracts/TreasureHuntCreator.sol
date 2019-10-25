@@ -27,7 +27,7 @@ contract TreasureHuntCreator is Ownable {
       uint256 currentChapter = _playerToCurrentChapter[msg.sender];
       uint256 currentChapterIndex = currentChapter - 1;
       address currentChapterSolution = _chapterIndexToSolution[currentChapterIndex];
-      bytes32 addressHash = getAddressHash(msg.sender);;
+      bytes32 addressHash = getAddressHash(msg.sender);
 
       require(ecrecover(addressHash, v, r, s) == currentChapterSolution, "Wrong solution.");
 
@@ -37,6 +37,6 @@ contract TreasureHuntCreator is Ownable {
    }
 
    function getAddressHash(address a) pure public returns (bytes32) {
-      return keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n20", a));
+     return keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n20", a));
    }
 }

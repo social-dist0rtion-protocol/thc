@@ -11,6 +11,7 @@
   "dependencies": {
     "ethers": "^4.0.38",
     "openzeppelin-solidity": "^2.3.0",
+    "truffle-assertions": "^0.9.2",
     "web3": "^1.2.2"
   }
 }
