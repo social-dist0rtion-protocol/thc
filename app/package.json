@@ -4,7 +4,7 @@
   "description": "A simple template to get you started with Svelte",
   "main": "index.js",
   "scripts": {
-    "start": "rollup --watch --config",
+    "start": "rollup --sourcemap --watch --config",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "vrde",

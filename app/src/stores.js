@@ -22,8 +22,10 @@ export const walletNoProvider = derived(mnemonic, $mnemonic => {
   return CURRENT_WALLET.wallet;
 });
 
-export const provider = derived(network, $network =>
-  ethers.getDefaultProvider($network)
+export const provider = derived(
+  network,
+  $network => new ethers.providers.JsonRpcProvider()
+  //ethers.getDefaultProvider($network)
 );
 
 export const wallet = derived(
