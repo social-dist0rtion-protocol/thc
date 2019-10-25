@@ -1,0 +1,31 @@
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+:root {
+  --space-s: 5px;
+  --space-m: 10px;
+  --space-l: 20px;
+  --color-highlight: pink;
+}
+
+html {
+  width: 100%;
+  height: 100%;
+}
+
+html,
+input,
+textarea,
+select,
+button {
+  font-family: monospace;
+}
+
+body {
+  width: inherit;
+  height: inherit;
+  margin: 0;
+}
