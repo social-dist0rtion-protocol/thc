@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "ethers": "^4.0.38",
     "openzeppelin-solidity": "^2.3.0",
     "web3": "^1.2.2"
   }
