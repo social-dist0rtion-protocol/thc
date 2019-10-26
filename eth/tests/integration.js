@@ -88,6 +88,29 @@ contract("TreasureHuntCreator test", async accounts => {
     assert.equal(result, currentAccount);
   });
 
+  it("should initialize the player who joines", async() => {
+    let instance = await TreasureHuntCreator.new([]);
+    instance.join({"from": currentAccount});
+
+    let resultPlayer = await instance._players(0);
+    let resultChapter = await instance._playerToCurrentChapter(currentAccount);
+
+    assert.equal(resultPlayer, currentAccount);
+    assert.equal(resultChapter, 1);
+  });
+
+  it("should fail if player added twice", async() => {
+    let instance = await TreasureHuntCreator.new([]);
+
+    instance.join({"from": currentAccount});
+
+    await truffleAssert.fails(
+      instance.join({"from": currentAccount}),
+      truffleAssert.ErrorType.REVER,
+      "Player already joined the game"
+    );
+  });
+
   it("should not accept users that did not join", async() => {
     let testSolution = "Any solution.";
     let [signature, solutionKey] = await getSignature(testSolution);
@@ -98,6 +121,30 @@ contract("TreasureHuntCreator test", async accounts => {
       instance.submit(v, r, s,{"from": currentAccount}),
       truffleAssert.ErrorType.REVERT,
       "Player did not join yet. Call 'join' first"
+    );
+  });
+
+  it("should add a game master", async() => {
+    let testGameMaster = accounts[1]
+    let instance = await TreasureHuntCreator.new([])
+
+    instance.addGameMaster(testGameMaster);
+
+    let result = await instance._gameMasters(0);
+
+    assert.equal(result, testGameMaster);
+  });
+
+  it("should not add twice the same game master", async() => {
+    let testGameMaster = accounts[1];
+    let instance = await TreasureHuntCreator.new([]);
+
+    instance.addGameMaster(testGameMaster);
+
+    await truffleAssert.fails(
+      instance.addGameMaster(testGameMaster),
+      truffleAssert.ErrorType.REVERT,
+      "This game master has already been added"
     );
   });
 });
