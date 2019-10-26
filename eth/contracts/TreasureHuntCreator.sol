@@ -23,6 +23,11 @@ contract TreasureHuntCreator is Ownable {
     _;
   }
 
+  modifier onlyPlayer() {
+    require(_playerToCurrentChapter[msg.sender] >= 1, "Player did not join yet. Call 'join' first");
+    _;
+  }
+
   function isGameMaster() internal view returns (bool) {
     for(uint i; i < _gameMasters.length; i++) {
       if(_gameMasters[i] == msg.sender){
@@ -51,8 +56,7 @@ contract TreasureHuntCreator is Ownable {
     _playerToCurrentChapter[msg.sender] = 1;
   }
 
-  function submit(uint8 v, bytes32 r, bytes32 s) public {
-    require(_playerToCurrentChapter[msg.sender] >= 1, "Player did not join yet. Call 'join' first");
+  function submit(uint8 v, bytes32 r, bytes32 s) public onlyPlayer {
     uint256 currentChapter = _playerToCurrentChapter[msg.sender];
     uint256 currentChapterIndex = currentChapter - 1;
     address currentChapterSolution = _chapterIndexToSolution[currentChapterIndex];
