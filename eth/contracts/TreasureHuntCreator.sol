@@ -38,8 +38,8 @@ contract TreasureHuntCreator is Ownable {
   }
 
   function addChapter(address solution) public onlyGameMaster {
+    _chapterIndexToSolution[_solutions.length] = solution;
     _solutions.push(solution);
-    _chapterIndexToSolution[_solutions.length - 1] = solution;
   }
 
   function addGameMaster(address gameMaster) public onlyOwner {
