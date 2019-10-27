@@ -9,6 +9,8 @@ contract("TreasureHuntCreator test", async accounts => {
 
   beforeEach(function() {
     currentAccount = accounts[0];
+    let solutions = accounts;
+    let quests = accounts.map(x => x + "quest")
   });
 
   async function getSignature(solution) {
@@ -20,23 +22,23 @@ contract("TreasureHuntCreator test", async accounts => {
     return [signature, wallet.address]
   }
 
-  describe("construction", async() => {
+  describe("constructor", async() => {
     it("should initialize chapters with solutions", async() => {
-      let instance = await TreasureHuntCreator.new(accounts);
+      let instance = await TreasureHuntCreator.new(solutions, quests);
       for(var i = 0; i < accounts.length; i++) {
-        let solution = await instance._chapterIndexToSolution(i);
+        let solution = await instance._solutions(i);
         assert.equal(solution.valueOf(), accounts[i]);
       }
     });
   });
 
-  describe("submission process", async() => {
-    it("should increment the user chapter upon successful submission", async() => {
+  describe("submit", async() => {
+    it("should increment the user chapter with correct solution", async() => {
       let testSolution = "A solution.";
       let [signature, solutionKey] = await getSignature(testSolution);
       let {r, v, s} = ethers.utils.splitSignature(signature);
 
-      let instance = await TreasureHuntCreator.new([solutionKey]);
+      let instance = await TreasureHuntCreator.new([solutionKey], ["any quest"]);
       instance.join({"from": currentAccount});
       instance.submit(v, r, s, {"from": currentAccount});
 
@@ -44,7 +46,7 @@ contract("TreasureHuntCreator test", async accounts => {
       assert.equal(result, 2);
     });
 
-    it("should fail upon unsuccessful submission", async() => {
+    it("should fail with wrong solution", async() => {
       let testRightSolution = "Right solution";
       let testWrongSolution = "Wrong solution";
 
@@ -52,7 +54,7 @@ contract("TreasureHuntCreator test", async accounts => {
       let [signatureRight, solutionKey] = await getSignature(testWrongSolution);
       let {r, v, s} = ethers.utils.splitSignature(signatureWrong);
 
-      let instance = await TreasureHuntCreator.new([solutionKey]);
+      let instance = await TreasureHuntCreator.new([solutionKey], ["any quest"]);
       instance.join({"from": currentAccount});
 
       await truffleAssert.fails(
@@ -61,7 +63,7 @@ contract("TreasureHuntCreator test", async accounts => {
       );
     });
 
-    it("should not increment any counter upon unsuccessful submission", async() => {
+    it("should not increment any counter with wrong", async() => {
       let testRightSolution = "Right solution";
       let testWrongSolution = "Wrong solution";
 
@@ -69,7 +71,7 @@ contract("TreasureHuntCreator test", async accounts => {
       let [signatureRight, solutionKey] = await getSignature(testWrongSolution);
       let {r, v, s} = ethers.utils.splitSignature(signatureWrong);
 
-      let instance = await TreasureHuntCreator.new([solutionKey]);
+      let instance = await TreasureHuntCreator.new([solutionKey], ["any quest"]);
       instance.join({"from": currentAccount});
 
       await truffleAssert.fails(instance.submit(v, r, s, {"from": currentAccount}));
@@ -83,7 +85,7 @@ contract("TreasureHuntCreator test", async accounts => {
       let [signature, solutionKey] = await getSignature(testSolution);
       let {r, v, s} = ethers.utils.splitSignature(signature);
 
-      let instance = await TreasureHuntCreator.new([solutionKey]);
+      let instance = await TreasureHuntCreator.new([solutionKey], ["any quest"]);
       instance.join({"from": currentAccount});
       instance.submit(v, r, s, {"from": currentAccount});
 
@@ -96,19 +98,23 @@ contract("TreasureHuntCreator test", async accounts => {
       let [signature, solutionKey] = await getSignature(testSolution);
       let {r, v, s} = ethers.utils.splitSignature(signature);
 
-      let instance = await TreasureHuntCreator.new([]);
+      let instance = await TreasureHuntCreator.new([], []);
       await truffleAssert.fails(
         instance.submit(v, r, s,{"from": currentAccount}),
         truffleAssert.ErrorType.REVERT,
         "Player did not join yet. Call 'join' first"
       );
     });
+  });
 
+  describe("currentQuest", async() => {
+    it("should return the quest hash of the user current chapter", async() => {
+    });
   });
 
   describe("player init", async() => {
     it("should initialize the player who joins", async() => {
-      let instance = await TreasureHuntCreator.new([]);
+      let instance = await TreasureHuntCreator.new([], []);
       instance.join({"from": currentAccount});
 
       let resultPlayer = await instance._players(0);
@@ -119,7 +125,7 @@ contract("TreasureHuntCreator test", async accounts => {
     });
 
     it("should fail if player added twice", async() => {
-      let instance = await TreasureHuntCreator.new([]);
+      let instance = await TreasureHuntCreator.new([], []);
 
       instance.join({"from": currentAccount});
 
@@ -134,7 +140,7 @@ contract("TreasureHuntCreator test", async accounts => {
   describe("game master functionalities", async() => {
     it("should add a game master", async() => {
       let testGameMaster = accounts[1]
-      let instance = await TreasureHuntCreator.new([])
+      let instance = await TreasureHuntCreator.new([], [])
 
       instance.addGameMaster(testGameMaster);
 
@@ -145,7 +151,7 @@ contract("TreasureHuntCreator test", async accounts => {
 
     it("should not add twice the same game master", async() => {
       let testGameMaster = accounts[1];
-      let instance = await TreasureHuntCreator.new([]);
+      let instance = await TreasureHuntCreator.new([], []);
 
       instance.addGameMaster(testGameMaster);
 
@@ -157,7 +163,7 @@ contract("TreasureHuntCreator test", async accounts => {
     });
 
     it("should forbid adding a solution to non game masters", async() => {
-      let instance = await TreasureHuntCreator.new([]);
+      let instance = await TreasureHuntCreator.new([], []);
       let testSolution = accounts[1];
 
       await truffleAssert.fails(
@@ -168,7 +174,7 @@ contract("TreasureHuntCreator test", async accounts => {
     });
 
     it("should add a new solution from a game master", async() => {
-      let instance = await TreasureHuntCreator.new([]);
+      let instance = await TreasureHuntCreator.new([], []);
       let testGameMaster = accounts[1];
       let testSolution = accounts[2]; // it's only for test
 

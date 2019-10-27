@@ -6,16 +6,14 @@ contract TreasureHuntCreator is Ownable {
 
   mapping (uint256 => address[]) public _chapterIndexToPlayers;
   mapping (address => uint256) public _playerToCurrentChapter;
-  mapping (uint256 => address) public _chapterIndexToSolution;
   address[] public _solutions;
   address[] public _players;
   address[] public _gameMasters;
+  bytes[] public _quests;
 
-  constructor(address[] memory solutions) public {
+  constructor(address[] memory solutions, bytes[] memory quests) public {
     _solutions = solutions;
-    for(uint i = 0; i < _solutions.length; i++) {
-      _chapterIndexToSolution[i] = _solutions[i];
-    }
+    _quests = quests;
   }
 
   modifier onlyGameMaster() {
@@ -37,9 +35,9 @@ contract TreasureHuntCreator is Ownable {
     return false;
   }
 
-  function addChapter(address solution) public onlyGameMaster {
-    _chapterIndexToSolution[_solutions.length] = solution;
+  function addChapter(address solution, string memory nextQuest) public onlyGameMaster {
     _solutions.push(solution);
+    _quests.push(nextQuest);
   }
 
   function addGameMaster(address gameMaster) public onlyOwner {
@@ -56,10 +54,16 @@ contract TreasureHuntCreator is Ownable {
     _playerToCurrentChapter[msg.sender] = 1;
   }
 
+  function currentQuest() public view onlyPlayer returns (string memory) {
+    uint currentChapterIndex = _playerToCurrentChapter[msg.sender] - 1;
+    return _quests[currentChapterIndex];
+
+  }
+
   function submit(uint8 v, bytes32 r, bytes32 s) public onlyPlayer {
     uint256 currentChapter = _playerToCurrentChapter[msg.sender];
     uint256 currentChapterIndex = currentChapter - 1;
-    address currentChapterSolution = _chapterIndexToSolution[currentChapterIndex];
+    address currentChapterSolution = _solutions[currentChapterIndex];
     bytes32 addressHash = getAddressHash(msg.sender);
 
     require(ecrecover(addressHash, v, r, s) == currentChapterSolution, "Wrong solution.");
