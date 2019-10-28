@@ -4,7 +4,7 @@ const fs = require("fs");
 const THC = artifacts.require("./TreasureHuntCreator.sol");
 
 module.exports = function(deployer) {
-  deployer.deploy(THC, []).then(() => {
+  deployer.deploy(THC, [], [, []]).then(() => {
     /* try {
       fs.mkdirSync("../src/resources/contracts");
     } catch (err) {

@@ -1,5 +1,6 @@
 pragma solidity ^0.5.8;
 import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
+//import "./VerifyIPFS.sol";
 
 contract TreasureHuntCreator is Ownable {
   event ChapterCompleted(uint indexed completedChapter, address indexed player);
@@ -9,9 +10,9 @@ contract TreasureHuntCreator is Ownable {
   address[] public _solutions;
   address[] public _players;
   address[] public _gameMasters;
-  bytes[] public _quests;
+  bytes32[] public _quests;
 
-  constructor(address[] memory solutions, bytes[] memory quests) public {
+  constructor(address[] memory solutions, bytes32[] memory quests) public {
     _solutions = solutions;
     _quests = quests;
   }
@@ -35,7 +36,7 @@ contract TreasureHuntCreator is Ownable {
     return false;
   }
 
-  function addChapter(address solution, string memory nextQuest) public onlyGameMaster {
+  function addChapter(address solution, bytes32 nextQuest) public onlyGameMaster {
     _solutions.push(solution);
     _quests.push(nextQuest);
   }
@@ -54,10 +55,9 @@ contract TreasureHuntCreator is Ownable {
     _playerToCurrentChapter[msg.sender] = 1;
   }
 
-  function currentQuest() public view onlyPlayer returns (string memory) {
+  function currentQuest() public view onlyPlayer returns (bytes32) {
     uint currentChapterIndex = _playerToCurrentChapter[msg.sender] - 1;
     return _quests[currentChapterIndex];
-
   }
 
   function submit(uint8 v, bytes32 r, bytes32 s) public onlyPlayer {
