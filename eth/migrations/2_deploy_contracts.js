@@ -8,12 +8,11 @@ module.exports = function(deployer) {
   var quests = [];
 
   CHAPTERS.map(chapter => {
-    var questAddress = chapter["quest"];
-    var contentHash = questAddress.split("/").pop();
-    var decoded = b58.decode(contentHash);
+    var questHash = chapter["questHash"];
+    var decoded = b58.decode(questHash);
     var quest = web3.utils.bytesToHex(decoded.slice(2));
     quests.push(quest);
-    solutions.push(chapter["solution"]);
+    solutions.push(chapter["solutionAddress"]);
   });
 
   deployer.deploy(THC, solutions, quests).then(function() {});
