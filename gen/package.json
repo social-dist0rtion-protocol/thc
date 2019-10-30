@@ -4,6 +4,7 @@
   "description": "",
   "main": "adresser.js",
   "dependencies": {
+    "base-58": "0.0.1",
     "ethers": "^4.0.38",
     "ipfs-js": "0.0.11"
   },

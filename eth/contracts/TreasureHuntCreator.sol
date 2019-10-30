@@ -1,6 +1,5 @@
 pragma solidity ^0.5.8;
 import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
-//import "./VerifyIPFS.sol";
 
 contract TreasureHuntCreator is Ownable {
   event ChapterCompleted(uint indexed completedChapter, address indexed player);

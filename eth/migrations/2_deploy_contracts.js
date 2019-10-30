@@ -1,22 +1,20 @@
 const web3 = require("web3");
-const fs = require("fs");
-
+const b58 = require("base-58");
+const CHAPTERS = require("./chapters.json");
 const THC = artifacts.require("./TreasureHuntCreator.sol");
 
 module.exports = function(deployer) {
-  deployer.deploy(THC, [], [, []]).then(() => {
-    /* try {
-      fs.mkdirSync("../src/resources/contracts");
-    } catch (err) {
-      if (err.code !== "EEXIST") throw err;
-    }
-    const json = {
-      abi: THC.abi,
-      networks: THC.networks
-    };
-    fs.writeFileSync(
-      "../src/resources/contracts/TreasureHuntCreator.json",
-      JSON.stringify(json, null, 2)
-    ); */
+  var solutions = [];
+  var quests = [];
+
+  CHAPTERS.map(chapter => {
+    var questAddress = chapter["quest"];
+    var contentHash = questAddress.split("/").pop();
+    var decoded = b58.decode(contentHash);
+    var quest = web3.utils.bytesToHex(decoded.slice(2));
+    quests.push(quest);
+    solutions.push(chapter["solution"]);
   });
+
+  deployer.deploy(THC, solutions, quests).then(function() {});
 };
