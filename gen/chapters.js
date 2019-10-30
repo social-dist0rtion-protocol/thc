@@ -20,10 +20,6 @@ function lpad(s, length, fill = "0") {
   return s;
 }
 
-function c(a) {
-  return `[${a.join(",")}]`;
-}
-
 async function chapter(dirIn, dirOut, solution) {
   let quest;
   let questFile = path.join(dirIn, "quest.md");
@@ -43,11 +39,8 @@ async function chapter(dirIn, dirOut, solution) {
 
     await writeFile(questAddress, address);
     await writeFile(questEnc, cipher.toString());
-
-    console.log(key);
-    console.log(cipher.toString());
   } else {
-    await writeFile(questEnc, cipher.toString());
+    await writeFile(questEnc, await readFile(questFile));
   }
   return { fileOut: questEnc, address };
 }
@@ -67,19 +60,48 @@ async function upload(contentBuffer) {
       }
       let url = `https://ipfs.io/ipfs/${result[0].hash}`;
       resolve(result[0].hash);
-      console.log(url);
     });
   });
 }
 
-async function main(dirIn, dirOut, solution) {
+async function processChapter(dirIn, dirOut, solution) {
   const { fileOut, address } = await chapter(dirIn, dirOut, solution);
   const questHash = await upload(await readFile(fileOut));
   return { questHash, solutionAddress: address };
 }
 
+async function main(dirIn, dirOut) {
+  const content = fs.readdirSync(dirIn, { withFileTypes: true });
+  const v = content.filter(x => x.isDirectory());
+  const result = [];
+
+  for (let i = 0; i < v.length; i++) {
+    const name = v[i].name;
+    const number = parseInt(name, 10);
+    let solution;
+    try {
+      solution = (await readFile(
+        path.join(dirIn, lpad(number - 1, 3), "solution")
+      )).toString();
+    } catch (e) {
+      if (e.code !== "ENOENT") {
+        raise(e);
+      }
+    }
+    result.push(
+      await processChapter(
+        path.join(dirIn, name),
+        path.join(dirOut, name),
+        solution
+      )
+    );
+  }
+  return result;
+}
+
 try {
-  main(DIR_IN, DIR_OUT, SOLUTION).then(console.log);
+  main(DIR_IN, DIR_OUT).then(r => console.log(JSON.stringify(r, null, 2)));
+  //main(DIR_IN, DIR_OUT, SOLUTION).then(console.log);
 } catch (e) {
   console.log(e);
 }
