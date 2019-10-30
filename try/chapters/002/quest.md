@@ -1,0 +1,1 @@
+You've found the Black Water Goat. You feel two hands grabbing your arms, but you don't see them. A man is screaming. You feel a needle piercing your skin. The VR headset is finally removed from your face. You fall asleep. Forever. Congrats you finished the game.
