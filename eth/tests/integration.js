@@ -56,26 +56,24 @@ contract("TreasureHuntCreator test", async accounts => {
         [solutionKey],
         quests.slice(0)
       );
-      instance.join({ from: currentAccount });
       instance.submit(v, r, s, { from: currentAccount });
 
       let result = await instance._playerToCurrentChapter(currentAccount);
-      assert.equal(result, 2);
+      assert.equal(result, 1);
     });
 
     it("should fail with wrong solution", async () => {
       let testRightSolution = "Right solution";
       let testWrongSolution = "Wrong solution";
 
-      let [signatureWrong] = await getSignature(testRightSolution);
-      let [signatureRight, solutionKey] = await getSignature(testWrongSolution);
+      let [signatureWrong] = await getSignature(testWrongSolution);
+      let [signatureRight, solutionKey] = await getSignature(testRightSolution);
       let { r, v, s } = ethers.utils.splitSignature(signatureWrong);
 
       let instance = await TreasureHuntCreator.new(
         [solutionKey],
         quests.slice(0)
       );
-      instance.join({ from: currentAccount });
 
       await truffleAssert.fails(
         instance.submit(v, r, s, { from: currentAccount }),
@@ -87,22 +85,49 @@ contract("TreasureHuntCreator test", async accounts => {
       let testRightSolution = "Right solution";
       let testWrongSolution = "Wrong solution";
 
-      let [signatureWrong] = await getSignature(testRightSolution);
-      let [signatureRight, solutionKey] = await getSignature(testWrongSolution);
+      let [signatureWrong] = await getSignature(testWrongSolution);
+      let [signatureRight, solutionKey] = await getSignature(testRightSolution);
       let { r, v, s } = ethers.utils.splitSignature(signatureWrong);
 
       let instance = await TreasureHuntCreator.new(
         [solutionKey],
         quests.slice(0)
       );
-      instance.join({ from: currentAccount });
 
       await truffleAssert.fails(
         instance.submit(v, r, s, { from: currentAccount })
       );
 
       let result = await instance._playerToCurrentChapter(currentAccount);
-      assert.equal(result, 1);
+      assert.equal(result, 0);
+    });
+
+    it("should not add player to list upon failure", async () => {
+      let testSolution = "A wrong solution";
+      let [signature, solutionKey] = await getSignature(testSolution);
+      let { r, v, s } = ethers.utils.splitSignature(signature);
+
+      let instance = await TreasureHuntCreator.new([solutions[0]], [quests[0]]);
+
+      await truffleAssert.fails(
+        instance.submit(v, r, s, { from: currentAccount })
+      );
+
+      await truffleAssert.fails(instance._players(0));
+    });
+
+    it("should add player to list upon success", async () => {
+      let testSolution = "A solution";
+      let [signature, solutionKey] = await getSignature(testSolution);
+      let { r, v, s } = ethers.utils.splitSignature(signature);
+
+      let instance = await TreasureHuntCreator.new([solutionKey], [quests[0]]);
+
+      instance.submit(v, r, s, { from: currentAccount });
+
+      let resultPlayer = await instance._players(0);
+
+      assert.equal(resultPlayer, currentAccount);
     });
 
     it("should add the player to the solved chapter", async () => {
@@ -111,61 +136,19 @@ contract("TreasureHuntCreator test", async accounts => {
       let { r, v, s } = ethers.utils.splitSignature(signature);
 
       let instance = await TreasureHuntCreator.new([solutionKey], [quests[0]]);
-      instance.join({ from: currentAccount });
       instance.submit(v, r, s, { from: currentAccount });
 
-      let result = await instance._chapterIndexToPlayers(0, 0);
+      let result = await instance._chapterToPlayers(0, 0);
       assert.equal(result, currentAccount);
-    });
-
-    it("should not accept users that did not join", async () => {
-      let testSolution = "Any solution.";
-      let [signature, solutionKey] = await getSignature(testSolution);
-      let { r, v, s } = ethers.utils.splitSignature(signature);
-
-      let instance = await TreasureHuntCreator.new([], []);
-      await truffleAssert.fails(
-        instance.submit(v, r, s, { from: currentAccount }),
-        truffleAssert.ErrorType.REVERT,
-        "Player did not join yet. Call 'join' first"
-      );
     });
   });
 
   describe("currentQuest", async () => {
     it("should return the quest hash of the user current chapter", async () => {
       let instance = await TreasureHuntCreator.new(solutions, quests);
-      instance.join({ from: currentAccount });
 
       let result = await instance.currentQuest();
       assert.equal(result, quests[0]);
-    });
-  });
-
-  describe("join", async () => {
-    it("should initialize the player who joins", async () => {
-      let instance = await TreasureHuntCreator.new([], []);
-      instance.join({ from: currentAccount });
-
-      let resultPlayer = await instance._players(0);
-      let resultChapter = await instance._playerToCurrentChapter(
-        currentAccount
-      );
-
-      assert.equal(resultPlayer, currentAccount);
-      assert.equal(resultChapter, 1);
-    });
-
-    it("should fail if player added twice", async () => {
-      let instance = await TreasureHuntCreator.new([], []);
-
-      instance.join({ from: currentAccount });
-
-      await truffleAssert.fails(
-        instance.join({ from: currentAccount }),
-        truffleAssert.ErrorType.REVER,
-        "Player already joined the game"
-      );
     });
   });
 
