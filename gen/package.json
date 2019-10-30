@@ -4,9 +4,10 @@
   "main": "adresser.js",
   "dependencies": {
     "base-58": "0.0.1",
+    "crypto-js": "^3.1.9-1",
     "ethers": "^4.0.39",
-    "ipfs-js": "0.0.11",
-    "crypto-js": "^3.1.9-1"
+    "ipfs-http-client": "^39.0.2",
+    "ipfs-js": "0.0.11"
   },
   "devDependencies": {},
   "scripts": {
