@@ -10,7 +10,7 @@ import livereload from "rollup-plugin-livereload";
 const mode = process.env.NODE_ENV;
 const dev = mode === "development";
 const legacy = !!process.env.SAPPER_LEGACY_BUILD;
-
+console.log(dev);
 const onwarn = (warning, onwarn) =>
   (warning.code === "CIRCULAR_DEPENDENCY" &&
     /[/\\]@sapper[/\\]/.test(warning.message)) ||
@@ -41,8 +41,9 @@ export default {
     resolve({ browser: true, dedupe }),
     commonjs(),
     // https://github.com/thgh/rollup-plugin-serve
-    serve({ contentBase: "build", open: true, host: "0.0.0.0", port: 4000 }),
-    livereload("build")
+    dev &&
+      serve({ contentBase: "build", open: true, host: "0.0.0.0", port: 4000 }),
+    dev && livereload("build")
   ],
   watch: {
     clearScreen: true,
