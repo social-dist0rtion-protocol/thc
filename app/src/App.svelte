@@ -1,14 +1,17 @@
 <script>
-  import {wallet, chainId} from "./stores"
+  import { onMount } from 'svelte';
+  import {wallet, currentHash} from "./stores"
   import {push} from 'svelte-spa-router'
   import ethers from "ethers";
-  import THC from "./contracts/THC.json"
 
   let solution;
 
-  async function submit() {
-    const thc = new ethers.Contract(THC.networks[$chainId].address, THC.abi, $wallet);
+  onMount(async () => {
+    //const current = await $thc.functions.currentQuest()
+    //console.log(current);
+  });
 
+  async function submit() {
     const address = $wallet.address
     // Generate the hash of the value
     const hash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(solution));
@@ -30,6 +33,7 @@
 </style>
 
 <h1>Hello {$wallet.address}!</h1>
+{$currentHash}
 
 <input bind:value={solution}/>
 <button on:click={submit}>submit</button>

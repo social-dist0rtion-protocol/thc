@@ -1,6 +1,7 @@
 import { readable, derived } from "svelte/store";
 import ethers from "ethers";
 import db from "./db";
+import THC from "./contracts/THC.json";
 
 window.ethers = ethers;
 
@@ -28,13 +29,30 @@ export const provider = derived(
   //ethers.getDefaultProvider($network)
 );
 
-export const chainId = derived(provider, ($provider, set) =>
-  $provider.getNetwork().then(({ chainId }) => set(chainId))
-);
+export const chainId = derived(provider, ($provider, set) => {
+  $provider.getNetwork().then(({ chainId }) => set(chainId));
+});
 
 export const wallet = derived(
   [provider, walletNoProvider],
   ([$provider, $walletNoProvider]) => $walletNoProvider.connect($provider)
+);
+
+export const thc = derived([wallet, chainId], ([$wallet, $chainId], set) => {
+  console.log($chainId);
+  if ($chainId) {
+    set(new ethers.Contract(THC.networks[$chainId].address, THC.abi, $wallet));
+  }
+});
+
+export const currentHash = derived(thc, ($thc, set) => {
+  if ($thc) {
+    $thc.functions.currentQuest().then(set);
+  }
+});
+
+export const currentQuest = derived(currentHash, ($currentHash, set) =>
+  console.log($currentHash)
 );
 
 export const balance = derived(

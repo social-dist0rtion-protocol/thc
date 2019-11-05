@@ -7,10 +7,8 @@ import svelte from "rollup-plugin-svelte";
 import serve from "rollup-plugin-serve";
 import livereload from "rollup-plugin-livereload";
 
-const mode = process.env.NODE_ENV;
-const dev = mode === "development";
+const dev = process.env.ROLLUP_WATCH;
 const legacy = !!process.env.SAPPER_LEGACY_BUILD;
-console.log(dev);
 const onwarn = (warning, onwarn) =>
   (warning.code === "CIRCULAR_DEPENDENCY" &&
     /[/\\]@sapper[/\\]/.test(warning.message)) ||
