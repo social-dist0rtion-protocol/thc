@@ -1,11 +1,12 @@
-const { readFileSync } = require("fs");
+const path = require("path");
+const { mkdirSync, readFileSync, writeFileSync } = require("fs");
 const web3 = require("web3");
 const b58 = require("base-58");
 const THC = artifacts.require("./TreasureHuntCreator.sol");
+const DIR_APP_CONTRACTS = "../app/src/contracts";
 
 module.exports = function(deployer) {
   const chapters = JSON.parse(readFileSync(process.argv.pop()));
-  console.log(chapters);
   var solutions = [];
   var quests = [];
 
@@ -17,5 +18,21 @@ module.exports = function(deployer) {
     solutions.push(chapter["solutionAddress"]);
   });
 
-  deployer.deploy(THC, solutions, quests).then(function() {});
+  deployer.deploy(THC, solutions, quests).then(function() {
+    const json = {
+      abi: THC.abi,
+      networks: THC.networks
+    };
+    try {
+      mkdirSync(DIR_APP_CONTRACTS);
+    } catch (e) {
+      if (e.code !== "EEXIST") {
+        throw e;
+      }
+    }
+    writeFileSync(
+      path.join(DIR_APP_CONTRACTS, "THC.json"),
+      JSON.stringify(json, null, 2)
+    );
+  });
 };

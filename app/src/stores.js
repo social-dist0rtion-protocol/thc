@@ -7,7 +7,7 @@ window.ethers = ethers;
 const Wallet = ethers.Wallet;
 const CURRENT_WALLET = { seed: undefined, wallet: undefined };
 
-export const network = db.writable("network", "homestead");
+export const network = db.writable("network", "http://localhost:8545");
 export const mnemonic = db.writable(
   "mnemonic",
   () => Wallet.createRandom().mnemonic
@@ -24,8 +24,12 @@ export const walletNoProvider = derived(mnemonic, $mnemonic => {
 
 export const provider = derived(
   network,
-  $network => new ethers.providers.JsonRpcProvider()
+  $network => new ethers.providers.JsonRpcProvider($network)
   //ethers.getDefaultProvider($network)
+);
+
+export const chainId = derived(provider, ($provider, set) =>
+  $provider.getNetwork().then(({ chainId }) => set(chainId))
 );
 
 export const wallet = derived(
