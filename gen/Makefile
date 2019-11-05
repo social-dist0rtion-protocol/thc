@@ -1,17 +1,13 @@
-SOLUTIONS ?= solutions.txt
+INPUT_DIR ?= ../try/chapters
+OUTPUT_DIR ?= ../try/build
 ETH_MIGRATIONS_DIR ?= ../eth/migrations
 CHAPTERS_FILE ?= chapters.config
 
-game: chapters
-	@cp $(CHAPTERS_FILE) $(ETH_MIGRATIONS_DIR)/chapters.json 
-	@cd $(ETH_MIGRATIONS_DIR); truffle migrate --reset
+game: chapters contracts
+	@cp $(CHAPTERS_FILE) $(ETH_MIGRATIONS_DIR)/chapters.json
 
-ipfs_file:
-	@node upload.js $(FILE_PATH)
+contracts:
+	@cd $(ETH_MIGRATIONS_DIR); truffle migrate --reset
 
 chapters:
 	node chapters.js $(INPUT_DIR) $(OUTPUT_DIR) > $(CHAPTERS_FILE)
-
-addresses:
-	@echo "Generate solution addresses from $(SOLUTIONS) into addresses.txt"
-	@node adresser.js $(SOLUTIONS) > addresses.txt

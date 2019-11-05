@@ -12,7 +12,6 @@ const mkdir = promisify(fs.mkdir);
 const ALGORITHM = "aes-128-gcm";
 const DIR_IN = process.argv[2];
 const DIR_OUT = process.argv[3];
-const SOLUTION = process.argv[4];
 
 function lpad(s, length, fill = "0") {
   s = s.toString();
@@ -101,7 +100,6 @@ async function main(dirIn, dirOut) {
 
 try {
   main(DIR_IN, DIR_OUT).then(r => console.log(JSON.stringify(r, null, 2)));
-  //main(DIR_IN, DIR_OUT, SOLUTION).then(console.log);
 } catch (e) {
   console.log(e);
 }
