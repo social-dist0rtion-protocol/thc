@@ -3,7 +3,7 @@ const { mkdirSync, readFileSync, writeFileSync } = require("fs");
 const web3 = require("web3");
 const b58 = require("base-58");
 const THC = artifacts.require("./TreasureHuntCreator.sol");
-const DIR_APP_CONTRACTS = "../app/src/contracts";
+const DIR_APP_CONTRACTS = "../../app/src/contracts";
 
 module.exports = function(deployer) {
   const chapters = JSON.parse(readFileSync(process.argv.pop()));

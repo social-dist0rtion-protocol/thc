@@ -15,12 +15,14 @@
     "rollup-plugin-copy": "^3.1.0",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-livereload": "^1.0.3",
+    "rollup-plugin-node-globals": "^1.4.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-serve": "^1.0.1",
     "rollup-plugin-svelte": "^5.1.0",
     "svelte": "^3.12.1"
   },
   "dependencies": {
+    "base58-encode": "^0.1.4",
     "ethers": "^4.0.38",
     "jsqr": "^1.2.0",
     "rollup-plugin-commonjs": "^10.1.0",

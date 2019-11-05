@@ -2,6 +2,7 @@ import { readable, derived } from "svelte/store";
 import ethers from "ethers";
 import db from "./db";
 import THC from "./contracts/THC.json";
+import base58Encode from "base58-encode";
 
 window.ethers = ethers;
 
@@ -45,9 +46,12 @@ export const thc = derived([wallet, chainId], ([$wallet, $chainId], set) => {
   }
 });
 
-export const currentHash = derived(thc, ($thc, set) => {
+export const currentHash = derived(thc, async ($thc, set) => {
   if ($thc) {
-    $thc.functions.currentQuest().then(set);
+    const hashAddress = await $thc.functions.currentQuest();
+    const completeHashAddress = hashAddress.replace("0x", "0x1220");
+    const hashBuffer = ethers.utils.arrayify(completeHashAddress);
+    set(hashBuffer);
   }
 });
 
