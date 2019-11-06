@@ -16,7 +16,7 @@ export const mnemonic = db.writable(
   () => Wallet.createRandom().mnemonic
 );
 
-export const current = db.writable("current", { password: undefined });
+export const current = db.writable("current", { solution: undefined });
 
 export const walletNoProvider = derived(mnemonic, $mnemonic => {
   // Wallet.fromMnemonic takes some time to create the wallet, so we cache it.
@@ -49,33 +49,12 @@ export const thc = derived([wallet, chainId], ([$wallet, $chainId], set) => {
   }
 });
 
-async function submitPassword(wallet, password) {
-  const address = wallet.address;
-  // Generate the hash of the value
-  const hash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(password));
-  // Generate wallet using the 32 bytes from the hash
-  const solution = new ethers.Wallet(hash);
-  // Sign the raw bytes, not the hex string
-  const signature = await solution.signMessage(ethers.utils.arrayify(address));
-  const { r, s, v } = ethers.utils.splitSignature(signature);
-  const contract = new ethers.Contract(
-    thc.networks[$provider.network.chainId].address,
-    thc.abi,
-    $wallet
-  );
-  try {
-    await contract.functions.submit(v, r, s);
-    return true;
-  } catch (e) {
-    console.log(e);
-  }
-}
 
 export const currentQuest = derived(
   [thc, current],
   async ([$thc, $current], set) => {
     if ($thc) {
-      const password = $current.password;
+      const solution = $current.solution;
       const hashAddress = await $thc.functions.currentQuest();
       const completeHashAddress = hashAddress.replace("0x", "0x1220");
       const hashBuffer = ethers.utils.arrayify(completeHashAddress);
@@ -84,14 +63,10 @@ export const currentQuest = derived(
       const response = await fetch(ipfsUrl);
       const encryptedQuest = await response.text();
 
-      if (password !== undefined) {
-        const success = await submitPassword($wallet, password);
-
-        if (success) {
-          const bytes = CryptoJS.AES.decrypt(encryptedQuest, password);
-          const plainQuest = bytes.toString(CryptoJS.enc.Utf8);
-          set(plainQuest);
-        }
+      if (solution !== undefined) {
+        const bytes = CryptoJS.AES.decrypt(encryptedQuest, solution);
+        const plainQuest = bytes.toString(CryptoJS.enc.Utf8);
+        set(plainQuest);
       } else {
         set(encryptedQuest); // Which is not actually encrypted
       }
