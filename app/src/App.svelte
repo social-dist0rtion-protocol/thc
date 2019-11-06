@@ -1,6 +1,6 @@
 <script>
   import { onMount } from 'svelte';
-  import {wallet, currentHash} from "./stores"
+  import {wallet, currentQuest} from "./stores"
   import {push} from 'svelte-spa-router'
   import ethers from "ethers";
 
@@ -33,7 +33,7 @@
 </style>
 
 <h1>Hello {$wallet.address}!</h1>
-{$currentHash}
+{$currentQuest}
 
 <input bind:value={solution}/>
 <button on:click={submit}>submit</button>
