@@ -12,6 +12,7 @@
     const hash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(solution));
     // Generate wallet using the 32 bytes from the hash
     const solutionWallet = new ethers.Wallet(hash);
+    console.log(solutionWallet.address);
     // Sign the raw bytes, not the hex string
     const signature = await solutionWallet.signMessage(
       ethers.utils.arrayify(address)
@@ -19,7 +20,7 @@
     const { r, s, v } = ethers.utils.splitSignature(signature);
     try {
       await $thc.functions.submit(v, r, s);
-      current.update(d => d["solution"] = solution)
+      current.update(d => d = {solution})
     } catch (e) {
       console.log(e);
     }

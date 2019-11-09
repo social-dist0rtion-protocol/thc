@@ -43,18 +43,15 @@ export const wallet = derived(
 );
 
 export const thc = derived([wallet, chainId], ([$wallet, $chainId], set) => {
-  console.log($chainId);
   if ($chainId) {
     set(new ethers.Contract(THC.networks[$chainId].address, THC.abi, $wallet));
   }
 });
 
-
 export const currentQuest = derived(
   [thc, current],
   async ([$thc, $current], set) => {
     if ($thc) {
-      const solution = $current.solution;
       const hashAddress = await $thc.functions.currentQuest();
       const completeHashAddress = hashAddress.replace("0x", "0x1220");
       const hashBuffer = ethers.utils.arrayify(completeHashAddress);
@@ -62,9 +59,11 @@ export const currentQuest = derived(
       const ipfsUrl = "https://ipfs.io/ipfs/" + ipfsHash;
       const response = await fetch(ipfsUrl);
       const encryptedQuest = await response.text();
+      const solution = $current.solution;
 
       if (solution !== undefined) {
-        const bytes = CryptoJS.AES.decrypt(encryptedQuest, solution);
+        const key = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(solution));
+        const bytes = CryptoJS.AES.decrypt(encryptedQuest, key.toString());
         const plainQuest = bytes.toString(CryptoJS.enc.Utf8);
         set(plainQuest);
       } else {

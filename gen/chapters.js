@@ -19,29 +19,43 @@ function lpad(s, length, fill = "0") {
   return s;
 }
 
-async function chapter(dirIn, dirOut, solution) {
-  let quest;
-  let questFile = path.join(dirIn, "quest.md");
-  let solutionFile = path.join(dirIn, "solution");
-  let questAddress = path.join(dirOut, "solution.address");
-  let questEnc = path.join(dirOut, "quest.aes.md");
-  await mkdir(dirOut, { recursive: true });
-  const address = new ethers.Wallet(
-    ethers.utils.keccak256(await readFile(solutionFile))
-  ).address;
-
-  if (solution) {
-    const hash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(solution));
-    const key = hash.toString();
-    const quest = (await readFile(questFile)).toString();
-    const cipher = CryptoJS.AES.encrypt(quest, key);
-
-    await writeFile(questAddress, address);
-    await writeFile(questEnc, cipher.toString());
-  } else {
-    await writeFile(questEnc, await readFile(questFile));
+async function readFileAndTrim(f) {
+  let solution = "";
+  try {
+    solution = (await readFile(f)).toString().trim();
+  } catch (e) {
+    if (e.code !== "ENOENT") {
+      raise(e);
+    }
   }
-  return { fileOut: questEnc, address };
+  return ethers.utils.toUtf8Bytes(solution);
+}
+
+async function chapter(dirIn, dirOut, prevSolution) {
+  const questFileIn = path.join(dirIn, "quest.md");
+  const solutionFileIn = path.join(dirIn, "solution");
+  const addressFileOut = path.join(dirOut, "solution.address");
+  const questFileOut = path.join(dirOut, "quest.aes.md");
+  const questIn = await readFile(questFileIn);
+  let questOut;
+
+  await mkdir(dirOut, { recursive: true });
+
+  const solutionBuffer = await readFileAndTrim(solutionFileIn);
+  const solutionHash = ethers.utils.keccak256(solutionBuffer);
+  const address = new ethers.Wallet(solutionHash).address;
+  await writeFile(addressFileOut, address);
+
+  if (prevSolution.length) {
+    questOut = CryptoJS.AES.encrypt(
+      questIn.toString(),
+      ethers.utils.keccak256(prevSolution).toString()
+    );
+  } else {
+    questOut = questIn.toString();
+  }
+  await writeFile(questFileOut, questOut);
+  return { fileOut: questFileOut, address };
 }
 
 async function upload(contentBuffer) {
@@ -77,16 +91,9 @@ async function main(dirIn, dirOut) {
   for (let i = 0; i < v.length; i++) {
     const name = v[i].name;
     const number = parseInt(name, 10);
-    let solution;
-    try {
-      solution = (await readFile(
-        path.join(dirIn, lpad(number - 1, 3), "solution")
-      )).toString();
-    } catch (e) {
-      if (e.code !== "ENOENT") {
-        raise(e);
-      }
-    }
+    let solution = await readFileAndTrim(
+      path.join(dirIn, lpad(number - 1, 3), "solution")
+    );
     result.push(
       await processChapter(
         path.join(dirIn, name),
