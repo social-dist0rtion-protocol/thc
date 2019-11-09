@@ -6,7 +6,7 @@ import commonjs from "rollup-plugin-commonjs";
 import svelte from "rollup-plugin-svelte";
 import serve from "rollup-plugin-serve";
 import livereload from "rollup-plugin-livereload";
-import globals from "rollup-plugin-node-globals";
+
 const dev = process.env.ROLLUP_WATCH;
 const legacy = !!process.env.SAPPER_LEGACY_BUILD;
 const onwarn = (warning, onwarn) =>
