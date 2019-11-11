@@ -14,15 +14,14 @@ async function upload(path) {
     wrapWithDirectory: true
   };
 
-  await ipfs.addFromFs(path, options, (err, result) => {
-    // Upload buffer to IPFS
-    if (err) {
-      console.log(err);
-      return;
-    }
+  try {
+    result = await ipfs.addFromFs(path, options);
+    console.log(result);
     let url = `https://ipfs.io/ipfs/${result.pop().hash}`;
     console.log(url);
-  });
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 upload(PATH);
