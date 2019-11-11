@@ -1,15 +1,5 @@
-//import { version } from "../package.json";
-import Router from "svelte-spa-router";
 import App from "./App.svelte";
 
-const routes = {
-  "/": App
-  //  "/solution/:message": Solution
-};
-
-new Router({
-  target: document.body,
-  props: {
-    routes: routes
-  }
+new App({
+  target: document.body
 });

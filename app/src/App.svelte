@@ -1,49 +1,22 @@
 <script>
-  import { onMount } from 'svelte';
-  import {wallet, currentQuest, current, provider, thc} from "./stores"
-  import {push} from 'svelte-spa-router'
-  import marked from "marked";
-  import ethers from "ethers";
+import Router from "svelte-spa-router";
+import Chapter from "./Chapter.svelte";
+import Leaderboard from "./Leaderboard.svelte";
+import Settings from "./Settings.svelte";
 
-  let main;
-  let solution;
+const routes = {
+  "/": Chapter,
+  "/leaderboard": Leaderboard,
+  "/settings": Settings
 
-  $: {
-    if(main){
-      main.innerHTML = marked($currentQuest || "");
-    }
-  }
-
-  async function submit() {
-    const address = $wallet.address;
-    // Generate the hash of the value
-    const hash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(solution));
-    // Generate wallet using the 32 bytes from the hash
-    const solutionWallet = new ethers.Wallet(hash);
-    // Sign the raw bytes, not the hex string
-    const signature = await solutionWallet.signMessage(
-      ethers.utils.arrayify(address)
-    );
-    const { r, s, v } = ethers.utils.splitSignature(signature);
-    try {
-      await $thc.functions.submit(v, r, s);
-      $current.solution = solution;
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
+};
 </script>
 
-<style>
-  h1 {
-    color: green;
-  }
-</style>
-
-<h1>Hello {$wallet.address}!</h1>
-<main bind:this={main}>
-</main>
-
-<input bind:value={solution}/>
-<button on:click={submit}>submit</button>
+<nav>
+  <ul>
+    <li><a href="#/">Current Chapter</a></li>
+    <li><a href="#/leaderboard">Leaderboard</a></li>
+    <li><a href="#/settings">Settings</a></li>
+  </ul>
+</nav>
+<Router {routes}/>
