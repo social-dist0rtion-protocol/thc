@@ -3,6 +3,7 @@ import copy from "rollup-plugin-copy";
 import json from "rollup-plugin-json";
 import resolve from "rollup-plugin-node-resolve";
 import commonjs from "rollup-plugin-commonjs";
+import replace from '@rollup/plugin-replace';
 import svelte from "rollup-plugin-svelte";
 import serve from "rollup-plugin-serve";
 import livereload from "rollup-plugin-livereload";
@@ -38,11 +39,11 @@ export default {
     // https://rollupjs.org/guide/en/#warning-treating-module-as-external-dependency
     resolve({ browser: true, dedupe }),
     replace({
-      NETWORK_CONFIG: JSON.stringify({
-        IPFS_HOST: process.env["IPFS_HOST"],
-        IPFS_PORT: process.env["IPFS_POST"],
+      __NETWORK_CONFIG__: JSON.stringify({
+        IPFS_HOST: process.env["IPFS_HOST"] || "http://localhost",
+        IPFS_PORT: process.env["IPFS_POST"] || "5001",
         IPFS_PROTOCOL: process.env["IPFS_PROTOCOL"],
-        IPFS_LOCATION: process.env["IPFS_LOCATION"]
+        IPFS_LOCATION: process.env["IPFS_LOCATION"] || "http://localhost:8080/ipfs/"
       })
     }),
     commonjs(),
