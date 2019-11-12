@@ -14,9 +14,9 @@ game: backend frontend
 frontend:
 	echo "Deploying client to ipfs."
 	cd app && ./node_modules/rollup/dist/bin/rollup -c
-	cd gen && IPFS_LOCATION=${IPFS_LOCATION} PROTOCOL=${IPFS_PROTOCOL} HOST=${IPFS_HOST} PORT=${IPFS_PORT} node push_client.js ../app/build
+	cd gen && IPFS_LOCATION=${IPFS_LOCATION} IPFS_PROTOCOL=${IPFS_PROTOCOL} IPFS_HOST=${IPFS_HOST} IPFS_PORT=${IPFS_PORT} node push_client.js ../app/build
 	echo "Frotend deployed to ipfs."
-	
+
 backend: chapters
 	echo "Deploying contracts to testnet."
 	@cd $(ETH_MIGRATIONS_DIR); truffle migrate --reset ../$(CHAPTERS_FILE)

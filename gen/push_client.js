@@ -1,7 +1,7 @@
 const ipfsClient = require("ipfs-http-client");
 
 const PATH = process.argv[2];
-const IPFS_PROTOCOL = process.env["IPFS_PROTCOL"];
+const IPFS_PROTOCOL = process.env["IPFS_PROTOCOL"];
 const IPFS_HOST = process.env["IPFS_HOST"];
 const IPFS_PORT = process.env["IPFS_PORT"];
 const IPFS_LOCATION = process.env["IPFS_LOCATION"];
@@ -19,9 +19,11 @@ async function upload(path) {
   };
 
   try {
-    result = await ipfs.addFromFs(path, options);
+    const result = await ipfs.addFromFs(path, options);
     console.log(result);
-    let url = IPFS_LOCATION + result.pop().hash;
+    const hash = result.pop().hash;
+    await ipfs.pin.add(hash);
+    let url = IPFS_LOCATION + hash;
     console.log(url);
   } catch (err) {
     console.log(err);
