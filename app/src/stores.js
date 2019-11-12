@@ -4,7 +4,7 @@ import db from "./db";
 import THC from "./contracts/THC.json";
 import base58Encode from "base58-encode";
 import CryptoJS from "crypto-js";
-
+import NETWORK_CONFIG from "./network_config.json";
 window.ethers = ethers;
 
 const Wallet = ethers.Wallet;
@@ -56,7 +56,7 @@ export const currentQuest = derived(
       const completeHashAddress = hashAddress.replace("0x", "0x1220");
       const hashBuffer = ethers.utils.arrayify(completeHashAddress);
       const ipfsHash = base58Encode(hashBuffer);
-      const ipfsUrl = "https://ipfs.io/ipfs/" + ipfsHash;
+      const ipfsUrl = NETWORK_CONFIG["IPFS_LOCATION"] + ipfsHash;
       const response = await fetch(ipfsUrl);
       const encryptedQuest = await response.text();
       const solution = $current.solution;

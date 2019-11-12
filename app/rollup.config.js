@@ -37,6 +37,14 @@ export default {
     // more info here:
     // https://rollupjs.org/guide/en/#warning-treating-module-as-external-dependency
     resolve({ browser: true, dedupe }),
+    replace({
+      NETWORK_CONFIG: JSON.stringify({
+        IPFS_HOST: process.env["IPFS_HOST"],
+        IPFS_PORT: process.env["IPFS_POST"],
+        IPFS_PROTOCOL: process.env["IPFS_PROTOCOL"],
+        IPFS_LOCATION: process.env["IPFS_LOCATION"]
+      })
+    }),
     commonjs(),
     // https://github.com/thgh/rollup-plugin-serve
     dev &&
