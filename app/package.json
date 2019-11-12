@@ -25,6 +25,7 @@
     "base58-encode": "^0.1.4",
     "crypto-js": "^3.1.9-1",
     "ethers": "^4.0.38",
+    "ipfs-http-client": "^39.0.2",
     "jsqr": "^1.2.0",
     "marked": "^0.7.0",
     "rollup-plugin-commonjs": "^10.1.0",
