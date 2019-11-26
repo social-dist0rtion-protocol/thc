@@ -1,17 +1,10 @@
 <script>
-  import { onMount } from 'svelte';
-  import {wallet, currentQuest, current, provider, thc} from "./stores"
+  import { onMount } from "svelte";
+  import { wallet, currentQuest, current, provider, thc } from "./stores";
   import marked from "marked";
   import ethers from "ethers";
 
-  let main;
   let solution;
-
-  $: {
-    if(main){
-      main.innerHTML = marked($currentQuest || "");
-    }
-  }
 
   async function submit() {
     const address = $wallet.address;
@@ -31,7 +24,6 @@
       console.log(e);
     }
   }
-
 </script>
 
 <style>
@@ -41,8 +33,9 @@
 </style>
 
 <h1>Hello {$wallet.address}!</h1>
-<main bind:this={main}>
+<main>
+  {@html marked($currentQuest || '')}
 </main>
 
-<input bind:value={solution}/>
+<input bind:value={solution} />
 <button on:click={submit}>submit</button>

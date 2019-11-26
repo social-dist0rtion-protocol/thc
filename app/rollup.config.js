@@ -3,7 +3,7 @@ import copy from "rollup-plugin-copy";
 import json from "rollup-plugin-json";
 import resolve from "rollup-plugin-node-resolve";
 import commonjs from "rollup-plugin-commonjs";
-import replace from '@rollup/plugin-replace';
+import replace from "@rollup/plugin-replace";
 import svelte from "rollup-plugin-svelte";
 import serve from "rollup-plugin-serve";
 import livereload from "rollup-plugin-livereload";
@@ -43,7 +43,8 @@ export default {
         IPFS_HOST: process.env["IPFS_HOST"] || "http://localhost",
         IPFS_PORT: process.env["IPFS_POST"] || "5001",
         IPFS_PROTOCOL: process.env["IPFS_PROTOCOL"],
-        IPFS_LOCATION: process.env["IPFS_LOCATION"] || "http://localhost:8080/ipfs/"
+        IPFS_LOCATION:
+          process.env["IPFS_LOCATION"] || "http://localhost:8080/ipfs/"
       })
     }),
     commonjs(),
