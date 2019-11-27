@@ -4,8 +4,8 @@ import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
 contract TreasureHuntCreator is Ownable {
   event ChapterCompleted(uint indexed completedChapter, address indexed player);
 
-  mapping (uint256 => address[]) public _chapterToPlayers;
-  mapping (address => uint256) public _playerToCurrentChapter;
+  mapping (uint96 => address[]) public _chapterToPlayers;
+  mapping (address => uint96) public _playerToCurrentChapter;
   address[] public _solutions;
   address[] public _players;
   address[] public _gameMasters;
@@ -54,14 +54,14 @@ contract TreasureHuntCreator is Ownable {
   }
 
   function submit(uint8 v, bytes32 r, bytes32 s) public {
-    uint256 currentChapter = _playerToCurrentChapter[msg.sender];
+    uint96 currentChapter = _playerToCurrentChapter[msg.sender];
     address currentChapterSolution = _solutions[currentChapter];
     bytes32 addressHash = getAddressHash(msg.sender);
 
     require(ecrecover(addressHash, v, r, s) == currentChapterSolution, "Wrong solution.");
 
     if(_playerToCurrentChapter[msg.sender] == 0) {
-      _players.push(msg.sender); 
+      _players.push(msg.sender);
     }
     _playerToCurrentChapter[msg.sender]++;
     _chapterToPlayers[currentChapter].push(msg.sender);
@@ -70,5 +70,12 @@ contract TreasureHuntCreator is Ownable {
 
   function getAddressHash(address a) pure public returns (bytes32) {
     return keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n20", a));
+  }
+
+  function getLeaderboard(uint offset) view public returns(uint[64] memory leaderboard) {
+    for(uint i = 0; i < 64 && i + offset < _players.length; i++) {
+      address player = _players[i+offset];
+      leaderboard[i] = uint256(player) << 96 | uint256(_playerToCurrentChapter[player]);
+    }
   }
 }

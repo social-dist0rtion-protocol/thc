@@ -19,7 +19,7 @@ frontend:
 
 backend: chapters
 	echo "Deploying contracts to testnet."
-	@cd $(ETH_MIGRATIONS_DIR); truffle migrate --reset ../$(CHAPTERS_FILE)
+	@cd $(ETH_MIGRATIONS_DIR); truffle migrate --reset --chapters=../$(CHAPTERS_FILE)
 	echo "Backend deployed to testnet."
 
 chapters:
