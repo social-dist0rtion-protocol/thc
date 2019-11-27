@@ -170,6 +170,29 @@ contract("TreasureHuntCreator test", async accounts => {
   });
 
   describe("getLeaderboard", async () => {
+    it("should return an empty list if no players", async () => {
+      let testSolution1 = "A solution 1";
+      let solutionKey1 = await getSolutionAddress(testSolution1);
+
+      let testSolution2 = "A solution 2";
+      let solutionKey2 = await getSolutionAddress(testSolution2);
+
+      let testSolution3 = "A solution 3";
+      let solutionKey3 = await getSolutionAddress(testSolution3);
+
+      let instance = await TreasureHuntCreator.new(
+        [solutionKey1, solutionKey2, solutionKey3],
+        [quests[0], quests[1], quests[2]]
+      );
+
+      let leaderboard = await instance.getLeaderboard(0);
+      let expectedLeaderboard = Array(64).fill(new BN(0));
+      assert.deepEqual(
+        leaderboard.map(n => n.toString()),
+        expectedLeaderboard.map(n => n.toString())
+      );
+    });
+
     it("should return the list of players and chapters", async () => {
       let [player1, player2, player3] = accounts;
 
