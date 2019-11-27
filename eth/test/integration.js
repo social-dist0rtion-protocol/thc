@@ -26,6 +26,22 @@ contract("TreasureHuntCreator test", async accounts => {
     return web3.utils.asciiToHex(hash);
   }
 
+  async function getSolutionAddress(solution) {
+    let solutionBytes = ethers.utils.toUtf8Bytes(solution);
+    let solutionDigest = ethers.utils.keccak256(solutionBytes);
+    let wallet = new ethers.Wallet(solutionDigest);
+    return wallet.address;
+  }
+
+  async function getSolutionSignature(solution, address) {
+    let solutionBytes = ethers.utils.toUtf8Bytes(solution);
+    let solutionDigest = ethers.utils.keccak256(solutionBytes);
+    let wallet = new ethers.Wallet(solutionDigest);
+    let signature = await wallet.signMessage(ethers.utils.arrayify(address));
+    let { v, r, s } = ethers.utils.splitSignature(signature);
+    return [v, r, s];
+  }
+
   async function getSignature(solution) {
     let solutionBytes = ethers.utils.toUtf8Bytes(solution);
     let solutionDigest = ethers.utils.keccak256(solutionBytes);
@@ -155,31 +171,85 @@ contract("TreasureHuntCreator test", async accounts => {
 
   describe("getLeaderboard", async () => {
     it("should return the list of players and chapters", async () => {
-      const [player1, player2, player3] = accounts;
+      let [player1, player2, player3] = accounts;
 
       let testSolution1 = "A solution 1";
-      let [signature1, solutionKey1] = await getSignature(testSolution1);
-      let { r: r1, v: v1, s: s1 } = ethers.utils.splitSignature(signature1);
+      let solutionKey1 = await getSolutionAddress(testSolution1);
 
       let testSolution2 = "A solution 2";
-      let [signature2, solutionKey2] = await getSignature(testSolution2);
-      let { r: r2, v: v2, s: s2 } = ethers.utils.splitSignature(signature2);
+      let solutionKey2 = await getSolutionAddress(testSolution2);
 
       let testSolution3 = "A solution 3";
-      let [signature3, solutionKey3] = await getSignature(testSolution3);
-      let { r: r3, v: v3, s: s3 } = ethers.utils.splitSignature(signature3);
+      let solutionKey3 = await getSolutionAddress(testSolution3);
 
       let instance = await TreasureHuntCreator.new(
         [solutionKey1, solutionKey2, solutionKey3],
         [quests[0], quests[1], quests[2]]
       );
 
-      await instance.submit(v1, r1, s1, { from: player1 });
-      let leaderboard = await instance.getLeaderboard(0);
-      let expectedLeaderboard = Array(64).fill(new BN(0));
-      expectedLeaderboard[0] = new BN(player1.replace("0x", ""), 16)
-        .shln(96)
-        .or(new BN("1"));
+      // Let the game begin!
+      let leaderboard;
+      let expectedLeaderboard;
+
+      // Util to merge an address with a chapter
+      let merge = (address, chapter) =>
+        new BN(address.replace("0x", ""), 16).shln(96).or(new BN(chapter));
+
+      // player 1 solves chapter 1
+      await instance.submit(
+        ...(await getSolutionSignature(testSolution1, player1)),
+        {
+          from: player1
+        }
+      );
+      leaderboard = await instance.getLeaderboard(0);
+      expectedLeaderboard = Array(64).fill(new BN(0));
+      expectedLeaderboard[0] = merge(player1, 1);
+      assert.deepEqual(
+        leaderboard.map(n => n.toString()),
+        expectedLeaderboard.map(n => n.toString())
+      );
+
+      // player 2 solves chapter 1
+      await instance.submit(
+        ...(await getSolutionSignature(testSolution1, player2)),
+        {
+          from: player2
+        }
+      );
+      leaderboard = await instance.getLeaderboard(0);
+      expectedLeaderboard = Array(64).fill(new BN(0));
+      expectedLeaderboard[0] = merge(player1, 1);
+      expectedLeaderboard[1] = merge(player2, 1);
+      assert.deepEqual(
+        leaderboard.map(n => n.toString()),
+        expectedLeaderboard.map(n => n.toString())
+      );
+
+      // plot twist: player 3 solves chapter 1, 2, and 3
+      await instance.submit(
+        ...(await getSolutionSignature(testSolution1, player3)),
+        {
+          from: player3
+        }
+      );
+      await instance.submit(
+        ...(await getSolutionSignature(testSolution2, player3)),
+        {
+          from: player3
+        }
+      );
+      await instance.submit(
+        ...(await getSolutionSignature(testSolution3, player3)),
+        {
+          from: player3
+        }
+      );
+      leaderboard = await instance.getLeaderboard(0);
+      expectedLeaderboard = Array(64).fill(new BN(0));
+      expectedLeaderboard[0] = merge(player1, 1);
+      expectedLeaderboard[1] = merge(player2, 1);
+      expectedLeaderboard[2] = merge(player3, 3);
       assert.deepEqual(
         leaderboard.map(n => n.toString()),
         expectedLeaderboard.map(n => n.toString())
