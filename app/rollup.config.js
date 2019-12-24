@@ -7,6 +7,7 @@ import replace from "@rollup/plugin-replace";
 import svelte from "rollup-plugin-svelte";
 import serve from "rollup-plugin-serve";
 import livereload from "rollup-plugin-livereload";
+import { terser } from "rollup-plugin-terser";
 
 const dev = process.env.ROLLUP_WATCH;
 const legacy = !!process.env.SAPPER_LEGACY_BUILD;
@@ -34,7 +35,7 @@ export default {
       css: css => css.write("build/bundle.css")
     }),
     json(),
-    // rollup-plugin-node-resolve embeds external dependecies in the bundle,
+    // rollup-plugin-node-resolve embeds external dependencies in the bundle,
     // more info here:
     // https://rollupjs.org/guide/en/#warning-treating-module-as-external-dependency
     resolve({ browser: true, dedupe }),
@@ -56,7 +57,8 @@ export default {
         host: "0.0.0.0",
         port: 4000
       }),
-    dev && livereload("build")
+    dev && livereload("build"),
+    !dev && terser()
   ],
   watch: {
     clearScreen: true,

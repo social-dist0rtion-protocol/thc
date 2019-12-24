@@ -13,7 +13,7 @@ game: backend frontend
 
 frontend:
 	echo "Deploying client to ipfs."
-	cd app && ./node_modules/rollup/dist/bin/rollup -c
+	cd app && npm run build
 	cd gen && IPFS_LOCATION=${IPFS_LOCATION} IPFS_PROTOCOL=${IPFS_PROTOCOL} IPFS_HOST=${IPFS_HOST} IPFS_PORT=${IPFS_PORT} node push_client.js ../app/build
 	echo "Frotend deployed to ipfs."
 
@@ -25,3 +25,9 @@ backend: chapters
 chapters:
 	echo "Generating chapters."
 	IPFS_LOCATION=${IPFS_LOCATION} node $(CHAPTERS_SCRIPT) $(INPUT_DIR) $(OUTPUT_DIR) > $(CHAPTERS_FILE)
+
+install-deps:
+	cd app && npm install
+	cd eth && npm install
+	cd gen && npm install
+	cd srv && npm install
