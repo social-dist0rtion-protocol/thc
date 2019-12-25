@@ -54,7 +54,6 @@ async function runTheFuckingPaginationTest() {
       value: web3.utils.toWei("1", "milliether")
     });
   }
-  console.log();
 
   // Send solutions
   for (let i = 0; i < TOTAL_PLAYERS; i++) {
@@ -73,8 +72,6 @@ async function runTheFuckingPaginationTest() {
     expectedLeaderboard[i] = utils.merge(players[i].address, 1);
   }
 
-  console.log();
-
   leaderboard = await instance.methods.getLeaderboard(0).call();
   assert.deepStrictEqual(
     leaderboard.map(n => n.toString()),
@@ -86,8 +83,6 @@ async function runTheFuckingPaginationTest() {
     leaderboard.map(n => n.toString()),
     expectedLeaderboard.slice(PAGE_SIZE, PAGE_SIZE * 2).map(n => n.toString())
   );
-
-  console.log("OK everything seems to work properly.");
 }
 
 runTheFuckingPaginationTest();
