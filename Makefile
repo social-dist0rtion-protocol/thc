@@ -24,7 +24,7 @@ backend: chapters
 
 chapters:
 	echo "Generating chapters."
-	IPFS_LOCATION=${IPFS_LOCATION} node $(CHAPTERS_SCRIPT) $(INPUT_DIR) $(OUTPUT_DIR) > $(CHAPTERS_FILE)
+	IPFS_LOCATION=${IPFS_LOCATION} IPFS_PROTOCOL=${IPFS_PROTOCOL} IPFS_HOST=${IPFS_HOST} IPFS_PORT=${IPFS_PORT} node $(CHAPTERS_SCRIPT) $(INPUT_DIR) $(OUTPUT_DIR) > $(CHAPTERS_FILE)
 
 install-deps:
 	cd app && npm install

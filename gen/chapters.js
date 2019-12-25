@@ -12,6 +12,10 @@ const mkdir = promisify(fs.mkdir);
 const ALGORITHM = "aes-128-gcm";
 const DIR_IN = process.argv[2];
 const DIR_OUT = process.argv[3];
+const IPFS_PROTOCOL = process.env["IPFS_PROTOCOL"];
+const IPFS_HOST = process.env["IPFS_HOST"];
+const IPFS_PORT = process.env["IPFS_PORT"];
+const IPFS_LOCATION = process.env["IPFS_LOCATION"];
 
 function lpad(s, length, fill = "0") {
   s = s.toString();
@@ -60,21 +64,14 @@ async function chapter(dirIn, dirOut, prevSolution) {
 
 async function upload(contentBuffer) {
   const ipfs = ipfsClient({
-    host: "ipfs.infura.io",
-    port: "5001",
-    protocol: "https"
+    host: IPFS_HOST,
+    port: IPFS_PORT,
+    protocol: IPFS_PROTOCOL
   });
-  return new Promise(resolve => {
-    ipfs.add(contentBuffer, (err, result) => {
-      // Upload buffer to IPFS
-      if (err) {
-        console.error(err);
-        return;
-      }
-      let url = `https://ipfs.io/ipfs/${result[0].hash}`;
-      resolve(result[0].hash);
-    });
-  });
+  const result = await ipfs.add(contentBuffer);
+  const hash = result[0].hash;
+  await ipfs.pin.add(hash);
+  return hash;
 }
 
 async function processChapter(dirIn, dirOut, solution) {
