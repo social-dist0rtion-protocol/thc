@@ -4,7 +4,7 @@ import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
 contract TreasureHuntCreator is Ownable {
   event ChapterCompleted(uint indexed completedChapter, address indexed player);
 
-  uint constant PAGE_SIZE = 64;
+  uint constant PAGE_SIZE = 32;
 
   mapping (uint96 => address[]) public _chapterToPlayers;
   mapping (address => uint96) public _playerToCurrentChapter;
@@ -76,7 +76,7 @@ contract TreasureHuntCreator is Ownable {
 
   function getLeaderboard(uint page) view public returns(uint[PAGE_SIZE] memory leaderboard) {
     uint offset = page * PAGE_SIZE;
-    for(uint i = 0; i < 64 && i + offset < _players.length; i++) {
+    for(uint i = 0; i < PAGE_SIZE && i + offset < _players.length; i++) {
       address player = _players[i+offset];
       leaderboard[i] = uint256(player) << 96 | uint256(_playerToCurrentChapter[player]);
     }

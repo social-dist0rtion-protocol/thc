@@ -1,4 +1,5 @@
-const web3 = require("web3");
+// Hey, no need to include web3 since Truffle magically injects it
+// const web3 = require("web3");
 const crypto = require("crypto");
 const ethers = require("ethers");
 const TreasureHuntCreator = artifacts.require("TreasureHuntCreator");
@@ -51,6 +52,10 @@ contract("TreasureHuntCreator test", async accounts => {
     );
 
     return [signature, wallet.address];
+  }
+
+  function merge(address, chapter) {
+    return new BN(address.replace("0x", ""), 16).shln(96).or(new BN(chapter));
   }
 
   describe("constructor", async () => {
@@ -213,10 +218,6 @@ contract("TreasureHuntCreator test", async accounts => {
       // Let the game begin!
       let leaderboard;
       let expectedLeaderboard;
-
-      // Util to merge an address with a chapter
-      let merge = (address, chapter) =>
-        new BN(address.replace("0x", ""), 16).shln(96).or(new BN(chapter));
 
       // player 1 solves chapter 1
       await instance.submit(
