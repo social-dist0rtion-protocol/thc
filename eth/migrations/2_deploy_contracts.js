@@ -1,3 +1,4 @@
+const program = require("commander");
 const path = require("path");
 const { mkdirSync, readFileSync, writeFileSync } = require("fs");
 const web3 = require("web3");
@@ -5,8 +6,13 @@ const b58 = require("base-58");
 const THC = artifacts.require("./TreasureHuntCreator.sol");
 const DIR_APP_CONTRACTS = "../app/src/contracts";
 
+program.option("--chapters <chapterFile>");
+
 module.exports = function(deployer) {
-  const chapters = JSON.parse(readFileSync(process.argv.pop()));
+  const parsed = program.parse(process.argv);
+  const chapters = parsed.chapters
+    ? JSON.parse(readFileSync(parsed.chapters))
+    : [];
   var solutions = [];
   var quests = [];
 

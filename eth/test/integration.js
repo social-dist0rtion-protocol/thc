@@ -1,8 +1,10 @@
-const web3 = require("web3");
+// Hey, no need to include web3 since Truffle magically injects it
+// const web3 = require("web3");
 const crypto = require("crypto");
 const ethers = require("ethers");
 const TreasureHuntCreator = artifacts.require("TreasureHuntCreator");
 const truffleAssert = require("truffle-assertions");
+const BN = web3.utils.BN;
 
 contract("TreasureHuntCreator test", async accounts => {
   let currentAccount;
@@ -25,6 +27,22 @@ contract("TreasureHuntCreator test", async accounts => {
     return web3.utils.asciiToHex(hash);
   }
 
+  async function getSolutionAddress(solution) {
+    let solutionBytes = ethers.utils.toUtf8Bytes(solution);
+    let solutionDigest = ethers.utils.keccak256(solutionBytes);
+    let wallet = new ethers.Wallet(solutionDigest);
+    return wallet.address;
+  }
+
+  async function getSolutionSignature(solution, address) {
+    let solutionBytes = ethers.utils.toUtf8Bytes(solution);
+    let solutionDigest = ethers.utils.keccak256(solutionBytes);
+    let wallet = new ethers.Wallet(solutionDigest);
+    let signature = await wallet.signMessage(ethers.utils.arrayify(address));
+    let { v, r, s } = ethers.utils.splitSignature(signature);
+    return [v, r, s];
+  }
+
   async function getSignature(solution) {
     let solutionBytes = ethers.utils.toUtf8Bytes(solution);
     let solutionDigest = ethers.utils.keccak256(solutionBytes);
@@ -34,6 +52,10 @@ contract("TreasureHuntCreator test", async accounts => {
     );
 
     return [signature, wallet.address];
+  }
+
+  function merge(address, chapter) {
+    return new BN(address.replace("0x", ""), 16).shln(96).or(new BN(chapter));
   }
 
   describe("constructor", async () => {
@@ -56,7 +78,7 @@ contract("TreasureHuntCreator test", async accounts => {
         [solutionKey],
         quests.slice(0)
       );
-      instance.submit(v, r, s, { from: currentAccount });
+      await instance.submit(v, r, s, { from: currentAccount });
 
       let result = await instance._playerToCurrentChapter(currentAccount);
       assert.equal(result, 1);
@@ -123,7 +145,7 @@ contract("TreasureHuntCreator test", async accounts => {
 
       let instance = await TreasureHuntCreator.new([solutionKey], [quests[0]]);
 
-      instance.submit(v, r, s, { from: currentAccount });
+      await instance.submit(v, r, s, { from: currentAccount });
 
       let resultPlayer = await instance._players(0);
 
@@ -136,7 +158,7 @@ contract("TreasureHuntCreator test", async accounts => {
       let { r, v, s } = ethers.utils.splitSignature(signature);
 
       let instance = await TreasureHuntCreator.new([solutionKey], [quests[0]]);
-      instance.submit(v, r, s, { from: currentAccount });
+      await instance.submit(v, r, s, { from: currentAccount });
 
       let result = await instance._chapterToPlayers(0, 0);
       assert.equal(result, currentAccount);
@@ -152,12 +174,119 @@ contract("TreasureHuntCreator test", async accounts => {
     });
   });
 
+  describe("getLeaderboard", async () => {
+    it("should return an empty list if no players", async () => {
+      let testSolution1 = "A solution 1";
+      let solutionKey1 = await getSolutionAddress(testSolution1);
+
+      let testSolution2 = "A solution 2";
+      let solutionKey2 = await getSolutionAddress(testSolution2);
+
+      let testSolution3 = "A solution 3";
+      let solutionKey3 = await getSolutionAddress(testSolution3);
+
+      let instance = await TreasureHuntCreator.new(
+        [solutionKey1, solutionKey2, solutionKey3],
+        [quests[0], quests[1], quests[2]]
+      );
+
+      let leaderboard = await instance.getLeaderboard(0);
+      let expectedLeaderboard = Array(64).fill(new BN(0));
+      assert.deepEqual(
+        leaderboard.map(n => n.toString()),
+        expectedLeaderboard.map(n => n.toString())
+      );
+    });
+
+    it("should return the list of players and chapters", async () => {
+      let [player1, player2, player3] = accounts;
+
+      let testSolution1 = "A solution 1";
+      let solutionKey1 = await getSolutionAddress(testSolution1);
+
+      let testSolution2 = "A solution 2";
+      let solutionKey2 = await getSolutionAddress(testSolution2);
+
+      let testSolution3 = "A solution 3";
+      let solutionKey3 = await getSolutionAddress(testSolution3);
+
+      let instance = await TreasureHuntCreator.new(
+        [solutionKey1, solutionKey2, solutionKey3],
+        [quests[0], quests[1], quests[2]]
+      );
+
+      // Let the game begin!
+      let leaderboard;
+      let expectedLeaderboard;
+
+      // player 1 solves chapter 1
+      await instance.submit(
+        ...(await getSolutionSignature(testSolution1, player1)),
+        {
+          from: player1
+        }
+      );
+      leaderboard = await instance.getLeaderboard(0);
+      expectedLeaderboard = Array(64).fill(new BN(0));
+      expectedLeaderboard[0] = merge(player1, 1);
+      assert.deepEqual(
+        leaderboard.map(n => n.toString()),
+        expectedLeaderboard.map(n => n.toString())
+      );
+
+      // player 2 solves chapter 1
+      await instance.submit(
+        ...(await getSolutionSignature(testSolution1, player2)),
+        {
+          from: player2
+        }
+      );
+      leaderboard = await instance.getLeaderboard(0);
+      expectedLeaderboard = Array(64).fill(new BN(0));
+      expectedLeaderboard[0] = merge(player1, 1);
+      expectedLeaderboard[1] = merge(player2, 1);
+      assert.deepEqual(
+        leaderboard.map(n => n.toString()),
+        expectedLeaderboard.map(n => n.toString())
+      );
+
+      // plot twist: player 3 solves chapter 1, 2, and 3
+      await instance.submit(
+        ...(await getSolutionSignature(testSolution1, player3)),
+        {
+          from: player3
+        }
+      );
+      await instance.submit(
+        ...(await getSolutionSignature(testSolution2, player3)),
+        {
+          from: player3
+        }
+      );
+      await instance.submit(
+        ...(await getSolutionSignature(testSolution3, player3)),
+        {
+          from: player3
+        }
+      );
+      leaderboard = await instance.getLeaderboard(0);
+      expectedLeaderboard = Array(64).fill(new BN(0));
+      expectedLeaderboard[0] = merge(player1, 1);
+      expectedLeaderboard[1] = merge(player2, 1);
+      expectedLeaderboard[2] = merge(player3, 3);
+      assert.deepEqual(
+        leaderboard.map(n => n.toString()),
+        expectedLeaderboard.map(n => n.toString())
+      );
+    });
+  });
+
   describe("addGameMaster", async () => {
     it("should add a game master", async () => {
       let testGameMaster = accounts[1];
       let instance = await TreasureHuntCreator.new([], []);
 
-      instance.addGameMaster(testGameMaster);
+      await instance.addGameMaster(testGameMaster);
 
       let result = await instance._gameMasters(0);
 
@@ -168,7 +297,7 @@ contract("TreasureHuntCreator test", async accounts => {
       let testGameMaster = accounts[1];
       let instance = await TreasureHuntCreator.new([], []);
 
-      instance.addGameMaster(testGameMaster);
+      await instance.addGameMaster(testGameMaster);
 
       await truffleAssert.fails(
         instance.addGameMaster(testGameMaster),
@@ -195,8 +324,10 @@ contract("TreasureHuntCreator test", async accounts => {
       let testSolution = solutions[0];
       let testQuest = quests[0];
 
-      instance.addGameMaster(testGameMaster);
-      instance.addChapter(testSolution, testQuest, { from: testGameMaster });
+      await instance.addGameMaster(testGameMaster);
+      await instance.addChapter(testSolution, testQuest, {
+        from: testGameMaster
+      });
 
       let resultSolution = await instance._solutions(0);
       let resultQuest = await instance._quests(0);
