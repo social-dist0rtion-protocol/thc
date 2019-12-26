@@ -15,6 +15,7 @@
   import ethers from "ethers";
 
   let solution = "";
+  let success = false;
 
   async function submit() {
     console.log("asdf", $currentChapter.toString());
@@ -36,6 +37,7 @@
       await $thc.functions.submit(v, r, s);
       $current.solution = solution;
       solution = "";
+      success = true;
     } catch (e) {
       alert("The solution is not correct, try again");
     }
@@ -48,26 +50,34 @@
   }
 </style>
 
-{#if $totalChapters && $currentQuest && $currentChapter}
-  <article>
-    <h1>Chapter {$currentChapter}</h1>
-    {@html marked($currentQuest)}
-  </article>
-  {#if $totalChapters.toNumber() - 1 !== $currentChapter.toNumber()}
-    <div class="solution">
-      <input bind:value={solution} placeholder="solution to the puzzle" />
-      {#if $fundRequest === undefined && solution.length}
-        <p class="warning">
-          You have to wait a bit more before submitting your first solution, the
-          game is not fully initialized yet. If you wonder why, check the
-          <a href="#/about">about page</a>
-        </p>
-      {/if}
-      <button class="primary" disabled={!solution.length} on:click={submit}>
-        Submit
-      </button>
-    </div>
-  {/if}
+{#if success}
+  <h1 class="hope">Congrats, you've solved the challenge!</h1>
+  <h2>But you are not done yet.</h2>
+  <button class="primary" on:click={() => (success = false)}>
+    Next Challenge
+  </button>
 {:else}
-  <p>loading...</p>
+  {#if $totalChapters && $currentQuest && $currentChapter}
+    <article>
+      <h1>Chapter {$currentChapter}</h1>
+      {@html marked($currentQuest)}
+    </article>
+    {#if $totalChapters.toNumber() - 1 !== $currentChapter.toNumber()}
+      <div class="solution">
+        <input bind:value={solution} placeholder="solution to the puzzle" />
+        {#if $fundRequest === undefined && solution.length}
+          <p class="warning">
+            You have to wait a bit more before submitting your first solution,
+            the game is not fully initialized yet. If you wonder why, check the
+            <a href="#/about">about page</a>
+          </p>
+        {/if}
+        <button class="primary" disabled={!solution.length} on:click={submit}>
+          Submit
+        </button>
+      </div>
+    {/if}
+  {:else}
+    <p>loading...</p>
+  {/if}
 {/if}
