@@ -8,7 +8,7 @@ import CONFIG from "./config";
 window.ethers = ethers;
 
 const Wallet = ethers.Wallet;
-const CURRENT_WALLET = { seed: undefined, wallet: undefined };
+const CURRENT_WALLET = { mnemonic: undefined, wallet: undefined };
 
 export const network = db.writable("network", "http://localhost:8545");
 export const mnemonic = db.writable(

@@ -37,16 +37,29 @@
 
 </style>
 
-<h1>Leaderboard</h1>
+<h1 class="hope">About</h1>
 
-{#await load()}
-  <p>Loading...</p>
-{:then values}
-  <ol>
-    {#each values as value}
-      <li>{value}</li>
-    {/each}
-  </ol>
-{:catch error}
-  <p>something went wrong. "{error.message}"</p>
-{/await}
+<p>
+  Someone should write a good about. I have no time at the moment because I have
+  to focus on other features. And I'm 100% sure this about page will stay as it
+  is now lol.
+</p>
+
+<p>Let's make a list to highlight some key points.</p>
+
+<ul>
+  <li>
+    If you get stuck, send us a message
+    <a href="https://twitter.com/dist0rtionproto">on Twitter</a>
+    or call us at our DECT.
+  </li>
+  <li>
+    This game has been generated using
+    <strong>THC</strong>
+    (short for Treasure Hunt Creator), a free and open source tool to generate
+    decentralzied treasure hunts using Ethereum and IPFS. Code is
+    <a href="https://github.com/social-dist0rtion-protocol/thc">
+      available on GitHub
+    </a>
+  </li>
+</ul>

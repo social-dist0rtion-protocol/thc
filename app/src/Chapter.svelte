@@ -1,5 +1,4 @@
 <script>
-  import { onMount } from "svelte";
   import { wallet, currentQuest, current, provider, thc } from "./stores";
   import marked from "marked";
   import ethers from "ethers";
@@ -31,37 +30,6 @@
   .solution {
     margin-top: var(--space-m);
   }
-
-  input,
-  button {
-    display: block;
-  }
-
-  input {
-    color: var(--color-hope);
-    background: transparent;
-    border: 2px solid var(--color-hope);
-    width: 100%;
-    padding: var(--space-s);
-    margin-bottom: var(--space-s);
-  }
-
-  button {
-    transition: background-color 0.2s;
-    transform: rotate(-1.337deg);
-    font-family: "Blackout 2 AM";
-    font-weight: 500;
-    font-size: 2em;
-    width: 100%;
-    padding: var(--space-s);
-    background-color: var(--color-hope);
-    border: none;
-    color: var(--color-text);
-  }
-
-  button:disabled {
-    background-color: gray;
-  }
 </style>
 
 <article>
@@ -71,5 +39,7 @@
 
 <div class="solution">
   <input bind:value={solution} placeholder="solution to the puzzle" />
-  <button disabled={!solution.length} on:click={submit}>Submit</button>
+  <button class="primary" disabled={!solution.length} on:click={submit}>
+    Submit
+  </button>
 </div>
