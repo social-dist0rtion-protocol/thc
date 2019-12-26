@@ -45,7 +45,10 @@
 
 <h2 class="hope">Wallet balance</h2>
 
-<p>{$balance === undefined ? 'loading' : $balance} Ether</p>
+<p>
+  {$balance === undefined ? 'loading' : ethers.utils.formatEther($balance)}
+  Ether
+</p>
 
 <h2 class="hope">Network</h2>
 

@@ -46,7 +46,8 @@ export default {
         IPFS_PORT: process.env["IPFS_POST"] || "5001",
         IPFS_PROTOCOL: process.env["IPFS_PROTOCOL"],
         IPFS_LOCATION:
-          process.env["IPFS_LOCATION"] || "http://localhost:8080/ipfs/"
+          process.env["IPFS_LOCATION"] || "http://localhost:8080/ipfs/",
+        FUND_ENDPOINT: process.env["FUND_ENDPOINT"] || "http://localhost:3000"
       })
     }),
     commonjs(),

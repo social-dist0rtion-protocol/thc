@@ -4,7 +4,7 @@
   import Leaderboard from "./Leaderboard.svelte";
   import About from "./About.svelte";
   import Settings from "./Settings.svelte";
-  import { wallet, provider, thc } from "./stores";
+  import { wallet, provider, fundRequest, balance, thc } from "./stores";
 
   const routes = {
     "/": Chapter,
@@ -35,13 +35,20 @@
         <a href="#/settings">Settings</a>
       </li>
       <li>
-        <a href="#/about">&nbsp;?&nbsp;</a>
+        <a href="#/about">???</a>
       </li>
     </ul>
   </nav>
-
   <main>
-    {#if $wallet && $provider && $thc}
+    {#if $fundRequest !== undefined && $fundRequest.error}
+      <p class="error">
+        There was an error setting up the application. Would be great if you can
+        message us
+        <a href="https://twitter.com/dist0rtionproto">on Twitter</a>
+        .
+      </p>
+    {/if}
+    {#if $wallet && $provider && $thc && $balance !== undefined}
       <Router {routes} />
     {:else}
       <p>Loading...</p>

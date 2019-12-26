@@ -37,15 +37,14 @@
 
 </style>
 
-<h1 class="hope">About</h1>
+<h1 class="hope">???</h1>
 
-<p>
-  Someone should write a good about. I have no time at the moment because I have
-  to focus on other features. And I'm 100% sure this about page will stay as it
-  is now lol.
-</p>
+<h2>
+  Destruction &
+  <span class="hope">& Hope</span>
+</h2>
 
-<p>Let's make a list to highlight some key points.</p>
+<p />
 
 <ul>
   <li>

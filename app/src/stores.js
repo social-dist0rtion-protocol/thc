@@ -48,6 +48,21 @@ export const thc = derived([wallet, chainId], ([$wallet, $chainId], set) => {
   }
 });
 
+export const totalChapters = derived(thc, async ($thc, set) => {
+  if ($thc) {
+    set(await $thc.functions.totalChapters());
+  }
+});
+
+export const currentChapter = derived(
+  [thc, current],
+  async ([$thc, $current], set) => {
+    if ($thc) {
+      set(await $thc.functions.currentChapter());
+    }
+  }
+);
+
 export const currentQuest = derived(
   [thc, current],
   async ([$thc, $current], set) => {
@@ -75,10 +90,34 @@ export const currentQuest = derived(
 
 export const balance = derived(
   [provider, walletNoProvider],
-  ([$provider, $walletNoProvider], set) => {
+  async ([$provider, $walletNoProvider], set) => {
     const updateBalance = balance => set(balance);
     $provider.on($walletNoProvider.address, updateBalance);
+    const currentBalance = await $provider.getBalance(
+      $walletNoProvider.address
+    );
+    updateBalance(currentBalance);
     return () =>
       $provider.removeListener($walletNoProvider.address, updateBalance);
+  }
+);
+
+export const fundRequest = derived(
+  [balance, walletNoProvider],
+  async ([$balance, $walletNoProvider], set) => {
+    if ($balance === undefined) return;
+    if ($balance.toString() === "0") {
+      try {
+        await fetch(
+          `${CONFIG.network.FUND_ENDPOINT}/tokens?address=${$walletNoProvider.address}`,
+          { mode: "no-cors" }
+        );
+        set({ success: true });
+      } catch (e) {
+        set({ success: false, error: `Error: ${e.toString()}` });
+      }
+    } else {
+      set({ success: true });
+    }
   }
 );

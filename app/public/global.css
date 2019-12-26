@@ -166,6 +166,17 @@ nav ul li:nth-child(4) {
 a,
 a:hover,
 a:visited {
-  color: var(--color-text);
+  color: inherit;
   text-decoration: underline;
+}
+
+.error {
+  background-color: #f44336;
+  padding: var(--space-s);
+}
+
+.warning {
+  color: black;
+  background-color: #ffeb3b;
+  padding: var(--space-s);
 }
