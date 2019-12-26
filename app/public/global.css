@@ -5,10 +5,26 @@
 }
 
 :root {
-  --space-s: 5px;
-  --space-m: 10px;
-  --space-l: 20px;
-  --color-highlight: pink;
+  --space-s: 1em;
+  --space-m: 5em;
+  --space-l: 10em;
+
+  /* colors from https://www.happyhues.co/palettes/4 */
+  --color-background: #16161a;
+  --color-text: #d0d0ce;
+  --color-destruction: #fe5000;
+  --color-hope: #00bb31;
+}
+
+@font-face {
+  font-family: "Blackout 2 AM";
+  src: url("assets/fonts/blackout_two_am-webfont.eot?#iefix")
+      format("embedded-opentype"),
+    url("assets/fonts/blackout_two_am-webfont.woff") format("woff"),
+    url("assets/fonts/blackout_two_am-webfont.ttf") format("truetype"),
+    url("assets/fonts/blackout_two_am-webfont.svg") format("svg");
+  font-style: normal;
+  font-weight: normal;
 }
 
 html {
@@ -31,5 +47,26 @@ body {
 }
 
 body {
-  background-color: gray;
+  color: var(--color-text);
+  background-color: var(--color-background);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  transform: rotate(3deg);
+  font-family: "Blackout 2 AM";
+  font-weight: 500;
+  color: var(--color-destruction);
+}
+
+h1 {
+  font-size: 2em;
+}
+
+p {
+  line-height: 1.5;
 }

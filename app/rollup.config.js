@@ -28,7 +28,8 @@ export default {
     copy({
       targets: [
         { src: "public/global.css", dest: "build" },
-        { src: "public/index.html", dest: "build" }
+        { src: "public/index.html", dest: "build" },
+        { src: "public/assets", dest: "build" }
       ]
     }),
     svelte({
