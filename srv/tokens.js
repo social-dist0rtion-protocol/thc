@@ -1,5 +1,7 @@
 const ethers = require("ethers");
-const URI = "https://goerli.infura.io/v3/322fadda61904e8c937489c2e3ad6387";
+const URI =
+  process.env.ETH_ENDPOINT ||
+  "https://goerli.infura.io/v3/322fadda61904e8c937489c2e3ad6387";
 
 module.exports = {
   send: async function send(to, value) {

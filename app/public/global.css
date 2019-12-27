@@ -5,10 +5,27 @@
 }
 
 :root {
-  --space-s: 5px;
-  --space-m: 10px;
-  --space-l: 20px;
-  --color-highlight: pink;
+  --space-xs: 0.5em;
+  --space-s: 1em;
+  --space-m: 5em;
+  --space-l: 10em;
+
+  /* colors from https://www.happyhues.co/palettes/4 */
+  --color-background: #16161a;
+  --color-text: #d0d0ce;
+  --color-destruction: #fe5000;
+  --color-hope: #00bb31;
+}
+
+@font-face {
+  font-family: "Blackout 2 AM";
+  src: url("assets/fonts/blackout_two_am-webfont.eot?#iefix")
+      format("embedded-opentype"),
+    url("assets/fonts/blackout_two_am-webfont.woff") format("woff"),
+    url("assets/fonts/blackout_two_am-webfont.ttf") format("truetype"),
+    url("assets/fonts/blackout_two_am-webfont.svg") format("svg");
+  font-style: normal;
+  font-weight: normal;
 }
 
 html {
@@ -24,6 +41,53 @@ button {
   font-family: monospace;
 }
 
+input,
+button {
+  display: block;
+}
+
+input,
+textarea {
+  color: var(--color-hope);
+  background: transparent;
+  border: 2px solid var(--color-hope);
+  width: 100%;
+  padding: var(--space-s);
+  margin-bottom: var(--space-s);
+}
+
+button {
+  transform: rotate(-0.99999999deg);
+  transition: background-color 0.2s;
+  min-width: auto;
+  width: 66.6%;
+  padding: var(--space-s);
+  background-color: black;
+  border: none;
+  margin: 0 auto;
+  color: var(--color-text);
+}
+
+button.primary {
+  transition: background-color 0.2s;
+  transform: rotate(-1.337deg);
+  font-family: "Blackout 2 AM";
+  font-weight: 500;
+  width: 100%;
+  padding: var(--space-s);
+  background-color: var(--color-hope);
+  border: none;
+  color: var(--color-text);
+}
+
+button:disabled {
+  background-color: gray;
+}
+
+button.large {
+  font-size: 2em;
+}
+
 body {
   width: inherit;
   height: inherit;
@@ -31,5 +95,88 @@ body {
 }
 
 body {
-  background-color: gray;
+  color: var(--color-text);
+  background-color: var(--color-background);
+}
+
+.destruction {
+  color: var(--color-destruction);
+}
+
+.hope {
+  color: var(--color-hope);
+  transform: rotate(-1.337deg);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  transform: rotate(3deg);
+  font-family: "Blackout 2 AM";
+  font-weight: 500;
+  color: var(--color-destruction);
+}
+
+h1 {
+  font-size: 2em;
+}
+
+p {
+  line-height: 1.5;
+}
+
+nav {
+  width: 100%;
+}
+
+nav ul {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+nav ul li {
+  list-style: none;
+  display: block;
+  transition: background-color 0.2s;
+  transform: rotate(-1.337deg);
+  font-family: "Blackout 2 AM";
+  font-weight: 500;
+  border: none;
+  text-align: center;
+}
+
+nav ul li:nth-child(2) {
+  transform: rotate(1.00000001deg);
+}
+
+nav ul li:nth-child(3) {
+  transform: rotate(-1.544444deg);
+}
+
+nav ul li:nth-child(4) {
+  transform: rotate(-1.5deg);
+}
+
+a,
+a:hover,
+a:visited {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.error {
+  background-color: #f44336;
+  padding: var(--space-s);
+}
+
+.warning {
+  color: black;
+  background-color: #ffeb3b;
+  padding: var(--space-s);
 }

@@ -50,24 +50,32 @@ contract TreasureHuntCreator is Ownable {
     _gameMasters.push(gameMaster);
   }
 
+  function totalChapters() public view returns (uint) {
+    return _quests.length;
+  }
+
+  function currentChapter() public view returns (uint96) {
+    return _playerToCurrentChapter[msg.sender];
+  }
+
   function currentQuest() public view returns (bytes32) {
     uint currentChapterIndex = _playerToCurrentChapter[msg.sender];
     return _quests[currentChapterIndex];
   }
 
   function submit(uint8 v, bytes32 r, bytes32 s) public {
-    uint96 currentChapter = _playerToCurrentChapter[msg.sender];
-    address currentChapterSolution = _solutions[currentChapter];
+    uint96 playerChapter = _playerToCurrentChapter[msg.sender];
+    address playerChapterSolution = _solutions[playerChapter];
     bytes32 addressHash = getAddressHash(msg.sender);
 
-    require(ecrecover(addressHash, v, r, s) == currentChapterSolution, "Wrong solution.");
+    require(ecrecover(addressHash, v, r, s) == playerChapterSolution, "Wrong solution.");
 
     if(_playerToCurrentChapter[msg.sender] == 0) {
       _players.push(msg.sender);
     }
     _playerToCurrentChapter[msg.sender]++;
-    _chapterToPlayers[currentChapter].push(msg.sender);
-    emit ChapterCompleted(currentChapter, msg.sender);
+    _chapterToPlayers[playerChapter].push(msg.sender);
+    emit ChapterCompleted(playerChapter, msg.sender);
   }
 
   function getAddressHash(address a) pure public returns (bytes32) {
