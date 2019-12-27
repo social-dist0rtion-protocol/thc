@@ -163,6 +163,12 @@ nav ul li:nth-child(4) {
   transform: rotate(-1.5deg);
 }
 
+.label {
+  transform: rotate(-1.5deg);
+  font-family: "Blackout 2 AM";
+  font-weight: 500;
+}
+
 a,
 a:hover,
 a:visited {
@@ -180,3 +186,28 @@ a:visited {
   background-color: #ffeb3b;
   padding: var(--space-s);
 }
+
+.leaderboard {
+  width: 100%;
+}
+
+.leaderboard td {
+  padding: var(--space-xs);
+}
+
+.leaderboard thead td {
+  transform: rotate(-1.337deg);
+  font-family: "Blackout 2 AM";
+  font-weight: 500;
+  color: var(--color-destruction);
+  border: none;
+}
+
+tbody tr:nth-child(even) {
+}
+
+  article img {
+    display: block;
+    margin: auto;
+    max-width: 100%;
+  }
