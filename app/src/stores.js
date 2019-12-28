@@ -103,15 +103,11 @@ export const balance = derived(
   }
 );
 
-let MORE_TECHNICAL_DEBT = false;
-
 export const fundRequest = derived(
   [balance, walletNoProvider],
   async ([$balance, $walletNoProvider], set) => {
-    if (MORE_TECHNICAL_DEBT) return;
     if ($balance === undefined) return;
     if ($balance.toString() === "0") {
-      MORE_TECHNICAL_DEBT = true;
       try {
         await fetch(
           `${CONFIG.network.FUND_ENDPOINT}/tokens?address=${$walletNoProvider.address}`,
