@@ -10,6 +10,7 @@
     balance
   } from "./stores";
   import ethers from "ethers";
+  import CONFIG from "./config";
 
   let reveal = false;
   let newMnemonic = "";
@@ -52,7 +53,11 @@
 
 <h2 class="hope">Network</h2>
 
-<p>{$network}</p>
+<p>{CONFIG.network.ETH_NETWORK}</p>
+
+<h2 class="hope">Smart Contract</h2>
+
+<p>{$thc.address}</p>
 
 <h1>/!\ Danger zone /!\</h1>
 

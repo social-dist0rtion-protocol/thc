@@ -48,7 +48,8 @@ export default {
         IPFS_LOCATION:
           process.env["IPFS_LOCATION"] || "http://localhost:8080/ipfs/",
         FUND_ENDPOINT: process.env["FUND_ENDPOINT"] || "http://localhost:3000",
-        ETH_ENDPOINT: process.env["ETH_ENDPOINT"] || "http://localhost:8545"
+        ETH_ENDPOINT: process.env["ETH_ENDPOINT"] || "http://localhost:8545",
+        ETH_NETWORK: process.env["ETH_NETWORK"] || "localhost"
       })
     }),
     commonjs(),

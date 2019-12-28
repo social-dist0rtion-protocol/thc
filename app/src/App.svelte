@@ -48,7 +48,7 @@
         .
       </p>
     {/if}
-    {#if $wallet && $provider && $thc && $balance !== undefined}
+    {#if $wallet && $provider && $thc}
       <Router {routes} />
     {:else}
       <p>Loading...</p>
