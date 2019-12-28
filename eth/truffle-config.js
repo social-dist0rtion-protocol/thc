@@ -60,13 +60,13 @@ module.exports = {
 
     // Useful for deploying to a public network.
     // NB: It's important to wrap the provider as a function.
-    goerli: {
+    rinkeby: {
       provider: () =>
         new HDWalletProvider(
           process.env.SECRET,
-          `https://goerli.infura.io/v3/${process.env.INFURA_KEY}`
+          `https://rinkeby.infura.io/v3/${process.env.INFURA_KEY}`
         ),
-      network_id: "5" // Any network (default: none)
+      network_id: "*" // Any network (default: none)
     }
 
     // Useful for private networks

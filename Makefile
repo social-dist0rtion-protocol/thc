@@ -17,8 +17,8 @@ game: backend frontend
 frontend:
 	echo "Deploying client to ipfs."
 	cd app && IPFS_LOCATION=${IPFS_LOCATION} IPFS_PROTOCOL=${IPFS_PROTOCOL} IPFS_HOST=${IPFS_HOST} IPFS_PORT=${IPFS_PORT} FUND_ENDPOINT=${FUND_ENDPOINT} ETH_NETWORK=$(ETH_NETWORK) ETH_ENDPOINT=$(ETH_ENDPOINT) npm run build
-	cd gen && IPFS_LOCATION=${IPFS_LOCATION} IPFS_PROTOCOL=${IPFS_PROTOCOL} IPFS_HOST=${IPFS_HOST} IPFS_PORT=${IPFS_PORT} node push_client.js ../app/build
-	echo "Frotend deployed to ipfs."
+	#cd gen && IPFS_LOCATION=${IPFS_LOCATION} IPFS_PROTOCOL=${IPFS_PROTOCOL} IPFS_HOST=${IPFS_HOST} IPFS_PORT=${IPFS_PORT} node push_client.js ../app/build
+	#echo "Frotend deployed to ipfs."
 
 backend: chapters
 	echo "Deploying contracts to testnet."
