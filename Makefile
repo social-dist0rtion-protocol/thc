@@ -1,6 +1,9 @@
 INPUT_DIR ?= try/chapters
 OUTPUT_DIR ?= try/build
 ETH_MIGRATIONS_DIR ?= eth
+ETH_NETWORK ?= development
+ETH_ENDPOINT ?= http://localhost:8545
+FUND_ENPOINT ?= http://localhost:3000
 CHAPTERS_SCRIPT ?= gen/chapters.js
 CHAPTERS_FILE ?= gen/chapters.json
 IPFS_HOST ?= localhost
@@ -13,13 +16,13 @@ game: backend frontend
 
 frontend:
 	echo "Deploying client to ipfs."
-	cd app && npm run build
+	cd app && IPFS_LOCATION=${IPFS_LOCATION} IPFS_PROTOCOL=${IPFS_PROTOCOL} IPFS_HOST=${IPFS_HOST} IPFS_PORT=${IPFS_PORT} FUND_ENDPOINT=${FUND_ENDPOINT} ETH_ENDPOINT=$(ETH_ENDPOINT) npm run build
 	cd gen && IPFS_LOCATION=${IPFS_LOCATION} IPFS_PROTOCOL=${IPFS_PROTOCOL} IPFS_HOST=${IPFS_HOST} IPFS_PORT=${IPFS_PORT} node push_client.js ../app/build
 	echo "Frotend deployed to ipfs."
 
 backend: chapters
 	echo "Deploying contracts to testnet."
-	@cd $(ETH_MIGRATIONS_DIR); truffle migrate --reset --chapters=../$(CHAPTERS_FILE)
+	@cd $(ETH_MIGRATIONS_DIR); truffle migrate --network $(ETH_NETWORK) --reset --chapters=../$(CHAPTERS_FILE)
 	echo "Backend deployed to testnet."
 
 chapters:

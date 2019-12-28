@@ -10,7 +10,7 @@ window.ethers = ethers;
 const Wallet = ethers.Wallet;
 const CURRENT_WALLET = { mnemonic: undefined, wallet: undefined };
 
-export const network = db.writable("network", "http://localhost:8545");
+export const network = db.writable("network", CONFIG.network.ETH_ENDPOINT);
 export const mnemonic = db.writable(
   "mnemonic",
   () => Wallet.createRandom().mnemonic
