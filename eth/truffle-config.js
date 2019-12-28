@@ -63,7 +63,7 @@ module.exports = {
     goerli: {
       provider: () =>
         new HDWalletProvider(
-          process.env.MNEMONIC,
+          process.env.SECRET,
           `https://goerli.infura.io/v3/${process.env.INFURA_KEY}`
         ),
       network_id: "5" // Any network (default: none)
