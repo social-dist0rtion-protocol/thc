@@ -15,8 +15,7 @@
   import ethers from "ethers";
 
   let solution = "";
-  let success = false;
-  let mining = false;
+  let state = "idle";
 
   async function submit() {
     solution = solution.toLowerCase();
@@ -30,19 +29,19 @@
       ethers.utils.arrayify(address)
     );
     const { r, s, v } = ethers.utils.splitSignature(signature);
+    state = "check";
     try {
       const transaction = await $thc.functions.submit(v, r, s);
       console.log(transaction);
-      mining = true;
+      state = "mine";
       const receipt = await $provider.waitForTransaction(transaction.hash);
       console.log("Transaction Mined: " + receipt.hash);
       console.log(receipt);
       $current.solution = solution;
       solution = "";
-      success = true;
-      mining = false;
+      state = "success";
     } catch (e) {
-      alert("The solution is not correct, try again");
+      state = "wrong";
     }
   }
 </script>
@@ -58,14 +57,27 @@
   }
 </style>
 
-{#if success}
+{#if state === 'check'}
+  <h1 class="hope">Checking the solution</h1>
+{:else if state === 'wrong'}
+  <h1>Wrong solution :(</h1>
+  <button class="primary" on:click={() => (state = 'idle')}>Try again</button>
+{:else if state === 'mine'}
+  <h1>Please wait for a few seconds</h1>
+  <p>
+    We are calculating the right trajectory to throw your answer into the
+    blockchain. This might take up to 10 seconds.
+  </p>
+  <p>
+    If it takes longer, there might be a network problem, try to reload the
+    page.
+  </p>
+{:else if state === 'success'}
   <h1 class="hope">Congrats, you've solved the challenge!</h1>
   <h2>But you are not done yet.</h2>
-  <button class="primary" on:click={() => (success = false)}>
+  <button class="primary" on:click={() => (state = 'idle')}>
     Next Challenge
   </button>
-{:else if mining}
-  <h1>Please wait for a few seconds</h1>
 {:else if $totalChapters && $currentQuest && $currentChapter}
   {#if $currentChapter !== undefined && $currentChapter.toString() === '0'}
     <p class="warning">
@@ -101,5 +113,5 @@
     </p>
   {/if}
 {:else}
-  <p>loading...</p>
+  <p>Loading... (Might take some time on old phones, like 30 seconds.)</p>
 {/if}

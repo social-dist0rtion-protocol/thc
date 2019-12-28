@@ -51,7 +51,7 @@
     {#if $wallet && $provider && $thc}
       <Router {routes} />
     {:else}
-      <p>Loading...</p>
+      <p>Loading... (Might take some time on old phones, like 30 seconds.)</p>
     {/if}
   </main>
 </div>

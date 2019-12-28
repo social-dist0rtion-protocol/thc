@@ -39,18 +39,21 @@
 
 <h1 class="hope">???</h1>
 
-<h2>
-  Destruction &
-  <span class="hope">& Hope</span>
-</h2>
-
-<p />
+<p>
+  Welcome to
+  <span class="label hope">planetscape</span>
+  , a decentralized treasure hunt built on IPFS and Ethereum.
+</p>
 
 <ul>
   <li>
     If you get stuck, send us a message
     <a href="https://twitter.com/dist0rtionproto">on Twitter</a>
-    or call us at our DECT.
+    , call us at our DECT #6919, or visit us at
+    <a href="https://36c3.c3nav.de/l/sdp/" target="_blank">
+      the Social Dist0rtion Protocol assembly.
+    </a>
+
   </li>
   <li>
     This game has been generated using
