@@ -7,6 +7,7 @@
     currentQuest,
     currentChapter,
     current,
+    lastTransactionMined,
     provider,
     thc
   } from "./stores";
@@ -32,12 +33,13 @@
     state = "check";
     try {
       const transaction = await $thc.functions.submit(v, r, s);
+      $current.solution = solution;
       console.log(transaction);
       state = "mine";
       const receipt = await $provider.waitForTransaction(transaction.hash);
-      console.log("Transaction Mined: " + receipt.hash);
+      $lastTransactionMined = receipt.transactionHash;
+      console.log("Transaction Mined: " + receipt);
       console.log(receipt);
-      $current.solution = solution;
       solution = "";
       state = "success";
     } catch (e) {

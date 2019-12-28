@@ -10,6 +10,7 @@ window.ethers = ethers;
 const Wallet = ethers.Wallet;
 const CURRENT_WALLET = { mnemonic: undefined, wallet: undefined };
 
+export const lastTransactionMined = db.writable("lastTransactionMined", null);
 export const network = db.writable("network", CONFIG.network.ETH_ENDPOINT);
 export const mnemonic = db.writable(
   "mnemonic",
@@ -55,7 +56,7 @@ export const totalChapters = derived(thc, async ($thc, set) => {
 });
 
 export const currentChapter = derived(
-  [thc, current],
+  [thc, current, lastTransactionMined],
   async ([$thc, $current], set) => {
     if ($thc) {
       set(await $thc.functions.currentChapter());
@@ -64,7 +65,7 @@ export const currentChapter = derived(
 );
 
 export const currentQuest = derived(
-  [thc, current],
+  [thc, current, lastTransactionMined],
   async ([$thc, $current], set) => {
     if ($thc) {
       const hashAddress = await $thc.functions.currentQuest();
