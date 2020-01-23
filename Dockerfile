@@ -1,4 +1,4 @@
-FROM node:10.18.1-stretch-slim
+FROM node:10.18.1-stretch
 
 WORKDIR /home/node
 
@@ -23,6 +23,8 @@ COPY gen/package-lock.json gen/
 COPY srv/package-lock.json srv/
 
 RUN for d in app eth gen srv; do cd $d; npm install; cd ..; done
+
+ENV PATH /home/node/eth/node_modules/.bin:${PATH}
 
 COPY . .
 

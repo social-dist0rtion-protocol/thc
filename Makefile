@@ -34,3 +34,4 @@ install-deps:
 	cd eth && npm install
 	cd gen && npm install
 	cd srv && npm install
+
