@@ -1,6 +1,6 @@
 # Treasure Hunt Creator (THC)
 
-This is the monorepo of THC, a framework to create decentalized treasure hunts.
+This is the monorepo of THC, a framework to create decentralized treasure hunts.
 
 ## Components
 
