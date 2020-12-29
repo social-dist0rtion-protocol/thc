@@ -53,10 +53,6 @@
     margin-top: var(--space-m);
   }
 
-  .info {
-    font-size: 0.8em;
-    margin-top: 1000em;
-  }
 </style>
 
 {#if state === 'check'}
@@ -88,6 +84,11 @@
       progress.
     </p>
   {/if}
+
+  <audio loop="true" controls>
+    <source src="https://music-2121.s3-eu-west-1.amazonaws.com/chapter_0.mp3" type="audio/mpeg"/>
+  </audio>
+
   <article>
     <h1>Chapter {$currentChapter}</h1>
     {@html marked($currentQuest)}
@@ -104,15 +105,8 @@
       {/if}
       <button class="primary" disabled={!solution.length} on:click={submit}>
         Submit
-      </button>
+        </button>
     </div>
-    <p class="info">
-      <em>
-        Are you stuck? Contact us at #6919, or
-        <a href="https://twitter.com/dist0rtionproto">send us a message</a>
-        .
-      </em>
-    </p>
   {/if}
 {:else}
   <p>Loading... (Might take some time on old phones, like 30 seconds.)</p>

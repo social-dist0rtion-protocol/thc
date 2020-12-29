@@ -64,6 +64,7 @@ module.exports = {
           `https://kovan.infura.io/v3/${process.env.INFURA_KEY}`
         ),
       network_id: "*", // Any network (default: none)
+      skipDryRun: true,
     },
 
     // Useful for private networks

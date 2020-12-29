@@ -63,4 +63,8 @@
       available on GitHub
     </a>
   </li>
+
+  <li>
+    Images in Chapter 8 and 14 by <a href="https://www.flickr.com/photos/metavolution/">metavolution</a>, licensed under CC BY-SA 2.0.
+  </li>
 </ul>

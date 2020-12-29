@@ -19,7 +19,7 @@ export const mnemonic = db.writable(
 
 export const current = db.writable("current", { solution: undefined });
 
-export const walletNoProvider = derived(mnemonic, $mnemonic => {
+export const walletNoProvider = derived(mnemonic, ($mnemonic) => {
   // Wallet.fromMnemonic takes some time to create the wallet, so we cache it.
   if (CURRENT_WALLET.mnemonic !== $mnemonic) {
     CURRENT_WALLET.mnemonic = $mnemonic;
@@ -30,7 +30,7 @@ export const walletNoProvider = derived(mnemonic, $mnemonic => {
 
 export const provider = derived(
   network,
-  $network => new ethers.providers.JsonRpcProvider($network)
+  ($network) => new ethers.providers.JsonRpcProvider($network)
   //ethers.getDefaultProvider($network)
 );
 
@@ -93,7 +93,7 @@ export const currentQuest = derived(
 export const balance = derived(
   [provider, walletNoProvider],
   async ([$provider, $walletNoProvider], set) => {
-    const updateBalance = balance => set(balance);
+    const updateBalance = (balance) => set(balance);
     $provider.on($walletNoProvider.address, updateBalance);
     const currentBalance = await $provider.getBalance(
       $walletNoProvider.address
@@ -108,7 +108,9 @@ export const fundRequest = derived(
   [balance, walletNoProvider],
   async ([$balance, $walletNoProvider], set) => {
     if ($balance === undefined) return;
-    if ($balance.toString() === "0") {
+    console.log("Balance is", $balance.toString());
+    if ($balance.lt("5000000000000000")) {
+      console.log("Need a refill");
       try {
         await fetch(
           `${CONFIG.network.FUND_ENDPOINT}/tokens?address=${$walletNoProvider.address}`,
