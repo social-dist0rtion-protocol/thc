@@ -66,7 +66,7 @@ async function upload(contentBuffer) {
   const ipfs = ipfsClient({
     host: IPFS_HOST,
     port: IPFS_PORT,
-    protocol: IPFS_PROTOCOL
+    protocol: IPFS_PROTOCOL,
   });
   const result = await ipfs.add(contentBuffer);
   const hash = result[0].hash;
@@ -82,14 +82,15 @@ async function processChapter(dirIn, dirOut, solution) {
 
 async function main(dirIn, dirOut) {
   const content = fs.readdirSync(dirIn, { withFileTypes: true });
-  const v = content.filter(x => x.isDirectory());
+  const v = content.filter((x) => x.isDirectory());
+  const padding = v[0].name.length;
   const result = [];
 
   for (let i = 0; i < v.length; i++) {
     const name = v[i].name;
     const number = parseInt(name, 10);
     let solution = await readFileAndTrim(
-      path.join(dirIn, lpad(number - 1, 3), "solution")
+      path.join(dirIn, lpad(number - 1, padding), "solution")
     );
     result.push(
       await processChapter(
@@ -103,7 +104,7 @@ async function main(dirIn, dirOut) {
 }
 
 try {
-  main(DIR_IN, DIR_OUT).then(r => console.log(JSON.stringify(r, null, 2)));
+  main(DIR_IN, DIR_OUT).then((r) => console.log(JSON.stringify(r, null, 2)));
 } catch (e) {
   console.log(e);
 }

@@ -1,4 +1,5 @@
 build
+prod.sh
 
 # Logs
 logs

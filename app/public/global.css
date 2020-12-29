@@ -13,19 +13,64 @@
   /* colors from https://www.happyhues.co/palettes/4 */
   --color-background: #16161a;
   --color-text: #d0d0ce;
-  --color-destruction: #fe5000;
-  --color-hope: #00bb31;
+
+  --primary-c1: rgba(178, 57, 255, 1);
+  --primary-c2: rgba(104, 0, 231, 1);
+  --primary-c3: rgba(5, 185, 236, 1);
+  --primary-c4: rgba(16, 14, 35, 1);
+
+  /*shaded versions*/
+  --primary-c1-s1: rgba(103, 2, 149, 1);
+  --primary-c2-s1: rgba(65, 0, 139, 1);
+  --primary-c3-s1: rgba(0, 118, 169, 1);
+
+  --primary-c1-s2: rgba(68, 9, 105, 1);
+  --primary-c2-s2: rgba(42, 0, 94, 1);
+  --primary-c3-s2: rgba(2, 93, 132, 1);
+
+  --primary-c1-s3: rgba(36, 0, 56, 1);
+  --primary-c2-s3: rgba(20, 0, 47, 1);
+  --primary-c3-s3: rgba(0, 42, 58, 1);
+
+  --secondary-c1: rgba(253, 41, 79, 1);
+  --secondary-c2: rgba(22, 10, 254, 1);
+  --secondary-c3: rgba(255, 235, 216, 1);
+  --secondary-c4: rgba(1, 2, 42, 1);
+
+  --color-destruction: var(--secondary-c1);
+  --color-hope: var(--primary-c1);
+}
+@font-face {
+  font-family: "orbitronregular";
+  src: url("assets/fonts/orbitron-variablefont_wght-webfont.woff2")
+      format("woff2"),
+    url("assets/fonts/orbitron-variablefont_wght-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
 }
 
 @font-face {
-  font-family: "Blackout 2 AM";
-  src: url("assets/fonts/blackout_two_am-webfont.eot?#iefix")
-      format("embedded-opentype"),
-    url("assets/fonts/blackout_two_am-webfont.woff") format("woff"),
-    url("assets/fonts/blackout_two_am-webfont.ttf") format("truetype"),
-    url("assets/fonts/blackout_two_am-webfont.svg") format("svg");
-  font-style: normal;
+  font-family: "montserratbold";
+  src: url("assets/fonts/montserrat-bold-webfont.woff2") format("woff2"),
+    url("assets/fonts/montserrat-bold-webfont.woff") format("woff");
   font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "montserratitalic";
+  src: url("assets/fonts/montserrat-italic-webfont.woff2") format("woff2"),
+    url("assets/fonts/montserrat-italic-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "montserratregular";
+  src: url("assets/fonts/montserrat-regular-webfont.woff2") format("woff2"),
+    url("assets/fonts/montserrat-regular-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
 }
 
 html {
@@ -57,7 +102,6 @@ textarea {
 }
 
 button {
-  transform: rotate(-0.99999999deg);
   transition: background-color 0.2s;
   min-width: auto;
   width: 66.6%;
@@ -70,9 +114,8 @@ button {
 
 button.primary {
   transition: background-color 0.2s;
-  transform: rotate(-1.337deg);
-  font-family: "Blackout 2 AM";
-  font-weight: 500;
+  font-family: "orbitronregular";
+  font-weight: bold;
   width: 100%;
   padding: var(--space-s);
   background-color: var(--color-hope);
@@ -95,8 +138,11 @@ body {
 }
 
 body {
-  color: var(--color-text);
-  background-color: var(--color-background);
+  font-size: 16px;
+  line-height: 1.7rem;
+  font-family: "montserratregular";
+  background-color: var(--primary-c4);
+  color: var(--secondary-c3);
 }
 
 .destruction {
@@ -105,7 +151,6 @@ body {
 
 .hope {
   color: var(--color-hope);
-  transform: rotate(-1.337deg);
 }
 
 h1,
@@ -114,18 +159,17 @@ h3,
 h4,
 h5,
 h6 {
-  transform: rotate(3deg);
-  font-family: "Blackout 2 AM";
-  font-weight: 500;
-  color: var(--color-destruction);
+  font-weight: bold;
+  font-family: "orbitronregular";
+  text-transform: uppercase;
+  color: var(--primary-c3);
 }
 
 h1 {
-  font-size: 2em;
+  font-size: 2rem;
 }
 
 p {
-  line-height: 1.5;
 }
 
 nav {
@@ -144,29 +188,33 @@ nav ul li {
   list-style: none;
   display: block;
   transition: background-color 0.2s;
-  transform: rotate(-1.337deg);
-  font-family: "Blackout 2 AM";
-  font-weight: 500;
+  background-color: var(--primary-c1);
+  font-family: "orbitronregular";
   border: none;
   text-align: center;
 }
 
 nav ul li:nth-child(2) {
-  transform: rotate(1.00000001deg);
 }
 
 nav ul li:nth-child(3) {
-  transform: rotate(-1.544444deg);
 }
 
 nav ul li:nth-child(4) {
-  transform: rotate(-1.5deg);
+}
+
+nav ul li a {
+  padding: var(--space-xs);
+  text-decoration: none;
+  color: var(--primary-c4);
+}
+
+nav ul li a:visited {
+  color: var(--primary-c4);
 }
 
 .label {
-  transform: rotate(-1.5deg);
-  font-family: "Blackout 2 AM";
-  font-weight: 500;
+  font-family: "orbitronregular";
 }
 
 a,
@@ -196,9 +244,8 @@ a:visited {
 }
 
 .leaderboard thead td {
-  transform: rotate(-1.337deg);
-  font-family: "Blackout 2 AM";
-  font-weight: 500;
+  font-family: "orbitronregular";
+  font-weight: bold;
   color: var(--color-destruction);
   border: none;
 }
@@ -206,8 +253,8 @@ a:visited {
 tbody tr:nth-child(even) {
 }
 
-  article img {
-    display: block;
-    margin: auto;
-    max-width: 100%;
-  }
+article img {
+  display: block;
+  margin: auto;
+  max-width: 100%;
+}

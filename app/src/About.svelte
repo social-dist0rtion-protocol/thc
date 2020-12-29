@@ -41,19 +41,18 @@
 
 <p>
   Welcome to
-  <span class="label hope">planetscape</span>
+  <span class="label hope">2121</span>
   , a decentralized treasure hunt built on IPFS and Ethereum.
 </p>
 
 <ul>
   <li>
     If you get stuck, send us a message
-    <a href="https://twitter.com/dist0rtionproto">on Twitter</a>
-    , call us at our DECT #6919, or visit us at
-    <a href="https://36c3.c3nav.de/l/sdp/" target="_blank">
+    <a href="https://twitter.com/dist0rtionproto">on Twitter</a>,
+    call us at our DECT #7999, or visit us at
+    <a href="https://rc3.world/rc3/assembly/social-dist0rtion-protocol/" target="_blank">
       the Social Dist0rtion Protocol assembly.
     </a>
-
   </li>
   <li>
     This game has been generated using
