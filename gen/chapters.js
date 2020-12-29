@@ -27,6 +27,7 @@ async function readFileAndTrim(f) {
   let solution = "";
   try {
     solution = (await readFile(f)).toString().trim();
+    solution = solution.toLowerCase();
   } catch (e) {
     if (e.code !== "ENOENT") {
       raise(e);
