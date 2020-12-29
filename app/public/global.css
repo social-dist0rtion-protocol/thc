@@ -131,6 +131,15 @@ button.large {
   font-size: 2em;
 }
 
+button.primary:hover {
+  cursor: pointer;
+}
+
+code {
+  background-color: var(--primary-c2);
+  padding: 4px;
+}
+
 body {
   width: inherit;
   height: inherit;
@@ -258,6 +267,10 @@ article img {
   display: block;
   margin: auto;
   max-width: 100%;
+}
+
+strong {
+  font-family: "montserratbold";
 }
 
 blockquote {
