@@ -9,9 +9,15 @@ window.ethers = ethers;
 
 const Wallet = ethers.Wallet;
 const CURRENT_WALLET = { mnemonic: undefined, wallet: undefined };
+const ETH_ENDPOINTS = CONFIG.network.ETH_ENDPOINT.split(";");
+const ethEndpoint =
+  ETH_ENDPOINTS[Math.floor(Math.random() * ETH_ENDPOINTS.length)];
+
+console.log("endpoint", ethEndpoint);
 
 export const lastTransactionMined = db.writable("lastTransactionMined", null);
-export const network = db.writable("network", CONFIG.network.ETH_ENDPOINT);
+
+export const network = readable(ethEndpoint);
 export const mnemonic = db.writable(
   "mnemonic",
   () => Wallet.createRandom().mnemonic
