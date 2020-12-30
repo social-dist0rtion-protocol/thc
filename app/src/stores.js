@@ -9,7 +9,7 @@ window.ethers = ethers;
 
 const Wallet = ethers.Wallet;
 const CURRENT_WALLET = { mnemonic: undefined, wallet: undefined };
-const ETH_ENDPOINTS = CONFIG.network.ETH_ENDPOINT.split(";");
+const ETH_ENDPOINTS = CONFIG.network.ETH_ENDPOINT.split(",");
 const ethEndpoint =
   ETH_ENDPOINTS[Math.floor(Math.random() * ETH_ENDPOINTS.length)];
 
