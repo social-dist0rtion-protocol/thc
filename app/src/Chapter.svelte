@@ -17,6 +17,7 @@
 
   let solution = "";
   let state = "idle";
+  let error;
 
   async function submit() {
     solution = solution.toLowerCase();
@@ -43,7 +44,14 @@
       solution = "";
       state = "success";
     } catch (e) {
-      state = "wrong";
+      console.log('error submitting solution', e);
+      if(e.toString().toLowerCase().includes('execution failed')){
+        state = "wrong";
+      }
+      else {
+        state = "error";
+        error = e.toString();
+      }
     }
   }
 </script>
@@ -55,7 +63,11 @@
 
 </style>
 
-{#if state === 'check'}
+{#if state === 'error'}
+  <h1>Oopsy poopsy something went wrong</h1>
+  <h2>Try to reload the page. If it doesn't work, contact us.</h2>
+  <p>{error}</p>
+{:else if state === 'check'}
   <h1 class="hope">Checking the solution</h1>
 {:else if state === 'wrong'}
   <h1>Wrong solution :(</h1>
