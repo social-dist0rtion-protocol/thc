@@ -1,6 +1,6 @@
 # Treasure Hunt Creator (THC)
 
-This is the monorepo of THC, a framework to create decentralized treasure hunts.
+This is the monorepo of THC, a framework to create decentralized treasure hunts. [Planetscape, a dystopian escape game for 36C3](https://www.dist0rtion.com/2020/01/30/Planetscape-a-dystopian-escape-game-for-36C3/) gives a good overview of what it can be used for.
 
 ## Components
 
