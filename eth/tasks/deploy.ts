@@ -3,7 +3,6 @@ import { writeFile } from "fs/promises";
 import { readFileSync } from "fs";
 import { TreasureHuntCreator__factory } from "../typechain";
 import { decode } from "bs58";
-import { hexlify } from "ethers/lib/utils";
 
 type Chapter = {
   questHash: string;
@@ -11,19 +10,19 @@ type Chapter = {
 };
 
 task("deploy", "Push THC to network")
-  .addParam("chapterFile", "the chapter file")
-  .setAction(async ({ chapterFile }: { chapterFile: string }, hre) => {
+  .addParam("chapters", "The file with all chapters")
+  .setAction(async ({ chapters }: { chapters: string }, hre) => {
     console.log("Deploy contract Treasure Hunt Creator");
-    const tchFactory = (await hre.ethers.getContractFactory(
+    const thcFactory = (await hre.ethers.getContractFactory(
       "TreasureHuntCreator"
     )) as TreasureHuntCreator__factory;
-    console.log(`  Chapter file: ${chapterFile}`);
-    const chapters = JSON.parse(readFileSync(chapterFile, "utf-8"));
+    console.log(`  Chapters file: ${chapters}`);
+    const chaptersData = JSON.parse(readFileSync(chapters, "utf-8"));
 
     let solutions: string[] = [];
     let quests: string[] = [];
 
-    chapters.map((chapter: Chapter) => {
+    chaptersData.map((chapter: Chapter) => {
       const questHash = chapter.questHash;
       const decoded = decode(questHash);
       const quest = "0x" + Buffer.from(decoded.slice(2)).toString("hex");
@@ -31,7 +30,7 @@ task("deploy", "Push THC to network")
       solutions.push(chapter.solutionAddress);
     });
 
-    const thcContract = await tchFactory.deploy(solutions, quests);
+    const thcContract = await thcFactory.deploy(solutions, quests);
     console.log("  Address", thcContract.address);
     const receipt = await thcContract.deployed();
     console.log("  Receipt", receipt.deployTransaction.hash);
@@ -44,24 +43,27 @@ task("deploy", "Push THC to network")
       },
     };
 
-    console.log("Configuration file in ./deployment/network.json");
-    await writeFile(
-      "./deployment/network.json",
-      JSON.stringify(config, null, 2)
-    );
+    const networkParam = hre.network.name;
+    const networkFile = `./deployments/${networkParam}.network.json`;
+    const argsFile = `./deployments/${networkParam}.args.json`;
 
-    console.log("Arguments file in ./deployment/arguments.js");
+    console.log("Network file", networkFile);
+    await writeFile(networkFile, JSON.stringify(config, null, 2));
+
+    console.log("Arguments file", argsFile);
     await writeFile(
-      "./deployment/arguments.js",
+      argsFile,
       `module.exports = ${JSON.stringify([solutions, quests])}`
     );
 
-    // It is recommended to wait for 5 confirmations before issuing the verification request
-    console.log("Verfication in progress...");
-    await thcContract.deployTransaction.wait(3);
-    await hre.run("verify", {
-      address: thcContract.address,
-      constructorArgs: "./deployment/arguments.js",
-      contract: "contracts/TreasureHuntCreator.sol:TreasureHuntCreator",
-    });
+    if (networkParam !== "localhost") {
+      // It is recommended to wait for 5 confirmations before issuing the verification request
+      console.log("Verfication in progress...");
+      await thcContract.deployTransaction.wait(3);
+      await hre.run("verify", {
+        address: thcContract.address,
+        constructorArgs: argsFile,
+        contract: "contracts/TreasureHuntCreator.sol:TreasureHuntCreator",
+      });
+    }
   });

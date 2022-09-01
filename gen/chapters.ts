@@ -1,61 +1,51 @@
-const { promisify } = require("util");
-const fs = require("fs");
-const path = require("path");
-const ethers = require("ethers");
-const CryptoJS = require("crypto-js");
-const ipfsClient = require("ipfs-http-client");
-
-const readFile = promisify(fs.readFile);
-const writeFile = promisify(fs.writeFile);
-const mkdir = promisify(fs.mkdir);
+import { readFile, writeFile, readdir, mkdir } from "fs/promises";
+import path from "path";
+import { ethers } from "ethers";
+import { toUtf8Bytes, keccak256 } from "ethers/lib/utils";
+import CryptoJS from "crypto-js";
+import { create as ipfsCreate } from "ipfs-http-client";
 
 const ALGORITHM = "aes-128-gcm";
 const DIR_IN = process.argv[2];
 const DIR_OUT = process.argv[3];
 const IPFS_PROTOCOL = process.env["IPFS_PROTOCOL"];
 const IPFS_HOST = process.env["IPFS_HOST"];
-const IPFS_PORT = process.env["IPFS_PORT"];
+const IPFS_PORT = parseInt(process.env["IPFS_PORT"] || "5001", 10);
 const IPFS_LOCATION = process.env["IPFS_LOCATION"];
 
-function lpad(s, length, fill = "0") {
-  s = s.toString();
-  while (s.length < length) s = fill + s;
-  return s;
-}
-
-async function readFileAndTrim(f) {
+async function readFileAndTrim(f: string) {
   let solution = "";
   try {
-    solution = (await readFile(f)).toString().trim();
+    solution = (await readFile(f, "utf8")).trim();
     solution = solution.toLowerCase();
-  } catch (e) {
+  } catch (e: any) {
     if (e.code !== "ENOENT") {
-      raise(e);
+      throw e;
     }
   }
-  return ethers.utils.toUtf8Bytes(solution);
+  return solution;
 }
 
-async function chapter(dirIn, dirOut, prevSolution) {
+async function chapter(dirIn: string, dirOut: string, prevSolution: string) {
   const questFileIn = path.join(dirIn, "quest.md");
   const solutionFileIn = path.join(dirIn, "solution");
   const addressFileOut = path.join(dirOut, "solution.address");
   const questFileOut = path.join(dirOut, "quest.aes.md");
   const questIn = await readFile(questFileIn);
-  let questOut;
+  let questOut: string;
 
   await mkdir(dirOut, { recursive: true });
 
   const solutionBuffer = await readFileAndTrim(solutionFileIn);
-  const solutionHash = ethers.utils.keccak256(solutionBuffer);
+  const solutionHash = keccak256(toUtf8Bytes(solutionBuffer));
   const address = new ethers.Wallet(solutionHash).address;
   await writeFile(addressFileOut, address);
 
   if (prevSolution.length) {
     questOut = CryptoJS.AES.encrypt(
       questIn.toString(),
-      ethers.utils.keccak256(prevSolution).toString()
-    );
+      keccak256(toUtf8Bytes(prevSolution)).toString()
+    ).toString();
   } else {
     questOut = questIn.toString();
   }
@@ -63,26 +53,25 @@ async function chapter(dirIn, dirOut, prevSolution) {
   return { fileOut: questFileOut, address };
 }
 
-async function upload(contentBuffer) {
-  const ipfs = ipfsClient({
+async function upload(contentBuffer: Buffer) {
+  const ipfs = ipfsCreate({
     host: IPFS_HOST,
     port: IPFS_PORT,
     protocol: IPFS_PROTOCOL,
   });
-  const result = await ipfs.add(contentBuffer);
-  const hash = result[0].hash;
-  await ipfs.pin.add(hash);
-  return hash;
+  const { cid } = await ipfs.add(contentBuffer);
+  await ipfs.pin.add(cid);
+  return cid.toV0().toString();
 }
 
-async function processChapter(dirIn, dirOut, solution) {
+async function processChapter(dirIn: string, dirOut: string, solution: string) {
   const { fileOut, address } = await chapter(dirIn, dirOut, solution);
   const questHash = await upload(await readFile(fileOut));
   return { questHash, solutionAddress: address };
 }
 
-async function main(dirIn, dirOut) {
-  const content = fs.readdirSync(dirIn, { withFileTypes: true });
+async function main(dirIn: string, dirOut: string) {
+  const content = await readdir(dirIn, { withFileTypes: true });
   const v = content.filter((x) => x.isDirectory());
   const padding = v[0].name.length;
   const result = [];
@@ -91,7 +80,11 @@ async function main(dirIn, dirOut) {
     const name = v[i].name;
     const number = parseInt(name, 10);
     let solution = await readFileAndTrim(
-      path.join(dirIn, lpad(number - 1, padding), "solution")
+      path.join(
+        dirIn,
+        (number - 1).toString().padStart(padding, "0"),
+        "solution"
+      )
     );
     result.push(
       await processChapter(
@@ -104,8 +97,6 @@ async function main(dirIn, dirOut) {
   return result;
 }
 
-try {
-  main(DIR_IN, DIR_OUT).then((r) => console.log(JSON.stringify(r, null, 2)));
-} catch (e) {
-  console.log(e);
-}
+main(DIR_IN, DIR_OUT)
+  .then((r) => console.log(JSON.stringify(r, null, 2)))
+  .catch((e) => console.log(e));

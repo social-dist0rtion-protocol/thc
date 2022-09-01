@@ -1,10 +1,10 @@
 INPUT_DIR ?= try/chapters
 OUTPUT_DIR ?= try/build
-ETH_MIGRATIONS_DIR ?= eth
-ETH_NETWORK ?= development
+ETH_DIR ?= eth
+ETH_NETWORK ?= localhost
 ETH_ENDPOINT ?= http://localhost:8545
 FUND_ENPOINT ?= http://localhost:3000
-CHAPTERS_SCRIPT ?= gen/chapters.js
+CHAPTERS_SCRIPT ?= gen/chapters.ts
 CHAPTERS_FILE ?= gen/chapters.json
 IPFS_HOST ?= localhost
 IPFS_PORT ?= 5001
@@ -22,15 +22,15 @@ frontend:
 
 backend: chapters
 	echo "Deploying contracts to testnet."
-	@cd $(ETH_MIGRATIONS_DIR); truffle migrate --network $(ETH_NETWORK) --reset --chapters=../$(CHAPTERS_FILE)
+	@cd $(ETH_DIR); npx hardhat deploy --network $(ETH_NETWORK) --chapters ../$(CHAPTERS_FILE)
 	echo "Backend deployed to testnet."
 
 chapters:
 	echo "Generating chapters."
-	IPFS_LOCATION=${IPFS_LOCATION} IPFS_PROTOCOL=${IPFS_PROTOCOL} IPFS_HOST=${IPFS_HOST} IPFS_PORT=${IPFS_PORT} node $(CHAPTERS_SCRIPT) $(INPUT_DIR) $(OUTPUT_DIR) > $(CHAPTERS_FILE)
+	IPFS_LOCATION=${IPFS_LOCATION} IPFS_PROTOCOL=${IPFS_PROTOCOL} IPFS_HOST=${IPFS_HOST} IPFS_PORT=${IPFS_PORT} pnpx ts-node $(CHAPTERS_SCRIPT) $(INPUT_DIR) $(OUTPUT_DIR) > $(CHAPTERS_FILE)
 
 install-deps:
-	cd app && npm install
-	cd eth && npm install
-	cd gen && npm install
-	cd srv && npm install
+	cd app && pnpm install
+	cd eth && pnpm install
+	cd gen && pnpm install
+	cd srv && pnpm install

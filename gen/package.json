@@ -3,12 +3,14 @@
   "version": "1.0.0",
   "main": "adresser.js",
   "dependencies": {
+    "@types/crypto-js": "^4.1.1",
     "base-58": "0.0.1",
-    "crypto-js": "^3.1.9-1",
-    "ethers": "^4.0.39",
-    "ipfs-http-client": "^39.0.2"
+    "crypto-js": "^4.1.1",
+    "ethers": "^5.7.0",
+    "ipfs-http-client": "56.0.3",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.2"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
