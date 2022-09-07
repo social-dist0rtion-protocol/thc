@@ -1,10 +1,11 @@
-import { Wallet } from "ethers";
+import { BigNumber, Wallet } from "ethers";
 import {
   arrayify,
   keccak256,
   splitSignature,
   toUtf8Bytes,
 } from "ethers/lib/utils";
+import type { TreasureHuntCreator } from "../../eth/typechain";
 
 export async function signatureFromSolution(address: string, solution: string) {
   solution = solution.toLowerCase();
@@ -18,4 +19,33 @@ export async function signatureFromSolution(address: string, solution: string) {
   // Sign the raw bytes, not the hex string
   const signature = await solutionWallet.signMessage(arrayify(address));
   return splitSignature(signature);
+}
+
+export async function parseLeaderboard(thc: TreasureHuntCreator) {
+  function parse(value: BigNumber) {
+    const address = value.div(BigNumber.from(2).pow(160)).toHexString();
+    const chapter = value.mask(96).toNumber();
+
+    return { address: "0x" + address, chapter };
+  }
+  async function getLeaderboard() {
+    const ZERO = BigNumber.from(0);
+    const leaderboard = [];
+    let page = 0;
+    while (true) {
+      const items = await thc.getLeaderboard(page);
+      for (let entry of items) {
+        if (entry.eq(ZERO)) {
+          return leaderboard;
+        } else {
+          leaderboard.push(parse(entry));
+        }
+      }
+      page++;
+    }
+  }
+
+  const leaderboard = await getLeaderboard();
+  leaderboard.sort((a, b) => b.chapter - a.chapter);
+  return leaderboard;
 }

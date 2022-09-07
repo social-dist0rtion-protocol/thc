@@ -5,8 +5,9 @@ import { signer } from "./burnerWallet";
 import { contractsAddresses, ipfsGateway } from "./config";
 import { writableLocalStorage } from "./x";
 import CryptoJS from "crypto-js";
-import { retry } from "./x/retry";
+import { retry, retryWrap } from "./x/retry";
 import { marked } from "marked";
+import { parseLeaderboard } from "../lib";
 
 export const lastTransactionMined = writableLocalStorage(
   "lastTransactionMined",
@@ -84,3 +85,18 @@ export const currentQuest: Readable<string | null> = derived(
 export const currentQuestHtml = derived(currentQuest, ($currentQuest) =>
   $currentQuest ? marked($currentQuest) : null
 );
+
+export const leaderboard: Readable<Awaited<
+  ReturnType<typeof parseLeaderboard>
+> | null> = derived(thc, ($thc, set) => {
+  if ($thc) {
+    const update = retryWrap(async () => {
+      set(await parseLeaderboard($thc));
+    });
+    const timerId = window.setInterval(update, 10000);
+    update();
+    return () => window.clearInterval(timerId);
+  } else {
+    set(null);
+  }
+});

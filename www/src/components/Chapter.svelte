@@ -40,8 +40,6 @@
   }
 </script>
 
-{state}
-
 {#if currentChapter === 0}
   <div class="notification warning">
     This game stores the session in your browser (no cookie, no login, no
@@ -55,17 +53,22 @@
     {@html currentQuestHtml}
   </section>
 
-  {#if currentChapter !== totalChapters - 1}
-    <form on:submit={submit}>
-      <input placeholder="solution to the puzzle" bind:value={solution} />
-      <button type="submit">Submit</button>
-    </form>
-  {/if}
-
   {#if lowBalance}
     <div class="notification warning">
-      Your wallet is low in balance, please refill <code>{address}</code> it with
-      some GörliETH.
+      Your wallet is low in balance, refill <code>{address}</code> with some GörliETH.
     </div>
+  {/if}
+
+  {#if currentChapter !== totalChapters - 1}
+    <form on:submit={submit}>
+      <input
+        disabled={lowBalance}
+        placeholder="solution to the puzzle"
+        bind:value={solution}
+      />
+      <button disabled={lowBalance || solution.length === 0} type="submit"
+        >Submit</button
+      >
+    </form>
   {/if}
 </article>

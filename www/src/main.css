@@ -41,3 +41,13 @@ main {
   max-width: var(--max-width);
   margin: 0 auto;
 }
+
+/*
+ * Current chapter
+ */
+
+ input, button {
+  padding: 1rem;
+  width: 100%;
+  margin-bottom: 0.5rem;
+ }
