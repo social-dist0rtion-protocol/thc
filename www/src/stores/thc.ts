@@ -1,5 +1,5 @@
 import { arrayify, base58, keccak256, toUtf8Bytes } from "ethers/lib/utils";
-import { derived, type Readable } from "svelte/store";
+import { derived, type Readable, type Writable } from "svelte/store";
 import { TreasureHuntCreator__factory } from "../../../eth/typechain";
 import { signer } from "./burnerWallet";
 import { contractsAddresses, ipfsGateway } from "./config";
@@ -12,7 +12,10 @@ export const lastTransactionMined = writableLocalStorage(
   "lastTransactionMined",
   null
 );
-export const currentSolution = writableLocalStorage("current", null);
+export const currentSolution: Writable<null | string> = writableLocalStorage(
+  "currentSolution",
+  null
+);
 
 export const thc = derived(
   signer,
