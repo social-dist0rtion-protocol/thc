@@ -23,10 +23,10 @@ export async function signatureFromSolution(address: string, solution: string) {
 
 export async function parseLeaderboard(thc: TreasureHuntCreator) {
   function parse(value: BigNumber) {
-    const address = value.div(BigNumber.from(2).pow(160)).toHexString();
+    const address = value.div(BigNumber.from(2).pow(96)).toHexString();
     const chapter = value.mask(96).toNumber();
 
-    return { address: "0x" + address, chapter };
+    return { address: address, chapter };
   }
   async function getLeaderboard() {
     const ZERO = BigNumber.from(0);

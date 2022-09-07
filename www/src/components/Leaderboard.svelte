@@ -14,7 +14,7 @@
     {#each leaderboard as { address: playerAddress, chapter }}
       <tr>
         <td>
-          {address}
+          {playerAddress}
           {#if playerAddress.toLowerCase() === address.toLowerCase()}
             <span class="label hope">that's you</span>
           {/if}

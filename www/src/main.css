@@ -1,4 +1,4 @@
-:root{
+:root {
   --root-size: 16px;
 
   --max-width: 50rem;
@@ -12,6 +12,23 @@ html {
 *:before,
 *:after {
   box-sizing: inherit;
+}
+
+/*
+ * Common elements
+ */
+
+label {
+  font-weight: bold;
+}
+
+textarea,
+input,
+button {
+  padding: 1rem;
+  width: 100%;
+  margin-bottom: 0.5rem;
+  display: block;
 }
 
 /*
@@ -46,8 +63,9 @@ main {
  * Current chapter
  */
 
- input, button {
-  padding: 1rem;
+/*
+ * Leaderboard
+ */
+.leaderboard {
   width: 100%;
-  margin-bottom: 0.5rem;
- }
+}
