@@ -17,8 +17,8 @@
   </div>
 {/if}
 
-<article>
-  <section>
+<article class="thc--chapter">
+  <section class="thc--chapter-text">
     {@html currentQuestHtml}
   </section>
 

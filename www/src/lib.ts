@@ -7,6 +7,10 @@ import {
 } from "ethers/lib/utils";
 import type { TreasureHuntCreator } from "../../eth/typechain";
 
+export function shortAddress(a: string) {
+  return a.substring(0, 6) + "…" + a.substring(16, 20);
+}
+
 export async function signatureFromSolution(address: string, solution: string) {
   solution = solution.toLowerCase();
 
