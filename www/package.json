@@ -21,6 +21,7 @@
     "@tsconfig/svelte": "^3.0.0",
     "@types/crypto-js": "^4.1.1",
     "@types/jest": "^29.0.0",
+    "@types/qrcode": "^1.5.0",
     "@types/testing-library__jest-dom": "^5.14.5",
     "@walletconnect/web3-provider": "^1.8.0",
     "crypto-js": "^4.1.1",
@@ -42,6 +43,7 @@
   "dependencies": {
     "@types/marked": "^4.0.6",
     "marked": "^4.1.0",
+    "qrcode": "^1.5.1",
     "svelte-spa-router": "^3.3.0"
   }
 }

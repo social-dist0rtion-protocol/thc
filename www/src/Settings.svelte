@@ -1,13 +1,22 @@
 <script lang="ts">
   import { formatEther } from "ethers/lib/utils";
+  import QRCode from "qrcode";
+  import { onMount } from "svelte";
 
   import { signer, balance, mnemonic } from "./stores/burnerWallet";
-  import { thc, currentSolution, currentChapter } from "./stores/thc";
+  import { thc, currentSolution } from "./stores/thc";
 
   let reveal = false;
+  let canvas: HTMLCanvasElement;
 
   let restoreMnemonic: string;
   let restoreCurrentSolution: null | string = null;
+
+  onMount(() => {
+    QRCode.toCanvas(canvas, `ethereum:${$signer!.address}`, {
+      width: 400,
+    });
+  });
 
   async function onRestoreGame() {
     let sure = prompt(
@@ -37,6 +46,8 @@
 <h2>Wallet address</h2>
 
 <p>{$signer ? $signer.address : "loading…"}</p>
+
+<canvas bind:this={canvas} />
 
 <h2>Wallet balance</h2>
 

@@ -11,7 +11,8 @@
   import { signatureFromSolution } from "./lib";
   import { fade } from "svelte/transition";
 
-  let state: "IDLE" | "CHECK" | "MINING" | "SUCCESS" | "ERROR" = "IDLE";
+  let state: "IDLE" | "CHECK" | "MINING" | "SUCCESS" | "WRONG" | "ERROR" =
+    "IDLE";
   let error: string;
 
   // This function is called by the child component
@@ -30,12 +31,18 @@
       console.log(receipt);
       state = "SUCCESS";
     } catch (e: any) {
-      console.log("error submitting solution", e);
-      state = "ERROR";
-      error = e.toString();
-      return;
+      const msg = e.toString() as string;
+      if (msg.toLowerCase().includes("wrong solution")) {
+        state = "WRONG";
+      } else {
+        console.log("error submitting solution", e);
+        state = "ERROR";
+        error = e.toString();
+      }
+      return false;
     }
     $currentSolution = solution;
+    return true;
   }
 </script>
 
@@ -50,11 +57,14 @@
   />
 
   {#if state !== "IDLE"}
-    <div transition:fade class="fullscreen-notification">
+    <div transition:fade class="thc--chapter-state">
       <div>
         {#if state === "CHECK"}
           <h2>Checking</h2>
           <p>Checking</p>
+        {:else if state === "WRONG"}
+          <h2>Wrong answer</h2>
+          <button on:click={() => (state = "IDLE")}>Try again</button>
         {:else if state === "ERROR"}
           <p>
             Something bad happened, get in contact with us, we can help you.
@@ -62,27 +72,15 @@
           <pre>{error}</pre>
         {:else}
           <h2>Correct answer</h2>
-          <p>Please wait some seconds because blockchains are fast.</p>
-          {#if state === "SUCCESS"}
-            <p>Are you ready to continue with the next chapter?</p>
-            <button on:click={() => (state = "IDLE")}>Of course</button>
+          {#if state === "MINING"}
+            <p>Please wait few seconds because blockchains are fast.</p>
+          {:else if state === "SUCCESS"}
+            <p>Your score has been updated.</p>
+            <button on:click={() => (state = "IDLE")}>Go to next chapter</button
+            >
           {/if}
         {/if}
       </div>
     </div>
   {/if}
 {/if}
-
-<style>
-  .fullscreen-notification {
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    background-color: rgba(255, 255, 255, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-</style>

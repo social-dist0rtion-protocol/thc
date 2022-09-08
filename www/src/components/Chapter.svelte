@@ -4,16 +4,24 @@
   export let totalChapters: number;
   export let address: string;
   export let lowBalance: boolean;
-  export let onSubmitSolution: (v: string) => void;
+  export let onSubmitSolution: (v: string) => Promise<boolean>;
 
   let solution = "";
+
+  async function onSubmit() {
+    if (await onSubmitSolution(solution)) {
+      solution = "";
+    }
+  }
 </script>
 
 {#if currentChapter === 0}
-  <div class="notification warning">
-    This game stores the session in your browser (no cookie, no login, no
-    recover password). Be aware that if you use incognito you might lose your
-    progress.
+  <div class="thc--notification warning">
+    <p>
+      This game stores the session in your browser (no cookie, no login, no
+      recover password). Be aware that if you use incognito you might lose your
+      progress.
+    </p>
   </div>
 {/if}
 
@@ -22,14 +30,8 @@
     {@html currentQuestHtml}
   </section>
 
-  {#if lowBalance}
-    <div class="notification warning">
-      Your wallet is low in balance, refill <code>{address}</code> with some GörliETH.
-    </div>
-  {/if}
-
   {#if currentChapter !== totalChapters - 1}
-    <form on:submit={() => onSubmitSolution(solution)}>
+    <form on:submit={onSubmit}>
       <input
         disabled={lowBalance}
         placeholder="solution to the puzzle"
@@ -39,5 +41,13 @@
         >Submit</button
       >
     </form>
+  {/if}
+
+  {#if lowBalance}
+    <div class="thc--notification warning">
+      <p>
+        Your wallet is low in balance, refill <code>{address}</code> with some GörliETH.
+      </p>
+    </div>
   {/if}
 </article>

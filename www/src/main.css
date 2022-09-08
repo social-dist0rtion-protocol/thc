@@ -75,7 +75,6 @@ nav ul {
 
 main {
   width: 100%;
-  max-width: var(--max-width);
   margin: 1rem auto;
   padding: 1rem;
 }
@@ -84,9 +83,33 @@ main {
  * Current chapter
  */
 
+.thc--chapter-state {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.666);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.thc--chapter-state div {
+  width: 100%;
+  max-width: calc(var(--max-width) / 2);
+}
 /*
  * Leaderboard
  */
 .leaderboard {
   width: 100%;
+}
+
+/*
+ * Notifications
+ */
+
+.thc--notification {
+  font-style: italic;
 }
