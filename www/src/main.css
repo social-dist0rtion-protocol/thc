@@ -1,0 +1,115 @@
+:root {
+  --root-size: 22px;
+  --max-width: 50rem;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+/*
+ * Common elements
+ */
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  min-height: 100vh;
+  font-size: var(--root-size);
+}
+
+label {
+  font-weight: bold;
+}
+
+textarea,
+input,
+button {
+  padding: 1rem;
+  width: 100%;
+  margin-bottom: 0.5rem;
+  display: block;
+  font-size: var(--root-size);
+}
+
+a,
+a:visited {
+  color: inherit;
+}
+
+p {
+  font-size: 1rem;
+  line-height: 140%;
+}
+
+/*
+ * Main navigation
+ */
+
+nav {
+  width: 100%;
+  max-width: var(--max-width);
+  padding: 1rem;
+  margin: 0 auto;
+  font-size: 1.5rem;
+}
+
+nav ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+}
+
+/*
+ * Main container
+ */
+
+main {
+  width: 100%;
+  margin: 1rem auto;
+  padding: 1rem;
+}
+
+/*
+ * Current chapter
+ */
+
+.thc--chapter-state {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.666);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.thc--chapter-state div {
+  width: 100%;
+  max-width: calc(var(--max-width) / 2);
+}
+/*
+ * Leaderboard
+ */
+.leaderboard {
+  width: 100%;
+}
+
+/*
+ * Notifications
+ */
+
+.thc--notification {
+  font-style: italic;
+}
