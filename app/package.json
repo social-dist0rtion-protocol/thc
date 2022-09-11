@@ -29,7 +29,7 @@
     "ethers": "^4.0.38",
     "ipfs-http-client": "^39.0.2",
     "jsqr": "^1.2.0",
-    "marked": "^0.7.0",
+    "marked": "^4.0.10",
     "rollup-plugin-commonjs": "^10.1.0",
     "svelte-spa-router": "^1.2.1"
   }
