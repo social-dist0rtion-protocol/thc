@@ -44,7 +44,7 @@ a:visited {
   color: inherit;
 }
 
-p {
+p, li {
   font-size: 1rem;
   line-height: 140%;
 }

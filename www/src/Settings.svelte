@@ -14,7 +14,7 @@
 
   onMount(() => {
     QRCode.toCanvas(canvas, `ethereum:${$signer!.address}`, {
-      width: 400,
+      width: 200,
     });
   });
 
