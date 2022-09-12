@@ -45,7 +45,9 @@
 
 <h2>Wallet address</h2>
 
-<p>{$signer ? $signer.address : "loading…"}</p>
+<p class="scroll">
+  {$signer ? $signer.address : "loading…"}
+</p>
 
 <canvas bind:this={canvas} />
 
@@ -55,13 +57,13 @@
   {$balance ? formatEther($balance) + " Ether" : "loading…"}
 </p>
 
-<h2 class="hope">Network</h2>
+<h2>Network</h2>
 
 <p>Görli</p>
 
-<h2 class="hope">Smart Contract</h2>
+<h2>Smart Contract</h2>
 
-<p>
+<p class="scroll">
   {#if $thc}
     <a href="https://goerli.etherscan.io/address/{$thc.address}"
       >{$thc.address}</a
@@ -86,7 +88,6 @@
   </label>
 {/if}
 
-<h1>/!\ Danger zone /!\</h1>
 <h2>Restore game</h2>
 
 <form on:submit={onRestoreGame}>
@@ -106,3 +107,9 @@
 <p>Reset the current session, you'll start from Chapter 0 again</p>
 
 <button on:click={onReset}>Reset game</button>
+
+<style>
+  .scroll {
+    overflow-x: auto;
+  }
+</style>

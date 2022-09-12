@@ -44,6 +44,9 @@ a:visited {
   color: inherit;
 }
 
+textarea,
+input,
+button,
 p, li {
   font-size: 1rem;
   line-height: 140%;

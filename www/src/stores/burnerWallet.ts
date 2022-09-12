@@ -3,7 +3,7 @@ import { parseEther } from "ethers/lib/utils";
 import { derived, readable, type Readable } from "svelte/store";
 import { ethereumEndpoint } from "./config";
 import { writableLocalStorage } from "./x";
-import { retry, retryWrap } from "./x/retry";
+import { retryWrap } from "./x/retry";
 
 export const provider = readable(
   new ethers.providers.JsonRpcProvider(ethereumEndpoint)
@@ -14,14 +14,18 @@ export const mnemonic = writableLocalStorage(
   () => Wallet.createRandom().mnemonic.phrase
 );
 
-export const signer = derived(
+export const signer: Readable<Wallet | null> = derived(
   [provider, mnemonic],
-  ([$provider, $mnemonic]) => {
+  ([$provider, $mnemonic], set) => {
     if ($provider && $mnemonic) {
-      const wallet = ethers.Wallet.fromMnemonic($mnemonic).connect($provider);
-      return wallet;
+      window.setTimeout(() => {
+        console.log("start");
+        const start = Date.now();
+        set(ethers.Wallet.fromMnemonic($mnemonic).connect($provider));
+        console.log(Date.now() - start);
+      }, 1000);
     }
-    return null;
+    set(null);
   }
 );
 

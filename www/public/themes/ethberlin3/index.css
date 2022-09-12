@@ -31,14 +31,6 @@
 }
 
 html {
-  background: url(./images/grain-opacity-compressed.png),
-    linear-gradient(5deg, #3a2f18 -10%, rgba(14, 12, 6, 0) 25%),
-    radial-gradient(
-      farthest-corner at top left,
-      rgba(14, 14, 14) 0%,
-      rgba(125, 125, 125, 0.6) 150%
-    );
-  background-size: cover;
   color: white;
 }
 
@@ -86,6 +78,16 @@ main {
   max-width: 40rem;
 }
 
+#app {
+  background: url(./images/grain-opacity-compressed.png),
+    linear-gradient(5deg, #3a2f18 -10%, rgba(14, 12, 6, 0) 25%),
+    radial-gradient(
+      farthest-corner at top left,
+      rgba(14, 14, 14) 0%,
+      rgba(125, 125, 125, 0.6) 150%
+    );
+  background-size: cover;
+}
 
 .thc--chapter {
   padding: 2rem;
