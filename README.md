@@ -1,4 +1,15 @@
-# Treasure Hunt Creator (THC)
+# Treasure Hunt C*(THC)
+
+THC stands for:
+
+- Treasure Hunt Creator, a framework to create Treasure Hunt Challenges (THCs).
+- Treasure Hunt Challenge, a Treasure Hunt Campaign made with Treasure Hunt Creator.
+- Treasure Hunt Campaign, a Treasure Hunt Challenge made with Treasure Hunt Creator.
+- Treasure Hunt Controller, the smart contract that manages the game.
+- Treasure Hunt Contract, see Treasure Hunt Controller.
+- Treasure Hunt Cadet, someone who just started playing a THC.
+- Treasure Hunt Champion, someone who finished a THC.
+- Treasure Hunt Chad, see Treasure Hunt Champion.
 
 This is the monorepo of THC, a framework to create decentralized treasure hunts. [Planetscape, a dystopian escape game for 36C3](https://www.dist0rtion.com/2020/01/30/Planetscape-a-dystopian-escape-game-for-36C3/) gives a good overview of what it can be used for.
 
