@@ -45,9 +45,13 @@
 
   {#if lowBalance}
     <div class="thc--notification warning">
-      <p>
-        Your wallet is low in balance, refill <code>{address}</code> with some GörliETH.
-      </p>
+      <p>Your wallet is low in balance, refill it with some GörliETH.</p>
     </div>
   {/if}
 </article>
+
+<style>
+  .scroll {
+    overflow-x: auto;
+  }
+</style>

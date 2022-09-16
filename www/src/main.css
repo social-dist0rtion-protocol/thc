@@ -119,4 +119,15 @@ main {
 
 .thc--notification {
   font-style: italic;
+  font-family: monospace;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.thc--notification p {
+  font-size: 0.8rem;
+}
+
+.thc--notification.warning {
+  background-color: rgba(255, 131, 0, 0.666);
 }

@@ -86,7 +86,6 @@ main {
       rgba(14, 14, 14) 0%,
       rgba(125, 125, 125, 0.6) 150%
     );
-  background-size: cover;
 }
 
 .thc--chapter {
