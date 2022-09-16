@@ -31,7 +31,7 @@
   </section>
 
   {#if currentChapter !== totalChapters - 1}
-    <form on:submit={onSubmit}>
+    <form on:submit|preventDefault={onSubmit}>
       <input
         disabled={lowBalance}
         placeholder="solution to the puzzle"

@@ -81,11 +81,17 @@
         {:else}
           <h2>Correct answer</h2>
           {#if state === "MINING"}
-            <p>Please wait few seconds because blockchains are fast.</p>
+            <p>Please wait some seconds because blockchains are fast.</p>
+            <p>
+              We didn't have time to do proper error handling (lol), and we hope
+              you won't get any network error. Keep this window open, wait,
+              cross your fingers, don't enter any Faraday cage, don't drop your
+              mobile phone in the toilet or in any other liquid, make sure you
+              have enough battery left, don't lock your mobile phone.
+            </p>
           {:else if state === "SUCCESS"}
             <p>Your score has been updated.</p>
-            <button on:click={() => (state = "IDLE")}>Go to next chapter</button
-            >
+            <button on:click={onCloseModal}>Go to next chapter</button>
           {/if}
         {/if}
       </div>
