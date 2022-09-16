@@ -25,6 +25,10 @@ body {
   font-size: var(--root-size);
 }
 
+#app {
+  min-height: 100vh;
+}
+
 label {
   font-weight: bold;
 }

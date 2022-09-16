@@ -90,9 +90,11 @@ main {
     radial-gradient(circle, rgba(48, 53, 75, 1) 20%, rgba(0, 0, 0, 1) 100%);
   background-size: cover;
   background-position: center;
+  padding-bottom: 100px;
 }
 
 footer {
+  position: fixed;
   content: " ";
   background-image: url(https://devcon.org/_next/static/media/clouds.e99bf504.png);
   background-size: auto 100px;
