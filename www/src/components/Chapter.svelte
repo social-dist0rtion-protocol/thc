@@ -51,7 +51,7 @@
 </article>
 
 <style>
-  .scroll {
-    overflow-x: auto;
+  :global(img) {
+    max-width: 100%;
   }
 </style>
