@@ -13,6 +13,8 @@ task("deploy", "Push THC to network")
   .addParam("chapters", "The file with all chapters")
   .setAction(async ({ chapters }: { chapters: string }, hre) => {
     console.log("Deploy contract Treasure Hunt Creator");
+    const [deployer] = await hre.ethers.getSigners();
+    console.log("Address:", deployer.address);
     const thcFactory = (await hre.ethers.getContractFactory(
       "TreasureHuntCreator"
     )) as TreasureHuntCreator__factory;
@@ -53,7 +55,8 @@ task("deploy", "Push THC to network")
     console.log("Arguments file", argsFile);
     await writeFile(
       argsFile,
-      `module.exports = ${JSON.stringify([solutions, quests])}`
+      JSON.stringify([solutions, quests])
+      //`module.exports = ${JSON.stringify([solutions, quests])}`
     );
 
     if (networkParam !== "localhost") {
