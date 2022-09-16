@@ -18,14 +18,28 @@
     });
   });
 
+  async function onRestoreSeedphrase() {
+    let sure = prompt(
+      'WARNING: this action will reset your current game, type "yes" to confirm.'
+    );
+
+    if (sure === "yes") {
+      localStorage.clear();
+      $mnemonic = restoreMnemonic;
+      window.location.reload();
+    }
+  }
+
   async function onRestoreGame() {
     let sure = prompt(
       'WARNING: this action will reset your current game, type "yes" to confirm.'
     );
 
     if (sure === "yes") {
+      localStorage.clear();
       $mnemonic = restoreMnemonic;
       $currentSolution = restoreCurrentSolution;
+      window.location.reload();
     }
   }
 
@@ -87,6 +101,16 @@
     <input readonly value={$currentSolution} />
   </label>
 {/if}
+
+<h2>Change Seedphrase</h2>
+
+<form on:submit={onRestoreGame}>
+  <label>
+    Mnemonic
+    <textarea bind:value={restoreMnemonic} />
+  </label>
+  <button type="submit">Change</button>
+</form>
 
 <h2>Restore game</h2>
 
