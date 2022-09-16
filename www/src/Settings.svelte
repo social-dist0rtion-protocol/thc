@@ -9,6 +9,7 @@
   let reveal = false;
   let canvas: HTMLCanvasElement;
 
+  let changeMnemonic: string;
   let restoreMnemonic: string;
   let restoreCurrentSolution: null | string = null;
 
@@ -18,14 +19,14 @@
     });
   });
 
-  async function onRestoreSeedphrase() {
+  async function onChangeMnemonic() {
     let sure = prompt(
       'WARNING: this action will reset your current game, type "yes" to confirm.'
     );
 
     if (sure === "yes") {
       localStorage.clear();
-      $mnemonic = restoreMnemonic;
+      $mnemonic = changeMnemonic;
       window.location.reload();
     }
   }
@@ -87,6 +88,16 @@
   {/if}
 </p>
 
+<h2>Change Seedphrase</h2>
+
+<form on:submit|preventDefault={onChangeMnemonic}>
+  <label>
+    Mnemonic
+    <textarea bind:value={changeMnemonic} />
+  </label>
+  <button type="submit">Change</button>
+</form>
+
 <h2>Mnemonic and game secret</h2>
 
 {#if !reveal}
@@ -102,19 +113,9 @@
   </label>
 {/if}
 
-<h2>Change Seedphrase</h2>
-
-<form on:submit={onRestoreGame}>
-  <label>
-    Mnemonic
-    <textarea bind:value={restoreMnemonic} />
-  </label>
-  <button type="submit">Change</button>
-</form>
-
 <h2>Restore game</h2>
 
-<form on:submit={onRestoreGame}>
+<form on:submit|preventDefault={onRestoreGame}>
   <label>
     Mnemonic
     <textarea bind:value={restoreMnemonic} />
@@ -135,5 +136,9 @@
 <style>
   .scroll {
     overflow-x: auto;
+  }
+
+  h2 {
+    margin-top: 4rem;
   }
 </style>

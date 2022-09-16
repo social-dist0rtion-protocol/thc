@@ -21,7 +21,12 @@ export const signer: Readable<Wallet | null> = derived(
       window.setTimeout(() => {
         console.log("start");
         const start = Date.now();
-        set(ethers.Wallet.fromMnemonic($mnemonic).connect($provider));
+        try {
+          set(ethers.Wallet.fromMnemonic($mnemonic).connect($provider));
+        } catch (e: any) {
+          mnemonic.set(null);
+          window.location.reload();
+        }
         console.log(Date.now() - start);
       }, 1000);
     }
