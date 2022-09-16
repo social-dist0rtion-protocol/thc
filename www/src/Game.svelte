@@ -3,6 +3,7 @@
     currentChapter,
     currentQuestHtml,
     currentSolution,
+    lastTransactionMined,
     thc,
     totalChapters,
   } from "./stores/thc";
@@ -19,6 +20,7 @@
   async function onSubmitSolution(solution: string) {
     const address = $signer!.address;
     const contract = $thc!;
+    solution = solution.toLowerCase();
 
     state = "CHECK";
     const { r, s, v } = await signatureFromSolution(address, solution);
@@ -30,6 +32,9 @@
       console.log("Transaction Mined: " + receipt);
       console.log(receipt);
       state = "SUCCESS";
+      $lastTransactionMined = tx.hash;
+      $currentSolution = solution;
+      return true;
     } catch (e: any) {
       const msg = e.toString() as string;
       if (msg.toLowerCase().includes("wrong solution")) {
@@ -41,8 +46,11 @@
       }
       return false;
     }
-    $currentSolution = solution;
-    return true;
+  }
+
+  function onCloseModal() {
+    state = "IDLE";
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 </script>
 

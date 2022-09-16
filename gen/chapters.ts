@@ -12,6 +12,7 @@ const IPFS_PROTOCOL = process.env["IPFS_PROTOCOL"];
 const IPFS_HOST = process.env["IPFS_HOST"];
 const IPFS_PORT = parseInt(process.env["IPFS_PORT"] || "5001", 10);
 const IPFS_LOCATION = process.env["IPFS_LOCATION"];
+const IPFS_TOKEN = process.env["IPFS_TOKEN"];
 
 async function readFileAndTrim(f: string) {
   let solution = "";
@@ -50,7 +51,7 @@ async function chapter(dirIn: string, dirOut: string, prevSolution: string) {
     questOut = questIn.toString();
   }
   await writeFile(questFileOut, questOut);
-  return { fileOut: questFileOut, address };
+  return { fileOut: questFileOut, address, quest: questOut };
 }
 
 async function upload(contentBuffer: Buffer) {
@@ -58,6 +59,9 @@ async function upload(contentBuffer: Buffer) {
     host: IPFS_HOST,
     port: IPFS_PORT,
     protocol: IPFS_PROTOCOL,
+    headers: {
+      authorization: "Basic " + btoa(IPFS_TOKEN!),
+    },
   });
   const { cid } = await ipfs.add(contentBuffer);
   await ipfs.pin.add(cid);
@@ -65,9 +69,9 @@ async function upload(contentBuffer: Buffer) {
 }
 
 async function processChapter(dirIn: string, dirOut: string, solution: string) {
-  const { fileOut, address } = await chapter(dirIn, dirOut, solution);
+  const { fileOut, address, quest } = await chapter(dirIn, dirOut, solution);
   const questHash = await upload(await readFile(fileOut));
-  return { questHash, solutionAddress: address };
+  return { solutionAddress: address, quest, questHash };
 }
 
 async function main(dirIn: string, dirOut: string) {

@@ -1,18 +1,16 @@
 import { arrayify, base58, keccak256, toUtf8Bytes } from "ethers/lib/utils";
-import { derived, type Readable, type Writable } from "svelte/store";
+import { derived, get, type Readable, type Writable } from "svelte/store";
 import { TreasureHuntCreator__factory } from "../../../eth/typechain";
 import { signer } from "./burnerWallet";
-import { contractsAddresses, ipfsGateway } from "./config";
+import { chapters, contractsAddresses, ipfsGateway } from "./config";
 import { writableLocalStorage } from "./x";
 import CryptoJS from "crypto-js";
 import { retry, retryWrap } from "./x/retry";
 import { marked } from "marked";
 import { parseLeaderboard } from "../lib";
 
-export const lastTransactionMined = writableLocalStorage(
-  "lastTransactionMined",
-  null
-);
+export const lastTransactionMined: Writable<null | string> =
+  writableLocalStorage("lastTransactionMined", null);
 export const currentSolution: Writable<null | string> = writableLocalStorage(
   "currentSolution",
   null
@@ -44,20 +42,25 @@ export const totalChapters: Readable<null | number> = derived(
 
 export const currentChapter: Readable<null | number> = derived(
   [thc, lastTransactionMined],
-  ([$thc], set) => {
+  ([$thc], set: (v: null | number) => void) => {
     if ($thc) {
       retry(async () => {
         set((await $thc.currentChapter()).toNumber());
       });
+    } else {
+      set(null);
     }
-  }
+  },
+  null
 );
 
 export const currentQuest: Readable<string | null> = derived(
-  [thc, currentSolution, lastTransactionMined],
-  ([$thc, $currentSolution], set) => {
-    if ($thc) {
-      retry(async () => {
+  [thc, currentChapter],
+  ([$thc, $currentChapter], set) => {
+    const $currentSolution = get(currentSolution);
+    console.log("Load new quest", $currentSolution, $currentChapter);
+    if ($thc && $currentChapter !== null) {
+      /*
         const hashAddress = await $thc.currentQuest();
         const completeHashAddress = hashAddress.replace("0x", "0x1220");
         const hashBuffer = arrayify(completeHashAddress);
@@ -67,17 +70,19 @@ export const currentQuest: Readable<string | null> = derived(
         const response = await fetch(ipfsUrl);
         console.log("IPFS response:", response);
         const quest = await response.text();
+        */
 
-        if ($currentSolution !== null) {
-          const key = keccak256(toUtf8Bytes($currentSolution));
-          const bytes = CryptoJS.AES.decrypt(quest, key.toString());
-          const plainQuest = bytes.toString(CryptoJS.enc.Utf8);
-          set(plainQuest);
-        } else {
-          // The first quest is not encrypted
-          set(quest);
-        }
-      });
+      const { quest } = chapters[$currentChapter];
+
+      if ($currentSolution !== null) {
+        const key = keccak256(toUtf8Bytes($currentSolution));
+        const bytes = CryptoJS.AES.decrypt(quest, key.toString());
+        const plainQuest = bytes.toString(CryptoJS.enc.Utf8);
+        set(plainQuest);
+      } else {
+        // The first quest is not encrypted
+        set(quest);
+      }
     }
   }
 );

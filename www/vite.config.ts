@@ -32,13 +32,21 @@ export default async ({ mode }) => {
     "VITE_",
     "HTML_",
     "SMART_CONTRACT_",
+    "CHAPTERS",
   ]);
 
   const smartContractPath = env?.SMART_CONTRACT_PATH;
   if (!smartContractPath) {
-    console.error("Cannod find smart contract directory");
+    console.error("Cannot find smart contract directory");
     process.exit(1);
   }
+
+  const chaptersPath = env?.CHAPTERS_PATH;
+  if (!chaptersPath) {
+    console.error("Cannot find chapters path");
+    process.exit(1);
+  }
+  const chapters = readFileSync(chaptersPath, "utf8");
 
   const chainId = env.VITE_ETHEREUM_CHAIN_ID;
   const contractsAddresses = getAddresses(
@@ -52,6 +60,7 @@ export default async ({ mode }) => {
       svelte(),
       replace({
         __VITE_CONTRACTS_ADDRESSES__: JSON.stringify(contractsAddresses),
+        __VITE_CHAPTERS__: chapters,
       }),
       createHtmlPlugin({
         inject: {
