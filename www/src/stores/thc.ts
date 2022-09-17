@@ -1,5 +1,11 @@
 import { arrayify, base58, keccak256, toUtf8Bytes } from "ethers/lib/utils";
-import { derived, get, type Readable, type Writable } from "svelte/store";
+import {
+  derived,
+  get,
+  writable,
+  type Readable,
+  type Writable,
+} from "svelte/store";
 import { TreasureHuntCreator__factory } from "../../../eth/typechain";
 import { signer } from "./burnerWallet";
 import { chapters, contractsAddresses, ipfsGateway } from "./config";
@@ -54,6 +60,8 @@ export const currentChapter: Readable<null | number> = derived(
   null
 );
 
+export const fuckFuckFuckFuckFuck = writable(false);
+
 export const currentQuest: Readable<string | null> = derived(
   [thc, currentChapter],
   ([$thc, $currentChapter], set) => {
@@ -76,14 +84,16 @@ export const currentQuest: Readable<string | null> = derived(
 
       if ($currentSolution !== null) {
         const key = keccak256(toUtf8Bytes($currentSolution));
-        const bytes = CryptoJS.AES.decrypt(quest, key.toString());
-        let plainQuest = bytes.toString(CryptoJS.enc.Utf8);
-        if ($currentChapter === 1) {
-          // LEMAO
-          plainQuest = plainQuest.replace(
-            "https://discord.gg/y4EZZZEr",
-            "https://discord.gg/GMU7j2kqWQ"
+        let plainQuest: string;
+        try {
+          const bytes = CryptoJS.AES.decrypt(quest, key.toString());
+          plainQuest = bytes.toString(CryptoJS.enc.Utf8);
+        } catch (e: any) {
+          set(
+            "Sorry, we had to restart the game, you need to reset your session using the button below"
           );
+          fuckFuckFuckFuckFuck.set(true);
+          return;
         }
         set(plainQuest);
       } else {
