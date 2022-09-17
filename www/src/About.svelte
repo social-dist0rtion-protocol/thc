@@ -17,7 +17,7 @@
     >
   </li>
   <li>
-    On discord, join our server <a href="https://discord.gg/XZ7MHZepyH"
+    On discord, join our server <a href="https://discord.gg/GMU7j2kqWQ"
       >No Time To DAI</a
     >
   </li>

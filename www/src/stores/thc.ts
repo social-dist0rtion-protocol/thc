@@ -77,7 +77,14 @@ export const currentQuest: Readable<string | null> = derived(
       if ($currentSolution !== null) {
         const key = keccak256(toUtf8Bytes($currentSolution));
         const bytes = CryptoJS.AES.decrypt(quest, key.toString());
-        const plainQuest = bytes.toString(CryptoJS.enc.Utf8);
+        let plainQuest = bytes.toString(CryptoJS.enc.Utf8);
+        if ($currentChapter === 1) {
+          // LEMAO
+          plainQuest = plainQuest.replace(
+            "https://discord.gg/y4EZZZEr",
+            "https://discord.gg/GMU7j2kqWQ"
+          );
+        }
         set(plainQuest);
       } else {
         // The first quest is not encrypted
