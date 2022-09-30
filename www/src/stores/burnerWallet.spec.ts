@@ -1,7 +1,10 @@
 import { get } from "svelte/store";
 import { mnemonic, provider, signer } from "./burnerWallet";
 
-beforeEach(() => localStorage.clear());
+beforeEach(() => {
+
+  localStorage.clear()
+});
 
 describe("provider", () => {
   test("is set", () => {

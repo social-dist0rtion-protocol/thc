@@ -18,19 +18,18 @@ export const signer: Readable<Wallet | null> = derived(
   [provider, mnemonic],
   ([$provider, $mnemonic], set) => {
     if ($provider && $mnemonic) {
-      window.setTimeout(() => {
-        console.log("start");
-        const start = Date.now();
-        try {
-          set(ethers.Wallet.fromMnemonic($mnemonic).connect($provider));
-        } catch (e: any) {
-          mnemonic.set(null);
-          window.location.reload();
-        }
-        console.log(Date.now() - start);
-      }, 1000);
+      console.log("start");
+      const start = Date.now();
+      try {
+        set(ethers.Wallet.fromMnemonic($mnemonic).connect($provider));
+      } catch (e: any) {
+        mnemonic.set(null);
+        window.location.reload();
+      }
+      console.log(Date.now() - start);
+    } else {
+      set(null);
     }
-    set(null);
   }
 );
 
