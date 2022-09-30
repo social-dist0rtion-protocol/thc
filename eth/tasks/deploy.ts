@@ -34,6 +34,8 @@ task("deploy", "Push THC to network")
     const receipt = await thcContract.deployed();
     console.log("  Receipt", receipt.deployTransaction.hash);
 
+    const questsRootCidArg = await thcContract.getQuestsRootCID()
+
     const { chainId } = await hre.ethers.provider.getNetwork();
 
     const config = {
@@ -52,8 +54,7 @@ task("deploy", "Push THC to network")
     console.log("Arguments file", argsFile);
     await writeFile(
       argsFile,
-      JSON.stringify([solutions, questsRootCid])
-      //`module.exports = ${JSON.stringify([solutions, quests])}`
+      JSON.stringify([solutions, questsRootCidArg])
     );
 
     if (networkParam !== "localhost") {
