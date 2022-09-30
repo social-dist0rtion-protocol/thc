@@ -5,13 +5,11 @@ import { toUtf8Bytes, keccak256 } from "ethers/lib/utils";
 import CryptoJS from "crypto-js";
 import { create as ipfsCreate, globSource } from "ipfs-http-client";
 
-const ALGORITHM = "aes-128-gcm";
 const DIR_IN = process.argv[2];
 const DIR_OUT = process.argv[3];
 const IPFS_PROTOCOL = process.env["IPFS_PROTOCOL"];
 const IPFS_HOST = process.env["IPFS_HOST"];
 const IPFS_PORT = parseInt(process.env["IPFS_PORT"] || "5001", 10);
-const IPFS_LOCATION = process.env["IPFS_LOCATION"];
 const IPFS_TOKEN = process.env["IPFS_TOKEN"];
 
 async function readFileAndTrim(f: string) {
@@ -106,21 +104,21 @@ async function main(dirIn: string, dirOut: string) {
       path.join(dirOut, name),
       solution
     );
+
     // put encrypted quests in one folder, named after the chapter number
     await rename(questFile, path.join(questsDir, `${i}`));
 
-    // append to "result" solutions, quests and quest hases as "<cid>/<number>"
     result.push({
       solutionAddress,
       quest,
-      questHash: ""
+      questHash: "", // will be added after all quests are uploaded and wrapped
     });
   }
 
   const dirCid = await upload(questsDir);
 
   for (let i = 0; i < v.length; i++) {
-    result[i].questHash = `${dirCid}/${i}`
+    result[i].questHash = `${dirCid}/${i}`;
   }
 
   return result;
