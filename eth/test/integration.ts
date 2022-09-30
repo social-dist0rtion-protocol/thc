@@ -9,9 +9,9 @@ import {
   TreasureHuntCreator__factory,
 } from "../typechain";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { BigNumber } from "ethers";
+import { BigNumber, utils } from "ethers";
 import {
-  getQuestBytes,
+  cidToBytes,
   getSignature,
   getSolutionAddress,
   getSolutionSignature,
@@ -29,7 +29,7 @@ describe("TreasureHuntCreator", () => {
   let accounts: SignerWithAddress[];
   let totalPlayers: number;
   let solutions: string[];
-  let quests: string[];
+  let questsRootCid: Uint8Array;
   let deployer: SignerWithAddress;
 
   beforeEach(async () => {
@@ -44,14 +44,15 @@ describe("TreasureHuntCreator", () => {
     totalPlayers = accounts.length;
 
     solutions = accounts.map((x) => x.address);
-    quests = solutions.map((x) => getQuestBytes(x));
+    questsRootCid = cidToBytes("QmUYWv6RaHHWkk5BMHJH4xKPEKNqAYKomeiTVobAMyxsbz");
+
   });
 
   async function deploy(
     solutions: string[],
-    quests: string[]
+    questsRootCid: Uint8Array
   ): Promise<TreasureHuntCreator> {
-    const thc = await thcFactory.deploy(solutions, quests);
+    const thc = await thcFactory.deploy(solutions, questsRootCid);
     await thc.deployed();
 
     return thc;
@@ -59,7 +60,7 @@ describe("TreasureHuntCreator", () => {
 
   describe("constructor", async () => {
     it("should initialize chapters with solutions and quests", async () => {
-      let instance = await deploy(solutions, quests);
+      let instance = await deploy(solutions, questsRootCid);
       for (var i = 0; i < accounts.length; i++) {
         let solution = await instance._solutions(i);
         expect(solution).equal(accounts[i].address);
@@ -73,7 +74,7 @@ describe("TreasureHuntCreator", () => {
       let [signature, solutionKey] = await getSignature(deployer, testSolution);
       let { r, v, s } = ethers.utils.splitSignature(signature);
 
-      let instance = await deploy([solutionKey], quests.slice(0));
+      let instance = await deploy([solutionKey], questsRootCid);
       await instance.connect(deployer).submit(v, r, s);
 
       let result = await instance._playerToCurrentChapter(deployer.address);
@@ -91,7 +92,7 @@ describe("TreasureHuntCreator", () => {
       );
       let { r, v, s } = ethers.utils.splitSignature(signatureWrong);
 
-      let instance = await deploy([solutionKey], quests.slice(0));
+      let instance = await deploy([solutionKey], questsRootCid);
 
       await expect(instance.connect(deployer).submit(v, r, s)).revertedWith(
         "Wrong solution."
@@ -108,7 +109,7 @@ describe("TreasureHuntCreator", () => {
         testRightSolution
       );
       let { r, v, s } = ethers.utils.splitSignature(signatureWrong);
-      let instance = await deploy([solutionKey], quests.slice(0));
+      let instance = await deploy([solutionKey], questsRootCid);
 
       await expect(instance.connect(deployer).submit(v, r, s)).revertedWith("");
 
@@ -121,7 +122,7 @@ describe("TreasureHuntCreator", () => {
       let [signature, solutionKey] = await getSignature(deployer, testSolution);
       let { r, v, s } = ethers.utils.splitSignature(signature);
 
-      let instance = await deploy([solutions[0]], [quests[0]]);
+      let instance = await deploy([solutions[0]], questsRootCid);
 
       await expect(instance.connect(deployer).submit(v, r, s)).revertedWith("");
       await expect(instance._players(0)).revertedWith("");
@@ -132,7 +133,7 @@ describe("TreasureHuntCreator", () => {
       let [signature, solutionKey] = await getSignature(deployer, testSolution);
       let { r, v, s } = ethers.utils.splitSignature(signature);
 
-      let instance = await deploy([solutionKey], [quests[0]]);
+      let instance = await deploy([solutionKey], questsRootCid);
 
       await instance.connect(deployer).submit(v, r, s);
 
@@ -146,20 +147,11 @@ describe("TreasureHuntCreator", () => {
       let [signature, solutionKey] = await getSignature(deployer, testSolution);
       let { r, v, s } = ethers.utils.splitSignature(signature);
 
-      let instance = await deploy([solutionKey], [quests[0]]);
+      let instance = await deploy([solutionKey], questsRootCid);
       await instance.connect(deployer).submit(v, r, s);
 
       let result = await instance._chapterToPlayers(0, 0);
       expect(result).equal(deployer.address);
-    });
-  });
-
-  describe("currentQuest", async () => {
-    it("should return the quest hash of the user current chapter", async () => {
-      let instance = await deploy(solutions, quests);
-
-      let result = await instance.currentQuest();
-      expect(result).equal(quests[0]);
     });
   });
 
@@ -176,7 +168,7 @@ describe("TreasureHuntCreator", () => {
 
       let instance = await deploy(
         [solutionKey1, solutionKey2, solutionKey3],
-        [quests[0], quests[1], quests[2]]
+        questsRootCid
       );
 
       let leaderboard = await instance.getLeaderboard(0);
@@ -200,7 +192,7 @@ describe("TreasureHuntCreator", () => {
 
       let instance = await deploy(
         [solutionKey1, solutionKey2, solutionKey3],
-        [quests[0], quests[1], quests[2]]
+        questsRootCid
       );
 
       // Let the game begin!
@@ -264,7 +256,7 @@ describe("TreasureHuntCreator", () => {
   describe("addGameMaster", async () => {
     it("should add a game master", async () => {
       let testGameMaster = accounts[1].address;
-      let instance = await deploy([], []);
+      let instance = await deploy([], questsRootCid);
 
       await instance.addGameMaster(testGameMaster);
 
@@ -275,7 +267,7 @@ describe("TreasureHuntCreator", () => {
 
     it("should not add twice the same game master", async () => {
       let testGameMaster = accounts[1].address;
-      let instance = await deploy([], []);
+      let instance = await deploy([], questsRootCid);
 
       await instance.addGameMaster(testGameMaster);
 
@@ -285,31 +277,52 @@ describe("TreasureHuntCreator", () => {
     });
   });
 
-  describe("addChapter", async () => {
-    it("should forbid adding a chapter to non game masters", async () => {
-      let instance = await deploy([], []);
+  describe("setQuestsRootCid", async () => {
+    it("should set root cid", async () => {
+      let instance = await deploy([], questsRootCid);
+      const newRootCid = cidToBytes("bagaaierasords4njcts6vs7qvdjfcvgnume4hqohf65zsfguprqphs3icwea")
+      let testGameMaster = accounts[1];
+      await instance.addGameMaster(testGameMaster.address);
 
-      await expect(instance.addChapter(solutions[0], quests[0])).revertedWith(
+      await instance.connect(testGameMaster).setQuestsRootCID(newRootCid);
+
+      let result = await instance.getQuestsRootCID();
+
+      expect(utils.arrayify(result)).eql(newRootCid);
+    });
+
+    it("should forbid setting the root to non game masters", async () => {
+      let instance = await deploy([], questsRootCid);
+      const newRootCid = cidToBytes("bagaaierasords4njcts6vs7qvdjfcvgnume4hqohf65zsfguprqphs3icwea")
+
+      await expect(instance.setQuestsRootCID(newRootCid)).revertedWith(
+        "Only game masters can use this function."
+      );
+    });
+  });
+
+  describe("addSolution", async () => {
+    it("should forbid adding a chapter to non game masters", async () => {
+      let instance = await deploy([], questsRootCid);
+
+      await expect(instance.addSolution(solutions[0])).revertedWith(
         "Only game masters can use this function."
       );
     });
 
     it("should add a new chapter from a game master", async () => {
-      let instance = await deploy([], []);
+      let instance = await deploy([], questsRootCid);
       let testGameMaster = accounts[1];
       let testSolution = solutions[0];
-      let testQuest = quests[0];
 
       await instance.addGameMaster(testGameMaster.address);
       await instance
         .connect(testGameMaster)
-        .addChapter(testSolution, testQuest);
+        .addSolution(testSolution);
 
       let resultSolution = await instance._solutions(0);
-      let resultQuest = await instance._quests(0);
 
       expect(resultSolution, testSolution);
-      expect(resultQuest, testQuest);
     });
   });
 });

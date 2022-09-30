@@ -8,8 +8,8 @@ import {
 } from "../typechain";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { BigNumber } from "ethers";
-import { getSolutionAddress, getSolutionSignature, merge } from "./utils";
-import { formatBytes32String } from "ethers/lib/utils";
+import { cidToBytes, getSolutionAddress, getSolutionSignature, merge } from "./utils";
+
 
 chai.use(solidity);
 chai.use(chaiAsPromised);
@@ -21,6 +21,7 @@ describe("TreasureHuntCreator", () => {
   let thcFactory: TreasureHuntCreator__factory;
   let accounts: SignerWithAddress[];
   let totalPlayers: number;
+  let questsRootCid: Uint8Array;
 
   beforeEach(async () => {
     accounts = await ethers.getSigners();
@@ -31,13 +32,14 @@ describe("TreasureHuntCreator", () => {
     )) as TreasureHuntCreator__factory;
 
     totalPlayers = accounts.length;
+    questsRootCid = cidToBytes("QmUYWv6RaHHWkk5BMHJH4xKPEKNqAYKomeiTVobAMyxsbz");
   });
 
   async function deploy(
-    quests: string[],
-    solutions: string[]
+    solutions: string[],
+    questsRootCid: Uint8Array
   ): Promise<TreasureHuntCreator> {
-    const thc = await thcFactory.deploy(quests, solutions);
+    const thc = await thcFactory.deploy(solutions, questsRootCid);
     await thc.deployed();
 
     return thc;
@@ -55,11 +57,7 @@ describe("TreasureHuntCreator", () => {
 
     let thc = await deploy(
       [solutionKey1, solutionKey2, solutionKey3],
-      [
-        formatBytes32String("0"),
-        formatBytes32String("1"),
-        formatBytes32String("2"),
-      ]
+      questsRootCid
     );
 
     let expectedLeaderboard = Array(PAGE_SIZE * 2).fill(BigNumber.from(0));

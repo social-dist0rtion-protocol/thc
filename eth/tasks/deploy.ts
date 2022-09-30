@@ -11,7 +11,8 @@ type Chapter = {
 
 task("deploy", "Push THC to network")
   .addParam("chapters", "The file with all chapters")
-  .setAction(async ({ chapters }: { chapters: string }, hre) => {
+  .addParam("questsRootCid", "The root CID for all the chapters")
+  .setAction(async ({ chapters, questsRootCid }: { chapters: string, questsRootCid: string }, hre) => {
     console.log("Deploy contract Treasure Hunt Creator");
     const [deployer] = await hre.ethers.getSigners();
     console.log("Address:", deployer.address);
@@ -22,17 +23,15 @@ task("deploy", "Push THC to network")
     const chaptersData = JSON.parse(readFileSync(chapters, "utf-8"));
 
     let solutions: string[] = [];
-    let quests: string[] = [];
 
     chaptersData.map((chapter: Chapter) => {
       const questHash = chapter.questHash;
       const decoded = decode(questHash);
       const quest = "0x" + Buffer.from(decoded.slice(2)).toString("hex");
-      quests.push(quest);
       solutions.push(chapter.solutionAddress);
     });
 
-    const thcContract = await thcFactory.deploy(solutions, quests);
+    const thcContract = await thcFactory.deploy(solutions, questsRootCid);
     console.log("  Address", thcContract.address);
     const receipt = await thcContract.deployed();
     console.log("  Receipt", receipt.deployTransaction.hash);
@@ -55,7 +54,7 @@ task("deploy", "Push THC to network")
     console.log("Arguments file", argsFile);
     await writeFile(
       argsFile,
-      JSON.stringify([solutions, quests])
+      JSON.stringify([solutions, questsRootCid])
       //`module.exports = ${JSON.stringify([solutions, quests])}`
     );
 

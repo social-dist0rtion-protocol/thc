@@ -39,6 +39,7 @@
     "ethers": "^5.7.0",
     "hardhat": "^2.10.2",
     "hardhat-gas-reporter": "^1.0.8",
+    "multiformats": "^9.9.0",
     "solidity-coverage": "^0.7.21",
     "ts-node": "^10.9.1",
     "typechain": "^8.1.0",
