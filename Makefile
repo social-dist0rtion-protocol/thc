@@ -1,7 +1,7 @@
 INPUT_DIR ?= try/chapters
 OUTPUT_DIR ?= try/build
 ETH_DIR ?= eth
-ETH_NETWORK ?= localhost
+ETH_NETWORK ?= goerli
 ETH_ENDPOINT ?= http://localhost:8545
 FUND_ENPOINT ?= http://localhost:3000
 CHAPTERS_SCRIPT ?= gen/chapters.ts
