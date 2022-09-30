@@ -6,13 +6,13 @@ export function sleep(ms: number) {
   });
 }
 
-export function retryWrap<T = void>(f: () => Promise<T>) {
+export function retryWrap<T = void>(f: () => Promise<T>, catchAll = false) {
   return async () => {
     for (let i = 0; i < 3; i++) {
       try {
         return await f();
       } catch (e: any) {
-        if (e instanceof RecoverableError) {
+        if (catchAll || e instanceof RecoverableError) {
           console.error("Retry", i + 1, e);
           await sleep(1000);
         } else {
@@ -26,6 +26,6 @@ export function retryWrap<T = void>(f: () => Promise<T>) {
   };
 }
 
-export function retry<T = void>(f: () => Promise<T>) {
-  return retryWrap(f)();
+export function retry<T = void>(f: () => Promise<T>, catchAll = false) {
+  return retryWrap(f, catchAll)();
 }
