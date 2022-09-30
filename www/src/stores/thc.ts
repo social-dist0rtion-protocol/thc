@@ -6,6 +6,8 @@ import {
   type Readable,
   type Writable,
 } from "svelte/store";
+import { CID } from "multiformats";
+
 import { TreasureHuntCreator__factory } from "../../../eth/typechain";
 import { signer } from "./burnerWallet";
 import { contractsAddresses, ipfsGateway } from "./config";
@@ -43,7 +45,7 @@ export const questsRootCID: Readable<string | null> = derived(
       retry(async () => {
         const cid = await $thc.getQuestsRootCID();
         const hashBuffer = arrayify(cid);
-        const ipfsHash = base58.encode(hashBuffer);
+        const ipfsHash = CID.decode(hashBuffer).toV0().toString();
         set(ipfsHash);
       }, true);
     }
