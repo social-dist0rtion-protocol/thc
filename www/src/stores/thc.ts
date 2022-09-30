@@ -42,7 +42,9 @@ export const questsRootCID: Readable<string | null> = derived(
     if ($thc) {
       retry(async () => {
         const cid = await $thc.getQuestsRootCID();
-        set(cid);
+        const hashBuffer = arrayify(cid);
+        const ipfsHash = base58.encode(hashBuffer);
+        set(ipfsHash);
       }, true);
     }
   }
