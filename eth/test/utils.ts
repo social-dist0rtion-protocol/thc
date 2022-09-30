@@ -1,16 +1,12 @@
 import web3 from "web3";
 import crypto from "crypto";
+import { CID } from 'multiformats/cid'
+import { base64 } from "multiformats/bases/base64"
 import { BigNumber, utils, Wallet } from "ethers";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 
-// Generate a sha256 of some content, which is the right most 32 bytes of an IPFS hash
-export function getQuestBytes(content: string) {
-  let hash = crypto
-    .createHash("sha256")
-    .update(content)
-    .digest()
-    .toString("ascii");
-  return web3.utils.asciiToHex(hash);
+export function cidToBytes(cid: string) {
+  return CID.parse(cid).bytes
 }
 
 export async function getSolutionAddress(solution: string) {

@@ -16,11 +16,12 @@ contract TreasureHuntCreator is Ownable {
     address[] public _solutions;
     address[] public _players;
     address[] public _gameMasters;
-    bytes32[] public _quests;
+    
+    bytes public _questsRootCid;
 
-    constructor(address[] memory solutions, bytes32[] memory quests) {
+    constructor(address[] memory solutions, bytes memory questsRootCid) {
         _solutions = solutions;
-        _quests = quests;
+        _questsRootCid = questsRootCid;
     }
 
     modifier onlyGameMaster() {
@@ -45,12 +46,19 @@ contract TreasureHuntCreator is Ownable {
         return false;
     }
 
-    function addChapter(address solution, bytes32 nextQuest)
+    function setQuestsRootCID(bytes memory questsRootCid) external onlyGameMaster {
+        _questsRootCid = questsRootCid;
+    }
+
+    function getQuestsRootCID() external view returns (bytes memory) {
+        return _questsRootCid;
+    }
+
+    function addSolution(address solution)
         public
         onlyGameMaster
     {
         _solutions.push(solution);
-        _quests.push(nextQuest);
     }
 
     function addGameMaster(address gameMaster) public onlyOwner {
@@ -65,16 +73,11 @@ contract TreasureHuntCreator is Ownable {
     }
 
     function totalChapters() public view returns (uint) {
-        return _quests.length;
+        return _solutions.length;
     }
 
     function currentChapter() public view returns (uint96) {
         return _playerToCurrentChapter[msg.sender];
-    }
-
-    function currentQuest() public view returns (bytes32) {
-        uint currentChapterIndex = _playerToCurrentChapter[msg.sender];
-        return _quests[currentChapterIndex];
     }
 
     function submit(
