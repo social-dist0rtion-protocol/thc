@@ -1,17 +1,15 @@
-import { readFile, writeFile, readdir, mkdir } from "fs/promises";
+import { readFile, writeFile, readdir, mkdir, rename } from "fs/promises";
 import path from "path";
 import { ethers } from "ethers";
 import { toUtf8Bytes, keccak256 } from "ethers/lib/utils";
 import CryptoJS from "crypto-js";
-import { create as ipfsCreate } from "ipfs-http-client";
+import { create as ipfsCreate, globSource } from "ipfs-http-client";
 
-const ALGORITHM = "aes-128-gcm";
 const DIR_IN = process.argv[2];
 const DIR_OUT = process.argv[3];
 const IPFS_PROTOCOL = process.env["IPFS_PROTOCOL"];
 const IPFS_HOST = process.env["IPFS_HOST"];
 const IPFS_PORT = parseInt(process.env["IPFS_PORT"] || "5001", 10);
-const IPFS_LOCATION = process.env["IPFS_LOCATION"];
 const IPFS_TOKEN = process.env["IPFS_TOKEN"];
 
 async function readFileAndTrim(f: string) {
@@ -54,7 +52,7 @@ async function chapter(dirIn: string, dirOut: string, prevSolution: string) {
   return { fileOut: questFileOut, address, quest: questOut };
 }
 
-async function upload(contentBuffer: Buffer) {
+async function upload(directory: string) {
   const ipfs = ipfsCreate({
     host: IPFS_HOST,
     port: IPFS_PORT,
@@ -63,22 +61,31 @@ async function upload(contentBuffer: Buffer) {
       authorization: "Basic " + btoa(IPFS_TOKEN!),
     },
   });
-  const { cid } = await ipfs.add(contentBuffer);
-  await ipfs.pin.add(cid);
-  return cid.toV0().toString();
+
+  let dirCid = "";
+  for await (const file of ipfs.addAll(globSource(directory, "**/*"), {
+    wrapWithDirectory: true,
+  })) {
+    await ipfs.pin.add(file.cid);
+    dirCid = file.cid.toString();
+  }
+
+  return dirCid;
 }
 
 async function processChapter(dirIn: string, dirOut: string, solution: string) {
   const { fileOut, address, quest } = await chapter(dirIn, dirOut, solution);
-  const questHash = await upload(await readFile(fileOut));
-  return { solutionAddress: address, quest, questHash };
+  return { solutionAddress: address, quest: quest, questFile: fileOut };
 }
 
 async function main(dirIn: string, dirOut: string) {
+  const questsDir = path.join(dirOut, "quests");
   const content = await readdir(dirIn, { withFileTypes: true });
   const v = content.filter((x) => x.isDirectory());
   const padding = v[0].name.length;
   const result = [];
+
+  await mkdir(questsDir, { recursive: true });
 
   for (let i = 0; i < v.length; i++) {
     const name = v[i].name;
@@ -90,14 +97,31 @@ async function main(dirIn: string, dirOut: string) {
         "solution"
       )
     );
-    result.push(
-      await processChapter(
-        path.join(dirIn, name),
-        path.join(dirOut, name),
-        solution
-      )
+
+    // collect chapter data
+    const { solutionAddress, quest, questFile } = await processChapter(
+      path.join(dirIn, name),
+      path.join(dirOut, name),
+      solution
     );
+
+    // put encrypted quest in one folder, named after the chapter number
+    await rename(questFile, path.join(questsDir, `${i}`));
+
+    result.push({
+      solutionAddress,
+      quest,
+      questHash: "", // will be added after all quests are uploaded and wrapped
+    });
   }
+
+  // add all encrypted quests at once
+  const dirCid = await upload(questsDir);
+
+  for (let i = 0; i < v.length; i++) {
+    result[i].questHash = `${dirCid}/${i}`;
+  }
+
   return result;
 }
 
