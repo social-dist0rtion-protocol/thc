@@ -2,6 +2,7 @@
   import {
     currentChapter,
     currentQuestHtml,
+    currentQuestUpdated,
     currentSolution,
     lastTransactionMined,
     thc,
@@ -11,6 +12,7 @@
   import Chapter from "./components/Chapter.svelte";
   import { signatureFromSolution } from "./lib";
   import { fade } from "svelte/transition";
+  import Update from "./components/Update.svelte";
 
   let state: "IDLE" | "CHECK" | "MINING" | "SUCCESS" | "WRONG" | "ERROR" =
     "IDLE";
@@ -51,6 +53,10 @@
   function onCloseModal() {
     state = "IDLE";
     window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function onQuestUpdatedConfirm() {
+    $currentQuestUpdated = false;
   }
 </script>
 
@@ -97,4 +103,6 @@
       </div>
     </div>
   {/if}
+
+  <Update {onQuestUpdatedConfirm} />
 {/if}

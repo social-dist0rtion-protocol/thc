@@ -17,9 +17,12 @@ import { retry, retryWrap } from "./x/retry";
 import { marked } from "marked";
 import { parseLeaderboard } from "../lib";
 import { RecoverableError } from "./x/exceptions";
+import db from "./x/db";
+import { derivedWritable } from "./x/derivedWritable";
 
 export const lastTransactionMined: Writable<null | string> =
   writableLocalStorage("lastTransactionMined", null);
+
 export const currentSolution: Writable<null | string> = writableLocalStorage(
   "currentSolution",
   null
@@ -42,12 +45,16 @@ export const questsRootCID: Readable<string | null> = derived(
   thc,
   ($thc, set) => {
     if ($thc) {
-      retry(async () => {
+      const update = retryWrap(async () => {
         const cid = await $thc.getQuestsRootCID();
+        console.log("Update quests root CID", cid);
         const hashBuffer = arrayify(cid);
         const ipfsHash = CID.decode(hashBuffer).toV0().toString();
         set(ipfsHash);
       }, true);
+      const timerId = window.setInterval(update, 10000);
+      update();
+      return () => window.clearInterval(timerId);
     }
   }
 );
@@ -113,6 +120,27 @@ export const currentQuest: Readable<string | null> = derived(
 
 export const currentQuestHtml = derived(currentQuest, ($currentQuest) =>
   $currentQuest ? marked($currentQuest) : null
+);
+
+export const currentQuestUpdated = derivedWritable(
+  [currentQuest, currentChapter],
+  ([$currentQuest, $currentChapter], set: (v: boolean) => void) => {
+    if ($currentQuest && $currentChapter !== null) {
+      const hash = keccak256(toUtf8Bytes($currentQuest));
+      const key = "chapterHashes";
+      // Check if the current quest exists in localstorage
+      const chaptersHashes = db.getsert(key, {}) as { [key: number]: string };
+      const chapterHash = chaptersHashes[$currentChapter];
+      if (chapterHash) {
+        set(chapterHash !== hash);
+      } else {
+        chaptersHashes[$currentChapter] = hash;
+        db.set(key, chaptersHashes);
+      }
+      set(false);
+    }
+  },
+  false
 );
 
 export const leaderboard: Readable<Awaited<
