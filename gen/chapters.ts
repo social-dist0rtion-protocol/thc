@@ -105,7 +105,7 @@ async function main(dirIn: string, dirOut: string) {
       solution
     );
 
-    // put encrypted quests in one folder, named after the chapter number
+    // put encrypted quest in one folder, named after the chapter number
     await rename(questFile, path.join(questsDir, `${i}`));
 
     result.push({
@@ -115,6 +115,7 @@ async function main(dirIn: string, dirOut: string) {
     });
   }
 
+  // add all encrypted quests at once
   const dirCid = await upload(questsDir);
 
   for (let i = 0; i < v.length; i++) {
