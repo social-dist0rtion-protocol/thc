@@ -6,14 +6,17 @@ import {
   type Readable,
   type Writable,
 } from "svelte/store";
+import { CID } from "multiformats";
+
 import { TreasureHuntCreator__factory } from "../../../eth/typechain";
 import { signer } from "./burnerWallet";
-import { chapters, contractsAddresses, ipfsGateway } from "./config";
+import { contractsAddresses, ipfsGateway } from "./config";
 import { writableLocalStorage } from "./x";
 import CryptoJS from "crypto-js";
 import { retry, retryWrap } from "./x/retry";
 import { marked } from "marked";
 import { parseLeaderboard } from "../lib";
+import { RecoverableError } from "./x/exceptions";
 
 export const lastTransactionMined: Writable<null | string> =
   writableLocalStorage("lastTransactionMined", null);
@@ -35,13 +38,27 @@ export const thc = derived(
   null
 );
 
+export const questsRootCID: Readable<string | null> = derived(
+  thc,
+  ($thc, set) => {
+    if ($thc) {
+      retry(async () => {
+        const cid = await $thc.getQuestsRootCID();
+        const hashBuffer = arrayify(cid);
+        const ipfsHash = CID.decode(hashBuffer).toV0().toString();
+        set(ipfsHash);
+      }, true);
+    }
+  }
+);
+
 export const totalChapters: Readable<null | number> = derived(
   thc,
   ($thc, set) => {
     if ($thc) {
       retry(async () => {
         set((await $thc.totalChapters()).toNumber());
-      });
+      }, true);
     }
   }
 );
@@ -52,7 +69,7 @@ export const currentChapter: Readable<null | number> = derived(
     if ($thc) {
       retry(async () => {
         set((await $thc.currentChapter()).toNumber());
-      });
+      }, true);
     } else {
       set(null);
     }
@@ -60,46 +77,36 @@ export const currentChapter: Readable<null | number> = derived(
   null
 );
 
-export const fuckFuckFuckFuckFuck = writable(false);
-
 export const currentQuest: Readable<string | null> = derived(
-  [thc, currentChapter],
-  ([$thc, $currentChapter], set) => {
+  [questsRootCID, currentChapter],
+  ([$questsRootCID, $currentChapter], set) => {
     const $currentSolution = get(currentSolution);
     console.log("Load new quest", $currentSolution, $currentChapter);
-    if ($thc && $currentChapter !== null) {
-      /*
-        const hashAddress = await $thc.currentQuest();
-        const completeHashAddress = hashAddress.replace("0x", "0x1220");
-        const hashBuffer = arrayify(completeHashAddress);
-        const ipfsHash = base58.encode(hashBuffer);
-        console.log(ipfsHash, ipfsGateway);
-        const ipfsUrl = new URL(ipfsHash, ipfsGateway);
-        const response = await fetch(ipfsUrl);
-        console.log("IPFS response:", response);
-        const quest = await response.text();
-        */
-
-      const { quest } = chapters[$currentChapter];
-
-      if ($currentSolution !== null) {
-        const key = keccak256(toUtf8Bytes($currentSolution));
-        let plainQuest: string;
+    if ($questsRootCID && $currentChapter !== null) {
+      retry(async () => {
+        const ipfsUrl = new URL(
+          $questsRootCID + "/" + $currentChapter,
+          ipfsGateway
+        );
+        let quest: string;
         try {
-          const bytes = CryptoJS.AES.decrypt(quest, key.toString());
-          plainQuest = bytes.toString(CryptoJS.enc.Utf8);
-        } catch (e: any) {
-          set(
-            "Sorry, we had to restart the game, you need to reset your session using the button below"
-          );
-          fuckFuckFuckFuckFuck.set(true);
-          return;
+          const response = await fetch(ipfsUrl);
+          console.log("IPFS response:", response);
+          quest = await response.text();
+        } catch (e) {
+          console.log(e);
+          throw RecoverableError;
         }
-        set(plainQuest);
-      } else {
-        // The first quest is not encrypted
-        set(quest);
-      }
+        if ($currentSolution !== null) {
+          const key = keccak256(toUtf8Bytes($currentSolution));
+          const bytes = CryptoJS.AES.decrypt(quest, key.toString());
+          const plainQuest = bytes.toString(CryptoJS.enc.Utf8);
+          set(plainQuest);
+        } else {
+          // The first quest is not encrypted
+          set(quest);
+        }
+      });
     }
   }
 );

@@ -18,6 +18,7 @@ specifiers:
   ethers: ^5.7.0
   jsdom: ^20.0.0
   marked: ^4.1.0
+  multiformats: ^9.9.0
   qrcode: ^1.5.1
   rollup-plugin-polyfill-node: ^0.10.2
   svelte: ^3.49.0
@@ -36,6 +37,7 @@ specifiers:
 dependencies:
   '@types/marked': 4.0.6
   marked: 4.1.0
+  multiformats: 9.9.0
   qrcode: 1.5.1
   svelte-spa-router: 3.3.0
 
@@ -3529,6 +3531,10 @@ packages:
   /ms/2.1.2:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}
     dev: true
+
+  /multiformats/9.9.0:
+    resolution: {integrity: sha512-HoMUjhH9T8DDBNT+6xzkrd9ga/XiBI4xLr58LJACwK6G3HTOPeMz4nB4KJs33L2BelrIJa7P0VuNaVF3hMYfjg==}
+    dev: false
 
   /nanoid/3.3.4:
     resolution: {integrity: sha512-MqBkQh/OHTS2egovRtLk45wEyNXwF+cokD+1YPf9u5VfJiRdAiRwB2froX5Co9Rh20xs4siNPm8naNotSD6RBw==}
