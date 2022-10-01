@@ -38,12 +38,12 @@ export const questsRootCID: Readable<string | null> = derived(
     if ($thc) {
       const update = retryWrap(async () => {
         const cid = await $thc.getQuestsRootCID();
-        console.log("Update quests root CID", cid);
         const hashBuffer = arrayify(cid);
         const ipfsHash = CID.decode(hashBuffer).toV0().toString();
+        console.log("Update quests root CID", ipfsHash);
         set(ipfsHash);
       }, true);
-      const timerId = window.setInterval(update, 10000);
+      const timerId = window.setInterval(update, 30000);
       update();
       return () => window.clearInterval(timerId);
     }
