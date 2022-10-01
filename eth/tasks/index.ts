@@ -1,1 +1,2 @@
 import "./deploy";
+import "./admin";
