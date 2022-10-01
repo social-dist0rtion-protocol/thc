@@ -2,18 +2,9 @@ type ContractsAddresses = {
   [key: string]: string;
 };
 
-type Chapter = {
-  solutionAddress: string;
-  quest: string;
-};
-
 export const contractsAddresses: ContractsAddresses =
   // @ts-ignore
   __VITE_CONTRACTS_ADDRESSES__;
-
-export const chapters: Chapter[] =
-  // @ts-ignore
-  __VITE_CHAPTERS__;
 
 export const ipfsGateway =
   import.meta.env.VITE_IPFS_GATEWAY +

@@ -1,13 +1,6 @@
-import { arrayify, base58, keccak256, toUtf8Bytes } from "ethers/lib/utils";
-import {
-  derived,
-  get,
-  writable,
-  type Readable,
-  type Writable,
-} from "svelte/store";
+import { arrayify, keccak256, toUtf8Bytes } from "ethers/lib/utils";
+import { derived, get, type Readable, type Writable } from "svelte/store";
 import { CID } from "multiformats";
-
 import { TreasureHuntCreator__factory } from "../../../eth/typechain";
 import { signer } from "./burnerWallet";
 import { contractsAddresses, ipfsGateway } from "./config";
@@ -17,8 +10,6 @@ import { retry, retryWrap } from "./x/retry";
 import { marked } from "marked";
 import { parseLeaderboard } from "../lib";
 import { RecoverableError } from "./x/exceptions";
-import db from "./x/db";
-import { derivedWritable } from "./x/derivedWritable";
 
 export const lastTransactionMined: Writable<null | string> =
   writableLocalStorage("lastTransactionMined", null);
@@ -122,25 +113,13 @@ export const currentQuestHtml = derived(currentQuest, ($currentQuest) =>
   $currentQuest ? marked($currentQuest) : null
 );
 
-export const currentQuestUpdated = derivedWritable(
-  [currentQuest, currentChapter],
-  ([$currentQuest, $currentChapter], set: (v: boolean) => void) => {
-    if ($currentQuest && $currentChapter !== null) {
-      const hash = keccak256(toUtf8Bytes($currentQuest));
-      const key = "chapterHashes";
-      // Check if the current quest exists in localstorage
-      const chaptersHashes = db.getsert(key, {}) as { [key: number]: string };
-      const chapterHash = chaptersHashes[$currentChapter];
-      if (chapterHash) {
-        set(chapterHash !== hash);
-      } else {
-        chaptersHashes[$currentChapter] = hash;
-        db.set(key, chaptersHashes);
-      }
-      set(false);
-    }
-  },
-  false
+export const currentQuestHash = derived(currentQuest, ($currentQuest) =>
+  $currentQuest ? keccak256(toUtf8Bytes($currentQuest)) : null
+);
+
+export const currentQuestLastSeenHash = writableLocalStorage<string | null>(
+  "currentQuestLastSeenHash",
+  null
 );
 
 export const leaderboard: Readable<Awaited<

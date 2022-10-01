@@ -2,7 +2,8 @@
   import {
     currentChapter,
     currentQuestHtml,
-    currentQuestUpdated,
+    currentQuestHash,
+    currentQuestLastSeenHash,
     currentSolution,
     lastTransactionMined,
     thc,
@@ -56,7 +57,16 @@
   }
 
   function onQuestUpdatedConfirm() {
-    $currentQuestUpdated = false;
+    $currentQuestLastSeenHash = $currentQuestHash;
+  }
+
+  let currentQuestUpdated = false;
+
+  $: {
+    if ($currentQuestLastSeenHash === null) {
+      $currentQuestLastSeenHash = $currentQuestHash;
+    }
+    currentQuestUpdated = $currentQuestLastSeenHash !== $currentQuestHash;
   }
 </script>
 
@@ -104,5 +114,7 @@
     </div>
   {/if}
 
-  <Update {onQuestUpdatedConfirm} />
+  {#if currentQuestUpdated}
+    <Update {onQuestUpdatedConfirm} />
+  {/if}
 {/if}
