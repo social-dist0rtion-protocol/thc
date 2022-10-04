@@ -1,13 +1,13 @@
 <script lang="ts">
   import {
+    game,
     currentChapter,
     currentQuestHtml,
     currentQuestHash,
-    currentQuestLastSeenHash,
-    currentSolution,
     lastTransactionMined,
     thc,
     totalChapters,
+    fuckFuckFuckFuckFuck,
   } from "./stores/thc";
   import { lowBalance, signer } from "./stores/burnerWallet";
   import Chapter from "./components/Chapter.svelte";
@@ -23,10 +23,19 @@
   async function onSubmitSolution(solution: string) {
     const address = $signer!.address;
     const contract = $thc!;
+    const chapterNumber = $currentChapter!;
     solution = solution.toLowerCase();
 
     state = "CHECK";
     const { r, s, v } = await signatureFromSolution(address, solution);
+    // Store the solution, if it's wrong it's not a problem since it won't be
+    // used
+    $game[chapterNumber.toString()].solution = solution;
+    $game[(chapterNumber + 1).toString()] = {
+      solution: null,
+      questHash: null,
+      transactionHash: null,
+    };
     try {
       const tx = await contract.submit(v, r, s);
       console.log(tx);
@@ -36,7 +45,7 @@
       console.log(receipt);
       state = "SUCCESS";
       $lastTransactionMined = tx.hash;
-      $currentSolution = solution;
+      $game[chapterNumber.toString()].transactionHash = tx.hash;
       return true;
     } catch (e: any) {
       const msg = e.toString() as string;
@@ -57,20 +66,33 @@
   }
 
   function onQuestUpdatedConfirm() {
-    $currentQuestLastSeenHash = $currentQuestHash;
+    if ($currentChapter !== null) {
+      $game[$currentChapter.toString()].questHash !== $currentQuestHash;
+    }
   }
 
   let currentQuestUpdated = false;
 
   $: {
-    if ($currentQuestLastSeenHash === null) {
-      $currentQuestLastSeenHash = $currentQuestHash;
+    if (
+      $currentChapter !== null &&
+      $game[$currentChapter] &&
+      $game[$currentChapter].questHash === null
+    ) {
+      $game[$currentChapter.toString()].questHash = $currentQuestHash;
+      currentQuestUpdated =
+        $game[$currentChapter.toString()].questHash !== $currentQuestHash;
     }
-    currentQuestUpdated = $currentQuestLastSeenHash !== $currentQuestHash;
   }
 </script>
 
-{#if $signer !== null && $thc !== null && $currentChapter !== null && $currentQuestHtml !== null && $totalChapters !== null}
+{#if $fuckFuckFuckFuckFuck}
+  <p>
+    The game is br0ken, something happened to the storage. Reach out to our
+    discord and ask for help or go to <a href="#/settings">Settings</a> and restart
+    the game.
+  </p>
+{:else if $signer !== null && $thc !== null && $currentChapter !== null && $currentQuestHtml !== null && $totalChapters !== null}
   <Chapter
     currentChapter={$currentChapter}
     currentQuestHtml={$currentQuestHtml}

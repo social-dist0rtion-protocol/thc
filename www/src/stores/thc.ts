@@ -1,5 +1,11 @@
 import { arrayify, keccak256, toUtf8Bytes } from "ethers/lib/utils";
-import { derived, get, type Readable, type Writable } from "svelte/store";
+import {
+  derived,
+  get,
+  writable,
+  type Readable,
+  type Writable,
+} from "svelte/store";
 import { CID } from "multiformats";
 import { TreasureHuntCreator__factory } from "../../../eth/typechain";
 import { signer } from "./burnerWallet";
@@ -11,13 +17,26 @@ import { marked } from "marked";
 import { parseLeaderboard } from "../lib";
 import { RecoverableError } from "./x/exceptions";
 
+export type Chapter = {
+  solution: string | null;
+  questHash: string | null;
+  transactionHash: string | null;
+};
+
+// Chapter should be a number, but we store it as JSON so it's easier to cast it
+// to string
+export type Game = { [chapter: string]: Chapter };
+
+export const game = writableLocalStorage("game", {
+  "0": {
+    solution: null,
+    questHash: null,
+    transactionHash: null,
+  },
+} as Game);
+
 export const lastTransactionMined: Writable<null | string> =
   writableLocalStorage("lastTransactionMined", null);
-
-export const currentSolution: Writable<null | string> = writableLocalStorage(
-  "currentSolution",
-  null
-);
 
 export const thc = derived(
   signer,
@@ -75,12 +94,23 @@ export const currentChapter: Readable<null | number> = derived(
   null
 );
 
+export const fuckFuckFuckFuckFuck = writable(false);
+
 export const currentQuest: Readable<string | null> = derived(
   [questsRootCID, currentChapter],
   ([$questsRootCID, $currentChapter], set) => {
-    const $currentSolution = get(currentSolution);
-    console.log("Load new quest", $currentSolution, $currentChapter);
     if ($questsRootCID && $currentChapter !== null) {
+      const $game = get(game);
+      console.log("Load new quest", $currentChapter, $game);
+      let solution: string | null;
+      try {
+        if ($currentChapter > 0) {
+          solution = $game[($currentChapter - 1).toString()].solution;
+        }
+      } catch (e) {
+        fuckFuckFuckFuckFuck.set(true);
+        return;
+      }
       retry(async () => {
         const ipfsUrl = new URL(
           $questsRootCID + "/" + $currentChapter,
@@ -95,8 +125,8 @@ export const currentQuest: Readable<string | null> = derived(
           console.log(e);
           throw RecoverableError;
         }
-        if ($currentSolution !== null) {
-          const key = keccak256(toUtf8Bytes($currentSolution));
+        if (solution !== null) {
+          const key = keccak256(toUtf8Bytes(solution));
           const bytes = CryptoJS.AES.decrypt(quest, key.toString());
           const plainQuest = bytes.toString(CryptoJS.enc.Utf8);
           set(plainQuest);
