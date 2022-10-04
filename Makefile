@@ -26,7 +26,7 @@ backend: chapters
 
 update-chapters: chapters
 	echo "Update chapters."
-	@cd $(ETH_DIR); npx hardhat --network $(ETH_NETWORK) set-root-from-chapters --chapters ../$(CHAPTERS_FILE)
+	@cd $(ETH_DIR); npx hardhat --network $(ETH_NETWORK) root-set-from-chapters --chapters ../$(CHAPTERS_FILE)
 
 chapters:
 	echo "Generating chapters."
