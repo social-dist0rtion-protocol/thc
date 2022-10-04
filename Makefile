@@ -3,7 +3,6 @@ OUTPUT_DIR ?= try/build
 ETH_DIR ?= eth
 ETH_NETWORK ?= localhost
 ETH_ENDPOINT ?= http://localhost:8545
-FUND_ENPOINT ?= http://localhost:3000
 CHAPTERS_SCRIPT ?= gen/chapters.ts
 CHAPTERS_FILE ?= gen/chapters.json
 IPFS_HOST ?= localhost
@@ -24,6 +23,10 @@ backend: chapters
 	echo "Deploying contracts to testnet."
 	@cd $(ETH_DIR); npx hardhat deploy --network $(ETH_NETWORK) --chapters ../$(CHAPTERS_FILE)
 	echo "Backend deployed to testnet."
+
+update-chapters: chapters
+	echo "Update chapters."
+	@cd $(ETH_DIR); npx hardhat --network $(ETH_NETWORK) root-set-from-chapters --chapters ../$(CHAPTERS_FILE)
 
 chapters:
 	echo "Generating chapters."

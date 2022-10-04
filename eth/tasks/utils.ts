@@ -1,11 +1,18 @@
+import { readFileSync } from "fs";
 import { readFile, writeFile } from "fs/promises";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { TreasureHuntCreator__factory } from "../typechain";
+import { CID } from "multiformats";
 
 const CONFIG_FILE_PATH = "./deployments";
 
 const FACTORIES: Record<string, any> = {
   TreasureHuntCreator: TreasureHuntCreator__factory,
+};
+
+type Chapter = {
+  questHash: string;
+  solutionAddress: string;
 };
 
 export async function storeContractAddress(
@@ -14,7 +21,9 @@ export async function storeContractAddress(
   address: string,
   configPath: string = CONFIG_FILE_PATH
 ) {
-  const networks: any = JSON.parse(await readFile(`${configPath}/${hre.network.name}.network.json`, "utf8"));
+  const networks: any = JSON.parse(
+    await readFile(`${configPath}/${hre.network.name}.network.json`, "utf8")
+  );
   const chainId = hre.network.config.chainId!;
 
   let addresses: any = {};
@@ -54,7 +63,9 @@ export async function loadContract(
   contractName: string,
   configPath: string = CONFIG_FILE_PATH
 ) {
-  const networks: any = JSON.parse(await readFile(`${configPath}/${hre.network.name}.network.json`, "utf8"));
+  const networks: any = JSON.parse(
+    await readFile(`${configPath}/${hre.network.name}.network.json`, "utf8")
+  );
   const [deployer] = await hre.ethers.getSigners();
   const { chainId } = await hre.ethers.provider.getNetwork();
   const addresses = networks[chainId];
@@ -66,4 +77,18 @@ export async function loadContract(
   }
 
   return contract;
+}
+
+export function loadChapters(path: string) {
+  const chaptersData = JSON.parse(readFileSync(path, "utf-8"));
+  let solutions: string[] = [];
+
+  chaptersData.map((chapter: Chapter) => {
+    solutions.push(chapter.solutionAddress);
+  });
+  const cid = chaptersData[0].questHash.split("/")[0];
+
+  const cidBytes = CID.parse(cid).bytes;
+
+  return { cid, cidBytes, solutions };
 }

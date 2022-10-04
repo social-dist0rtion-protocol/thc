@@ -1,12 +1,9 @@
-import web3 from "web3";
-import crypto from "crypto";
-import { CID } from 'multiformats/cid'
-import { base64 } from "multiformats/bases/base64"
+import { CID } from "multiformats/cid";
 import { BigNumber, utils, Wallet } from "ethers";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 
 export function cidToBytes(cid: string) {
-  return CID.parse(cid).bytes
+  return CID.parse(cid).bytes;
 }
 
 export async function getSolutionAddress(solution: string) {

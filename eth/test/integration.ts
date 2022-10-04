@@ -17,12 +17,14 @@ import {
   getSolutionSignature,
   merge,
 } from "./utils";
+import { keccak256, toUtf8Bytes } from "ethers/lib/utils";
 
 chai.use(solidity);
 chai.use(chaiAsPromised);
 const { expect } = chai;
 
 const PAGE_SIZE = 32;
+const GAME_MASTER_ROLE = keccak256(toUtf8Bytes("GAME_MASTER_ROLE"));
 
 describe("TreasureHuntCreator", () => {
   let thcFactory: TreasureHuntCreator__factory;
@@ -44,8 +46,9 @@ describe("TreasureHuntCreator", () => {
     totalPlayers = accounts.length;
 
     solutions = accounts.map((x) => x.address);
-    questsRootCid = cidToBytes("QmUYWv6RaHHWkk5BMHJH4xKPEKNqAYKomeiTVobAMyxsbz");
-
+    questsRootCid = cidToBytes(
+      "QmUYWv6RaHHWkk5BMHJH4xKPEKNqAYKomeiTVobAMyxsbz"
+    );
   });
 
   async function deploy(
@@ -253,36 +256,14 @@ describe("TreasureHuntCreator", () => {
     });
   });
 
-  describe("addGameMaster", async () => {
-    it("should add a game master", async () => {
-      let testGameMaster = accounts[1].address;
-      let instance = await deploy([], questsRootCid);
-
-      await instance.addGameMaster(testGameMaster);
-
-      let result = await instance._gameMasters(0);
-
-      expect(result).equal(testGameMaster);
-    });
-
-    it("should not add twice the same game master", async () => {
-      let testGameMaster = accounts[1].address;
-      let instance = await deploy([], questsRootCid);
-
-      await instance.addGameMaster(testGameMaster);
-
-      await expect(instance.addGameMaster(testGameMaster)).revertedWith(
-        "This game master has already been added"
-      );
-    });
-  });
-
   describe("setQuestsRootCid", async () => {
     it("should set root cid", async () => {
       let instance = await deploy([], questsRootCid);
-      const newRootCid = cidToBytes("bagaaierasords4njcts6vs7qvdjfcvgnume4hqohf65zsfguprqphs3icwea")
+      const newRootCid = cidToBytes(
+        "bagaaierasords4njcts6vs7qvdjfcvgnume4hqohf65zsfguprqphs3icwea"
+      );
       let testGameMaster = accounts[1];
-      await instance.addGameMaster(testGameMaster.address);
+      await instance.grantRole(GAME_MASTER_ROLE, testGameMaster.address);
 
       await instance.connect(testGameMaster).setQuestsRootCID(newRootCid);
 
@@ -292,21 +273,29 @@ describe("TreasureHuntCreator", () => {
     });
 
     it("should forbid setting the root to non game masters", async () => {
+      let user = accounts[1];
       let instance = await deploy([], questsRootCid);
-      const newRootCid = cidToBytes("bagaaierasords4njcts6vs7qvdjfcvgnume4hqohf65zsfguprqphs3icwea")
+      const newRootCid = cidToBytes(
+        "bagaaierasords4njcts6vs7qvdjfcvgnume4hqohf65zsfguprqphs3icwea"
+      );
 
-      await expect(instance.setQuestsRootCID(newRootCid)).revertedWith(
-        "Only game masters can use this function."
+      await expect(
+        instance.connect(user).setQuestsRootCID(newRootCid)
+      ).revertedWith(
+        `AccessControl: account ${user.address.toLocaleLowerCase()} is missing role ${GAME_MASTER_ROLE}`
       );
     });
   });
 
   describe("addSolution", async () => {
     it("should forbid adding a chapter to non game masters", async () => {
+      let user = accounts[1];
       let instance = await deploy([], questsRootCid);
 
-      await expect(instance.addSolution(solutions[0])).revertedWith(
-        "Only game masters can use this function."
+      await expect(
+        instance.connect(user).addSolution(solutions[0])
+      ).revertedWith(
+        `AccessControl: account ${user.address.toLocaleLowerCase()} is missing role ${GAME_MASTER_ROLE}`
       );
     });
 
@@ -315,10 +304,8 @@ describe("TreasureHuntCreator", () => {
       let testGameMaster = accounts[1];
       let testSolution = solutions[0];
 
-      await instance.addGameMaster(testGameMaster.address);
-      await instance
-        .connect(testGameMaster)
-        .addSolution(testSolution);
+      await instance.grantRole(GAME_MASTER_ROLE, testGameMaster.address);
+      await instance.connect(testGameMaster).addSolution(testSolution);
 
       let resultSolution = await instance._solutions(0);
 

@@ -1,13 +1,7 @@
 import { task } from "hardhat/config";
 import { writeFile } from "fs/promises";
-import { readFileSync } from "fs";
 import { TreasureHuntCreator__factory } from "../typechain";
-import { CID } from "multiformats"
-
-type Chapter = {
-  questHash: string;
-  solutionAddress: string;
-};
+import { loadChapters } from "./utils";
 
 task("deploy", "Push THC to network")
   .addParam("chapters", "The file with all chapters")
@@ -19,22 +13,15 @@ task("deploy", "Push THC to network")
       "TreasureHuntCreator"
     )) as TreasureHuntCreator__factory;
     console.log(`  Chapters file: ${chapters}`);
-    const chaptersData = JSON.parse(readFileSync(chapters, "utf-8"));
 
-    let solutions: string[] = [];
+    const { cidBytes, solutions } = loadChapters(chapters);
 
-    chaptersData.map((chapter: Chapter) => {
-      solutions.push(chapter.solutionAddress);
-    });
-
-    const questsRootCid = CID.parse(chaptersData[0].questHash.split("/")[0]).bytes
-
-    const thcContract = await thcFactory.deploy(solutions, questsRootCid);
+    const thcContract = await thcFactory.deploy(solutions, cidBytes);
     console.log("  Address", thcContract.address);
     const receipt = await thcContract.deployed();
     console.log("  Receipt", receipt.deployTransaction.hash);
 
-    const questsRootCidArg = await thcContract.getQuestsRootCID()
+    const questsRootCidArg = await thcContract.getQuestsRootCID();
 
     const { chainId } = await hre.ethers.provider.getNetwork();
 
@@ -52,10 +39,7 @@ task("deploy", "Push THC to network")
     await writeFile(networkFile, JSON.stringify(config, null, 2));
 
     console.log("Arguments file", argsFile);
-    await writeFile(
-      argsFile,
-      JSON.stringify([solutions, questsRootCidArg])
-    );
+    await writeFile(argsFile, JSON.stringify([solutions, questsRootCidArg]));
 
     if (networkParam !== "localhost") {
       // It is recommended to wait for 5 confirmations before issuing the verification request
