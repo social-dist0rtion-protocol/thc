@@ -8,7 +8,7 @@ import {
 } from "svelte/store";
 import { CID } from "multiformats";
 import { TreasureHuntCreator__factory } from "../../../eth/typechain";
-import { signer } from "./burnerWallet";
+import { provider, signer } from "./burnerWallet";
 import { contractsAddresses, ipfsGateway } from "./config";
 import { writableLocalStorage } from "./x";
 import CryptoJS from "crypto-js";
@@ -16,6 +16,20 @@ import { retry, retryWrap } from "./x/retry";
 import { marked } from "marked";
 import { parseLeaderboard } from "../lib";
 import { RecoverableError } from "./x/exceptions";
+import db from "./x/db";
+
+export type Chapter = {
+  solution: string | null;
+  questHash: string | null;
+  questHashLastSeen: string | null;
+  transactionHash: string | null;
+};
+
+// Chapter should be a number, but we store it as JSON so it's easier to cast it
+// to string
+export type Game = { [chapter: string]: Chapter };
+
+export const game = writableLocalStorage("game", {} as Game);
 
 export type Chapter = {
   solution: string | null;
@@ -169,17 +183,83 @@ export const currentQuestLastSeenHash = writableLocalStorage<string | null>(
   null
 );
 
+let leaderboardTimerId = -1;
+
 export const leaderboard: Readable<Awaited<
   ReturnType<typeof parseLeaderboard>
 > | null> = derived(thc, ($thc, set) => {
+  window.clearInterval(leaderboardTimerId);
   if ($thc) {
     const update = retryWrap(async () => {
       set(await parseLeaderboard($thc));
     });
-    const timerId = window.setInterval(update, 10000);
+    leaderboardTimerId = window.setInterval(update, 10000);
     update();
-    return () => window.clearInterval(timerId);
+    return () => window.clearInterval(leaderboardTimerId);
   } else {
     set(null);
   }
 });
+
+export type ENSAddresses = {
+  [address: string]: {
+    ensName?: string;
+    avatar?: string;
+    lastUpdate: number;
+  };
+};
+
+// Refresh every 10 minutes
+const ENS_TIMEOUT = 10 * 60 * 1000;
+
+let ensAddressesTimerId = -1;
+
+export const ensAddresses: Readable<ENSAddresses | null> = derived(
+  [provider, leaderboard],
+  ([$provider, $leaderboard], set) => {
+    window.clearInterval(ensAddressesTimerId);
+    if ($provider && $leaderboard) {
+      const update = retryWrap(async () => {
+        console.log("Task: update ens addresses");
+        const key = "ensAddresses";
+        const a = db.getsert(key, {} as ENSAddresses);
+        set(a);
+        for (let i = 0; i < $leaderboard.length; i++) {
+          const { address } = $leaderboard[i];
+
+          if (!a[address]) {
+            a[address] = {
+              lastUpdate: 0,
+            };
+          }
+
+          if (Date.now() - a[address].lastUpdate > ENS_TIMEOUT) {
+            try {
+              const ensName = await $provider.lookupAddress(address);
+              if (ensName) {
+                a[address].ensName = ensName;
+                a[address].lastUpdate = Date.now();
+                db.set(key, a);
+                set(a);
+              }
+              const avatar = await $provider.getAvatar(address);
+              if (avatar) {
+                a[address].avatar = avatar;
+                a[address].lastUpdate = Date.now();
+                db.set(key, a);
+                set(a);
+              }
+            } catch (e) {
+              console.error(e);
+            }
+          }
+        }
+      });
+      ensAddressesTimerId = window.setInterval(update, 60 * 1000);
+      update();
+      return () => window.clearInterval(ensAddressesTimerId);
+    } else {
+      set(null);
+    }
+  }
+);

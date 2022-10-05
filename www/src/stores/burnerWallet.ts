@@ -6,7 +6,7 @@ import { writableLocalStorage } from "./x";
 import { retryWrap } from "./x/retry";
 
 export const provider = readable(
-  new ethers.providers.JsonRpcProvider(ethereumEndpoint)
+  new ethers.providers.StaticJsonRpcProvider(ethereumEndpoint)
 );
 
 export const mnemonic = writableLocalStorage(
