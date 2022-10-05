@@ -2,14 +2,13 @@ import { get } from "svelte/store";
 import { mnemonic, provider, signer } from "./burnerWallet";
 
 beforeEach(() => {
-
-  localStorage.clear()
+  localStorage.clear();
 });
 
 describe("provider", () => {
   test("is set", () => {
     const p = get(provider);
-    p.connection.url === "http://localhost:8545";
+    expect(p.connection.url).toEqual("http://localhost:8545");
   });
 });
 

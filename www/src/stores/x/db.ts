@@ -35,7 +35,8 @@ class DB {
     if (!this.has(key)) {
       this.set(key, valueOrFunction);
     }
-    return this.get<T>(key);
+    // key is set in the if
+    return this.get<T>(key) as T;
   }
 
   clear() {

@@ -4,14 +4,14 @@
   import { onMount } from "svelte";
 
   import { signer, balance, mnemonic } from "./stores/burnerWallet";
-  import { thc, currentSolution } from "./stores/thc";
+  import { thc, game } from "./stores/thc";
 
   let reveal = false;
   let canvas: HTMLCanvasElement;
 
   let changeMnemonic: string;
   let restoreMnemonic: string;
-  let restoreCurrentSolution: null | string = null;
+  let restoreGame: null | string = null;
 
   onMount(() => {
     QRCode.toCanvas(canvas, `ethereum:${$signer!.address}`, {
@@ -39,7 +39,17 @@
     if (sure === "yes") {
       localStorage.clear();
       $mnemonic = restoreMnemonic;
-      $currentSolution = restoreCurrentSolution;
+      try {
+        if (restoreGame) {
+          $game = JSON.parse(window.atob(restoreGame));
+        } else {
+          $game = {};
+        }
+      } catch (e) {
+        alert("There was an error importing the game. Please try again.");
+        localStorage.clear();
+        return;
+      }
       window.location.reload();
     }
   }
@@ -108,8 +118,8 @@
     <textarea readonly>{$mnemonic}</textarea>
   </label>
   <label>
-    Last Solution
-    <input readonly value={$currentSolution} />
+    Game State
+    <input readonly value={window.btoa(JSON.stringify($game))} />
   </label>
 {/if}
 
@@ -121,8 +131,8 @@
     <textarea bind:value={restoreMnemonic} />
   </label>
   <label>
-    Last Solution
-    <input bind:value={restoreCurrentSolution} />
+    Game State
+    <input bind:value={restoreGame} />
   </label>
   <button type="submit">Restore</button>
 </form>

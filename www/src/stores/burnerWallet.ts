@@ -18,7 +18,6 @@ export const signer: Readable<Wallet | null> = derived(
   [provider, mnemonic],
   ([$provider, $mnemonic], set) => {
     if ($provider && $mnemonic) {
-      console.log("start");
       const start = Date.now();
       try {
         set(ethers.Wallet.fromMnemonic($mnemonic).connect($provider));
