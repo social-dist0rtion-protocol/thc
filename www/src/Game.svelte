@@ -3,7 +3,6 @@
     game,
     currentChapter,
     currentQuestHtml,
-    currentQuestHash,
     lastTransactionMined,
     thc,
     totalChapters,
@@ -25,17 +24,11 @@
     const contract = $thc!;
     const chapterNumber = $currentChapter!;
     solution = solution.toLowerCase();
-
     state = "CHECK";
     const { r, s, v } = await signatureFromSolution(address, solution);
     // Store the solution, if it's wrong it's not a problem since it won't be
     // used
     $game[chapterNumber.toString()].solution = solution;
-    $game[(chapterNumber + 1).toString()] = {
-      solution: null,
-      questHash: null,
-      transactionHash: null,
-    };
     try {
       const tx = await contract.submit(v, r, s);
       console.log(tx);
@@ -67,22 +60,19 @@
 
   function onQuestUpdatedConfirm() {
     if ($currentChapter !== null) {
-      $game[$currentChapter.toString()].questHash !== $currentQuestHash;
+      $game[$currentChapter.toString()].questHashLastSeen !==
+        $game[$currentChapter.toString()].questHash;
     }
   }
 
   let currentQuestUpdated = false;
 
   $: {
-    if (
+    currentQuestUpdated =
       $currentChapter !== null &&
-      $game[$currentChapter] &&
-      $game[$currentChapter].questHash === null
-    ) {
-      $game[$currentChapter.toString()].questHash = $currentQuestHash;
-      currentQuestUpdated =
-        $game[$currentChapter.toString()].questHash !== $currentQuestHash;
-    }
+      $game[$currentChapter.toString()] &&
+      $game[$currentChapter.toString()].questHashLastSeen !==
+        $game[$currentChapter.toString()].questHash;
   }
 </script>
 

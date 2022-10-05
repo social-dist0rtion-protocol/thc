@@ -20,6 +20,7 @@ import { RecoverableError } from "./x/exceptions";
 export type Chapter = {
   solution: string | null;
   questHash: string | null;
+  questHashLastSeen: string | null;
   transactionHash: string | null;
 };
 
@@ -27,13 +28,7 @@ export type Chapter = {
 // to string
 export type Game = { [chapter: string]: Chapter };
 
-export const game = writableLocalStorage("game", {
-  "0": {
-    solution: null,
-    questHash: null,
-    transactionHash: null,
-  },
-} as Game);
+export const game = writableLocalStorage("game", {} as Game);
 
 export const lastTransactionMined: Writable<null | string> =
   writableLocalStorage("lastTransactionMined", null);
@@ -100,14 +95,28 @@ export const currentQuest: Readable<string | null> = derived(
   [questsRootCID, currentChapter],
   ([$questsRootCID, $currentChapter], set) => {
     if ($questsRootCID && $currentChapter !== null) {
+      const currentChapterString = $currentChapter.toString();
       const $game = get(game);
+
+      if (!(currentChapterString in $game)) {
+        $game[currentChapterString] = {
+          solution: null,
+          questHash: null,
+          questHashLastSeen: null,
+          transactionHash: null,
+        };
+        game.set($game);
+      }
+
       console.log("Load new quest", $currentChapter, $game);
-      let solution: string | null;
+
+      let solution: string | null = null;
       try {
         if ($currentChapter > 0) {
           solution = $game[($currentChapter - 1).toString()].solution;
         }
       } catch (e) {
+        console.error("current quest error", e);
         fuckFuckFuckFuckFuck.set(true);
         return;
       }
@@ -126,14 +135,22 @@ export const currentQuest: Readable<string | null> = derived(
           throw RecoverableError;
         }
         if (solution !== null) {
+          console.log("solution is", solution);
           const key = keccak256(toUtf8Bytes(solution));
           const bytes = CryptoJS.AES.decrypt(quest, key.toString());
-          const plainQuest = bytes.toString(CryptoJS.enc.Utf8);
-          set(plainQuest);
+          quest = bytes.toString(CryptoJS.enc.Utf8);
+          set(quest);
         } else {
           // The first quest is not encrypted
           set(quest);
         }
+
+        $game[currentChapterString].questHash = keccak256(toUtf8Bytes(quest));
+        if ($game[currentChapterString].questHashLastSeen === null) {
+          $game[currentChapterString].questHashLastSeen =
+            $game[currentChapterString].questHash;
+        }
+        game.set($game);
       });
     }
   }
