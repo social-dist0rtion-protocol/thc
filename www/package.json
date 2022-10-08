@@ -43,7 +43,6 @@
   "dependencies": {
     "@types/marked": "^4.0.6",
     "marked": "^4.1.0",
-    "multiformats": "^9.9.0",
     "qrcode": "^1.5.1",
     "svelte-spa-router": "^3.3.0"
   }

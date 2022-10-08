@@ -20,7 +20,6 @@ specifiers:
   ethers: ^5.7.0
   hardhat: ^2.10.2
   hardhat-gas-reporter: ^1.0.8
-  multiformats: ^9.9.0
   solidity-coverage: ^0.7.21
   ts-node: ^10.9.1
   typechain: ^8.1.0
@@ -49,7 +48,6 @@ devDependencies:
   ethers: 5.7.0
   hardhat: 2.10.2_s5ojjbx2isjkawqptqpitvy25q
   hardhat-gas-reporter: 1.0.8_hardhat@2.10.2
-  multiformats: 9.9.0
   solidity-coverage: 0.7.21
   ts-node: 10.9.1_tphhiizkxv2hzwkunblc3hbmra
   typechain: 8.1.0_typescript@4.8.2
@@ -100,7 +98,7 @@ packages:
     dependencies:
       '@resolver-engine/imports': 0.3.3
       '@resolver-engine/imports-fs': 0.3.3
-      '@typechain/ethers-v5': 2.0.0_typechain@3.0.0
+      '@typechain/ethers-v5': 2.0.0_nencdbwvihrvhes5lxff7r5ypq
       '@types/mkdirp': 0.5.2
       '@types/node-fetch': 2.6.2
       ethers: 5.7.0
@@ -866,16 +864,14 @@ packages:
       typescript: 4.8.2
     dev: true
 
-  /@typechain/ethers-v5/2.0.0_typechain@3.0.0:
+  /@typechain/ethers-v5/2.0.0_nencdbwvihrvhes5lxff7r5ypq:
     resolution: {integrity: sha512-0xdCkyGOzdqh4h5JSf+zoWx85IusEjDcPIwNEHP8mrWSnCae4rvrqB+/gtpdNfX7zjlFlZiMeePn2r63EI3Lrw==}
     peerDependencies:
+      ethers: ^5.0.0
       typechain: ^3.0.0
     dependencies:
       ethers: 5.7.0
       typechain: 3.0.0_typescript@4.8.2
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
     dev: true
 
   /@typechain/hardhat/6.1.2_hdz7ben54ub5jwweqocizqrrl4:
@@ -6250,10 +6246,6 @@ packages:
     dependencies:
       buffer: 5.7.1
       varint: 5.0.2
-    dev: true
-
-  /multiformats/9.9.0:
-    resolution: {integrity: sha512-HoMUjhH9T8DDBNT+6xzkrd9ga/XiBI4xLr58LJACwK6G3HTOPeMz4nB4KJs33L2BelrIJa7P0VuNaVF3hMYfjg==}
     dev: true
 
   /multihashes/0.4.21:

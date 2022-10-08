@@ -12,8 +12,7 @@ task("root-set", "Set root CID")
       "TreasureHuntCreator"
     )) as TreasureHuntCreator;
     console.log(`Setting root CID ${cid} for contract ${thcContract.address}`);
-    const cidBytes = CID.parse(cid).bytes;
-    const tx = await thcContract.setQuestsRootCID(cidBytes);
+    const tx = await thcContract.setQuestsRootCID(cid);
 
     console.log(`  Transaction submitted. Waiting for 3 confirmation....`);
     const receipt = await tx.wait(3);
@@ -25,13 +24,13 @@ task("root-set", "Set root CID")
 task("root-set-from-chapters", "Set root CID from chapters file")
   .addParam("chapters", "The file with all chapters")
   .setAction(async ({ chapters }: { chapters: string }, hre) => {
-    const { cid, cidBytes } = loadChapters(chapters);
+    const { cid } = loadChapters(chapters);
     const thcContract = (await loadContract(
       hre,
       "TreasureHuntCreator"
     )) as TreasureHuntCreator;
     console.log(`Setting root CID ${cid} for contract ${thcContract.address}`);
-    const tx = await thcContract.setQuestsRootCID(cidBytes);
+    const tx = await thcContract.setQuestsRootCID(cid);
     console.log(`  Transaction submitted. Waiting for 3 confirmation....`);
     const receipt = await tx.wait(3);
     console.log(

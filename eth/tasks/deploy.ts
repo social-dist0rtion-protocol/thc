@@ -14,9 +14,9 @@ task("deploy", "Push THC to network")
     )) as TreasureHuntCreator__factory;
     console.log(`  Chapters file: ${chapters}`);
 
-    const { cidBytes, solutions } = loadChapters(chapters);
+    const { cid, solutions } = loadChapters(chapters);
 
-    const thcContract = await thcFactory.deploy(solutions, cidBytes);
+    const thcContract = await thcFactory.deploy(solutions, cid);
     console.log("  Address", thcContract.address);
     const receipt = await thcContract.deployed();
     console.log("  Receipt", receipt.deployTransaction.hash);

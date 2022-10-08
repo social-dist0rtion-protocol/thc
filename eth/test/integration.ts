@@ -31,7 +31,7 @@ describe("TreasureHuntCreator", () => {
   let accounts: SignerWithAddress[];
   let totalPlayers: number;
   let solutions: string[];
-  let questsRootCid: Uint8Array;
+  let questsRootCid: string;
   let deployer: SignerWithAddress;
 
   beforeEach(async () => {
@@ -46,14 +46,12 @@ describe("TreasureHuntCreator", () => {
     totalPlayers = accounts.length;
 
     solutions = accounts.map((x) => x.address);
-    questsRootCid = cidToBytes(
-      "QmUYWv6RaHHWkk5BMHJH4xKPEKNqAYKomeiTVobAMyxsbz"
-    );
+    questsRootCid = "QmUYWv6RaHHWkk5BMHJH4xKPEKNqAYKomeiTVobAMyxsbz";
   });
 
   async function deploy(
     solutions: string[],
-    questsRootCid: Uint8Array
+    questsRootCid: string
   ): Promise<TreasureHuntCreator> {
     const thc = await thcFactory.deploy(solutions, questsRootCid);
     await thc.deployed();
@@ -259,9 +257,8 @@ describe("TreasureHuntCreator", () => {
   describe("setQuestsRootCid", async () => {
     it("should set root cid", async () => {
       let instance = await deploy([], questsRootCid);
-      const newRootCid = cidToBytes(
-        "bagaaierasords4njcts6vs7qvdjfcvgnume4hqohf65zsfguprqphs3icwea"
-      );
+      const newRootCid =
+        "bagaaierasords4njcts6vs7qvdjfcvgnume4hqohf65zsfguprqphs3icwea";
       let testGameMaster = accounts[1];
       await instance.grantRole(GAME_MASTER_ROLE, testGameMaster.address);
 
@@ -269,15 +266,14 @@ describe("TreasureHuntCreator", () => {
 
       let result = await instance.getQuestsRootCID();
 
-      expect(utils.arrayify(result)).eql(newRootCid);
+      expect(result).eql(newRootCid);
     });
 
     it("should forbid setting the root to non game masters", async () => {
       let user = accounts[1];
       let instance = await deploy([], questsRootCid);
-      const newRootCid = cidToBytes(
-        "bagaaierasords4njcts6vs7qvdjfcvgnume4hqohf65zsfguprqphs3icwea"
-      );
+      const newRootCid =
+        "bagaaierasords4njcts6vs7qvdjfcvgnume4hqohf65zsfguprqphs3icwea";
 
       await expect(
         instance.connect(user).setQuestsRootCID(newRootCid)

@@ -20,23 +20,23 @@ contract TreasureHuntCreator is Ownable, AccessControl {
     address[] public _players;
     address[] public _gameMasters;
 
-    bytes public _questsRootCid;
+    string public _questsRootCid;
 
-    constructor(address[] memory solutions, bytes memory questsRootCid) {
+    constructor(address[] memory solutions, string memory questsRootCid) {
         _solutions = solutions;
         _questsRootCid = questsRootCid;
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(GAME_MASTER_ROLE, msg.sender);
     }
 
-    function setQuestsRootCID(bytes memory questsRootCid)
+    function setQuestsRootCID(string memory questsRootCid)
         external
         onlyRole(GAME_MASTER_ROLE)
     {
         _questsRootCid = questsRootCid;
     }
 
-    function getQuestsRootCID() external view returns (bytes memory) {
+    function getQuestsRootCID() external view returns (string memory) {
         return _questsRootCid;
     }
 

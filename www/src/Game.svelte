@@ -60,7 +60,7 @@
 
   function onQuestUpdatedConfirm() {
     if ($currentChapter !== null) {
-      $game[$currentChapter.toString()].questHashLastSeen !==
+      $game[$currentChapter.toString()].questHashLastSeen =
         $game[$currentChapter.toString()].questHash;
     }
   }

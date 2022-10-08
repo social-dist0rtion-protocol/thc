@@ -6,7 +6,6 @@ import {
   type Readable,
   type Writable,
 } from "svelte/store";
-import { CID } from "multiformats";
 import { TreasureHuntCreator__factory } from "../../../eth/typechain";
 import { provider, signer } from "./burnerWallet";
 import { contractsAddresses, ipfsGateway } from "./config";
@@ -17,19 +16,6 @@ import { marked } from "marked";
 import { parseLeaderboard } from "../lib";
 import { RecoverableError } from "./x/exceptions";
 import db from "./x/db";
-
-export type Chapter = {
-  solution: string | null;
-  questHash: string | null;
-  questHashLastSeen: string | null;
-  transactionHash: string | null;
-};
-
-// Chapter should be a number, but we store it as JSON so it's easier to cast it
-// to string
-export type Game = { [chapter: string]: Chapter };
-
-export const game = writableLocalStorage("game", {} as Game);
 
 export type Chapter = {
   solution: string | null;
@@ -66,10 +52,8 @@ export const questsRootCID: Readable<string | null> = derived(
     if ($thc) {
       const update = retryWrap(async () => {
         const cid = await $thc.getQuestsRootCID();
-        const hashBuffer = arrayify(cid);
-        const ipfsHash = CID.decode(hashBuffer).toV0().toString();
-        console.log("Update quests root CID", ipfsHash);
-        set(ipfsHash);
+        console.log("Update quests root CID", cid);
+        set(cid);
       }, true);
       const timerId = window.setInterval(update, 30000);
       update();

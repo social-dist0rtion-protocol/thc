@@ -2,7 +2,6 @@ import { readFileSync } from "fs";
 import { readFile, writeFile } from "fs/promises";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { TreasureHuntCreator__factory } from "../typechain";
-import { CID } from "multiformats";
 
 const CONFIG_FILE_PATH = "./deployments";
 
@@ -88,7 +87,5 @@ export function loadChapters(path: string) {
   });
   const cid = chaptersData[0].questHash.split("/")[0];
 
-  const cidBytes = CID.parse(cid).bytes;
-
-  return { cid, cidBytes, solutions };
+  return { cid, solutions };
 }
