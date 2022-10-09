@@ -1,4 +1,4 @@
-import { BigNumber, Wallet } from "ethers";
+import { BigNumber, Wallet, Wordlist } from "ethers";
 import {
   arrayify,
   keccak256,
@@ -6,6 +6,8 @@ import {
   toUtf8Bytes,
 } from "ethers/lib/utils";
 import type { TreasureHuntCreator } from "../../eth/typechain";
+
+export { getCorrespondingWordlist } from "../../eth/tasks/utils";
 
 export function shortAddress(a: string) {
   return a.substring(0, 6) + "…" + a.substring(16, 20);
@@ -25,8 +27,8 @@ export async function signatureFromSolution(address: string, solution: string) {
   return splitSignature(signature);
 }
 
-export async function signatureFromKey(address: string, mnemonic: string) {
-  const keyWallet = Wallet.fromMnemonic(mnemonic);
+export async function signatureFromKey(address: string, mnemonic: string, wordlist?: Wordlist) {
+  const keyWallet = Wallet.fromMnemonic(mnemonic, undefined, wordlist);
   // Sign the raw bytes, not the hex string
   const signature = await keyWallet.signMessage(arrayify(address));
   return splitSignature(signature);

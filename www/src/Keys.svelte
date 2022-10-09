@@ -1,7 +1,7 @@
 <script lang="ts">
   import { fuckFuckFuckFuckFuck, thc } from "./stores/thc";
   import { lowBalance, signer } from "./stores/burnerWallet";
-  import { signatureFromKey } from "./lib";
+  import { getCorrespondingWordlist, signatureFromKey } from "./lib";
   import { fade } from "svelte/transition";
   import { isValidMnemonic } from "ethers/lib/utils";
 
@@ -14,11 +14,12 @@
     const address = $signer!.address;
     const contract = $thc!;
     state = "CHECK";
-    if (!isValidMnemonic(mnemonic)) {
+    const wordlist = getCorrespondingWordlist(mnemonic);
+    if (!wordlist) {
       state = "WRONG";
       return;
     }
-    const { r, s, v } = await signatureFromKey(address, mnemonic);
+    const { r, s, v } = await signatureFromKey(address, mnemonic, wordlist);
     try {
       const tx = await contract.submitKey(v, r, s);
       console.log(tx);

@@ -31,6 +31,7 @@ const MNEMONICS = [
   "order quick stereo library opera rack volume note useless dignity purchase avocado",
   "sort humor transfer labor bridge crisp spell nerve harvest poet sight mimic",
   "electric relief banner entry blood concert sight daring twist hood disorder swamp",
+  "sonido ochenta aviso madera relieve oveja colina panal asombro maniquí móvil enchufe",
 ];
 
 describe("TreasureHuntCreator", () => {
