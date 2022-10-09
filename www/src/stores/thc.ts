@@ -31,19 +31,6 @@ export type Game = { [chapter: string]: Chapter };
 
 export const game = writableLocalStorage("game", {} as Game);
 
-export type Chapter = {
-  solution: string | null;
-  questHash: string | null;
-  questHashLastSeen: string | null;
-  transactionHash: string | null;
-};
-
-// Chapter should be a number, but we store it as JSON so it's easier to cast it
-// to string
-export type Game = { [chapter: string]: Chapter };
-
-export const game = writableLocalStorage("game", {} as Game);
-
 export const lastTransactionMined: Writable<null | string> =
   writableLocalStorage("lastTransactionMined", null);
 
