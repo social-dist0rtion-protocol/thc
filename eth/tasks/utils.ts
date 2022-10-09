@@ -96,6 +96,7 @@ export function loadChapters(path: string) {
 
 export function loadKeys(path: string) {
   const keys = readFileSync(path, "utf-8")
+    .trim()
     .split("\n")
     .map((x) => x.trim())
     .map((x) => {
