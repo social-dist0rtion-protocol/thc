@@ -76,6 +76,18 @@ export const totalChapters: Readable<null | number> = derived(
   }
 );
 
+export const totalKeys: Readable<null | number> = derived(
+  thc,
+  ($thc, set: (v: number | null) => void) => {
+    if ($thc) {
+      retry(async () => {
+        set(await $thc.totalKeys());
+      }, true);
+    }
+  },
+  null
+);
+
 export const currentChapter: Readable<null | number> = derived(
   [thc, lastTransactionMined],
   ([$thc], set: (v: null | number) => void) => {
@@ -174,11 +186,11 @@ let leaderboardTimerId = -1;
 
 export const leaderboard: Readable<Awaited<
   ReturnType<typeof parseLeaderboard>
-> | null> = derived(thc, ($thc, set) => {
+> | null> = derived([thc, totalKeys], ([$thc, $totalKeys], set) => {
   window.clearInterval(leaderboardTimerId);
-  if ($thc) {
+  if ($thc && $totalKeys !== null) {
     const update = retryWrap(async () => {
-      set(await parseLeaderboard($thc));
+      set(await parseLeaderboard($thc, $totalKeys));
     });
     leaderboardTimerId = window.setInterval(update, 10000);
     update();

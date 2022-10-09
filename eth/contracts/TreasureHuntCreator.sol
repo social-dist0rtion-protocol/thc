@@ -18,6 +18,7 @@ contract TreasureHuntCreator is Ownable, AccessControl {
     mapping(address => uint96) public _playerToCurrentChapter;
     mapping(address => uint8) public _keyToPos;
     mapping(address => uint80) public _playerToKeys;
+    uint8 public totalKeys;
     address[] public _solutions;
     address[] public _players;
     address[] public _gameMasters;
@@ -36,6 +37,7 @@ contract TreasureHuntCreator is Ownable, AccessControl {
             // 0) exists or not
             _keyToPos[keys[i]] = i + 1;
         }
+        totalKeys = uint8(keys.length);
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(GAME_MASTER_ROLE, msg.sender);
     }
