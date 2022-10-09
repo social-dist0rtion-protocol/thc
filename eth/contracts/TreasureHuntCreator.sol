@@ -16,15 +16,26 @@ contract TreasureHuntCreator is Ownable, AccessControl {
 
     mapping(uint96 => address[]) public _chapterToPlayers;
     mapping(address => uint96) public _playerToCurrentChapter;
+    mapping(address => uint8) public _keyToPos;
+    mapping(address => uint80) public _playerToKeys;
     address[] public _solutions;
     address[] public _players;
     address[] public _gameMasters;
 
     bytes public _questsRootCid;
 
-    constructor(address[] memory solutions, bytes memory questsRootCid) {
+    constructor(
+        address[] memory solutions,
+        address[] memory keys,
+        bytes memory questsRootCid
+    ) {
         _solutions = solutions;
         _questsRootCid = questsRootCid;
+        for (uint8 i; i < keys.length; i++) {
+            // Add 1 otherwise it's impossible to know if the first key (index
+            // 0) exists or not
+            _keyToPos[keys[i]] = i + 1;
+        }
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(GAME_MASTER_ROLE, msg.sender);
     }
@@ -74,11 +85,26 @@ contract TreasureHuntCreator is Ownable, AccessControl {
         emit ChapterCompleted(playerChapter, msg.sender);
     }
 
+    function submitKey(
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) public {
+        address signer = ecrecover(getAddressHash(msg.sender), v, r, s);
+        uint8 pos = _keyToPos[signer];
+        require(pos > 0, "Wrong key");
+        _playerToKeys[msg.sender] |= uint80(1 << (pos - 1));
+    }
+
     function getAddressHash(address a) public pure returns (bytes32) {
         return
             keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n20", a));
     }
 
+    // 160 bit address
+    //   8 bit future use lol sure thing
+    //  80 bit keys
+    //   8 bit chapter
     function getLeaderboard(uint256 page)
         public
         view
@@ -91,10 +117,12 @@ contract TreasureHuntCreator is Ownable, AccessControl {
             i++
         ) {
             address player = _players[i + offset];
+            uint80 keys = _playerToKeys[player];
 
             leaderboard[i] =
                 (uint256(uint160(player)) << 96) |
-                uint256(_playerToCurrentChapter[player]);
+                (uint256(keys) << 8) |
+                uint256(uint8(_playerToCurrentChapter[player]));
         }
     }
 }

@@ -7,9 +7,13 @@ import {
   TreasureHuntCreator__factory,
 } from "../typechain";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { BigNumber } from "ethers";
-import { cidToBytes, getSolutionAddress, getSolutionSignature, merge } from "./utils";
-
+import { BigNumber, Wallet } from "ethers";
+import {
+  cidToBytes,
+  getSolutionAddress,
+  getSolutionSignature,
+  merge,
+} from "./utils";
 
 chai.use(solidity);
 chai.use(chaiAsPromised);
@@ -32,14 +36,16 @@ describe("TreasureHuntCreator", () => {
     )) as TreasureHuntCreator__factory;
 
     totalPlayers = accounts.length;
-    questsRootCid = cidToBytes("QmUYWv6RaHHWkk5BMHJH4xKPEKNqAYKomeiTVobAMyxsbz");
+    questsRootCid = cidToBytes(
+      "QmUYWv6RaHHWkk5BMHJH4xKPEKNqAYKomeiTVobAMyxsbz"
+    );
   });
 
   async function deploy(
     solutions: string[],
     questsRootCid: Uint8Array
   ): Promise<TreasureHuntCreator> {
-    const thc = await thcFactory.deploy(solutions, questsRootCid);
+    const thc = await thcFactory.deploy(solutions, [], questsRootCid);
     await thc.deployed();
 
     return thc;
