@@ -1,4 +1,4 @@
-import { BigNumber, Wallet, Wordlist } from "ethers";
+import { BigNumber, utils, Wallet, Wordlist, wordlists } from "ethers";
 import {
   arrayify,
   keccak256,
@@ -6,8 +6,6 @@ import {
   toUtf8Bytes,
 } from "ethers/lib/utils";
 import type { TreasureHuntCreator } from "../../eth/typechain";
-
-export { getCorrespondingWordlist } from "../../eth/tasks/utils";
 
 export function shortAddress(a: string) {
   return a.substring(0, 6) + "…" + a.substring(16, 20);
@@ -75,4 +73,13 @@ export async function parseLeaderboard(
   const leaderboard = await getLeaderboard();
   leaderboard.sort((a, b) => b.chapter - a.chapter);
   return leaderboard;
+}
+
+export function getCorrespondingWordlist(mnemonic: string) {
+    for (let locale in wordlists) {
+        const wordlist = wordlists[locale];
+        if (utils.isValidMnemonic(mnemonic, wordlist)) {
+            return wordlists[locale];
+        }
+    }
 }
