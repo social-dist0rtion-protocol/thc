@@ -3,6 +3,7 @@ import { readFile, writeFile } from "fs/promises";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { TreasureHuntCreator__factory } from "../typechain";
 import { CID } from "multiformats";
+import { Wallet, utils, wordlists } from "ethers";
 
 const CONFIG_FILE_PATH = "./deployments";
 
@@ -91,4 +92,26 @@ export function loadChapters(path: string) {
   const cidBytes = CID.parse(cid).bytes;
 
   return { cid, cidBytes, solutions };
+}
+
+export function loadKeys(path: string) {
+  const keys = readFileSync(path, "utf-8")
+    .trim()
+    .split("\n")
+    .map((x) => x.trim())
+    .map((x) => {
+        const wordlist = getCorrespondingWordlist(x);
+        return Wallet.fromMnemonic(x, undefined, wordlist).address
+    });
+
+  return keys;
+}
+
+export function getCorrespondingWordlist(mnemonic: string) {
+    for (let locale in wordlists) {
+        const wordlist = wordlists[locale];
+        if (utils.isValidMnemonic(mnemonic, wordlist)) {
+            return wordlists[locale];
+        }
+    }
 }

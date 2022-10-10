@@ -9,12 +9,14 @@ import {
   TreasureHuntCreator__factory,
 } from "../typechain";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { BigNumber, utils } from "ethers";
+import { BigNumber, utils, Wallet } from "ethers";
 import {
   cidToBytes,
+  getKeySignature,
   getSignature,
   getSolutionAddress,
   getSolutionSignature,
+  leaderboardEntry,
   merge,
 } from "./utils";
 import { keccak256, toUtf8Bytes } from "ethers/lib/utils";
@@ -25,12 +27,19 @@ const { expect } = chai;
 
 const PAGE_SIZE = 32;
 const GAME_MASTER_ROLE = keccak256(toUtf8Bytes("GAME_MASTER_ROLE"));
+const MNEMONICS = [
+  "order quick stereo library opera rack volume note useless dignity purchase avocado",
+  "sort humor transfer labor bridge crisp spell nerve harvest poet sight mimic",
+  "electric relief banner entry blood concert sight daring twist hood disorder swamp",
+  "sonido ochenta aviso madera relieve oveja colina panal asombro maniquí móvil enchufe",
+];
 
 describe("TreasureHuntCreator", () => {
   let thcFactory: TreasureHuntCreator__factory;
   let accounts: SignerWithAddress[];
   let totalPlayers: number;
   let solutions: string[];
+  let keys: string[];
   let questsRootCid: Uint8Array;
   let deployer: SignerWithAddress;
 
@@ -46,6 +55,7 @@ describe("TreasureHuntCreator", () => {
     totalPlayers = accounts.length;
 
     solutions = accounts.map((x) => x.address);
+    keys = MNEMONICS.map((x) => Wallet.fromMnemonic(x).address);
     questsRootCid = cidToBytes(
       "QmUYWv6RaHHWkk5BMHJH4xKPEKNqAYKomeiTVobAMyxsbz"
     );
@@ -53,9 +63,10 @@ describe("TreasureHuntCreator", () => {
 
   async function deploy(
     solutions: string[],
+    keys: string[],
     questsRootCid: Uint8Array
   ): Promise<TreasureHuntCreator> {
-    const thc = await thcFactory.deploy(solutions, questsRootCid);
+    const thc = await thcFactory.deploy(solutions, keys, questsRootCid);
     await thc.deployed();
 
     return thc;
@@ -63,7 +74,7 @@ describe("TreasureHuntCreator", () => {
 
   describe("constructor", async () => {
     it("should initialize chapters with solutions and quests", async () => {
-      let instance = await deploy(solutions, questsRootCid);
+      let instance = await deploy(solutions, keys, questsRootCid);
       for (var i = 0; i < accounts.length; i++) {
         let solution = await instance._solutions(i);
         expect(solution).equal(accounts[i].address);
@@ -77,7 +88,7 @@ describe("TreasureHuntCreator", () => {
       let [signature, solutionKey] = await getSignature(deployer, testSolution);
       let { r, v, s } = ethers.utils.splitSignature(signature);
 
-      let instance = await deploy([solutionKey], questsRootCid);
+      let instance = await deploy([solutionKey], keys, questsRootCid);
       await instance.connect(deployer).submit(v, r, s);
 
       let result = await instance._playerToCurrentChapter(deployer.address);
@@ -95,7 +106,7 @@ describe("TreasureHuntCreator", () => {
       );
       let { r, v, s } = ethers.utils.splitSignature(signatureWrong);
 
-      let instance = await deploy([solutionKey], questsRootCid);
+      let instance = await deploy([solutionKey], keys, questsRootCid);
 
       await expect(instance.connect(deployer).submit(v, r, s)).revertedWith(
         "Wrong solution."
@@ -112,7 +123,7 @@ describe("TreasureHuntCreator", () => {
         testRightSolution
       );
       let { r, v, s } = ethers.utils.splitSignature(signatureWrong);
-      let instance = await deploy([solutionKey], questsRootCid);
+      let instance = await deploy([solutionKey], keys, questsRootCid);
 
       await expect(instance.connect(deployer).submit(v, r, s)).revertedWith("");
 
@@ -125,7 +136,7 @@ describe("TreasureHuntCreator", () => {
       let [signature, solutionKey] = await getSignature(deployer, testSolution);
       let { r, v, s } = ethers.utils.splitSignature(signature);
 
-      let instance = await deploy([solutions[0]], questsRootCid);
+      let instance = await deploy([solutions[0]], keys, questsRootCid);
 
       await expect(instance.connect(deployer).submit(v, r, s)).revertedWith("");
       await expect(instance._players(0)).revertedWith("");
@@ -136,7 +147,7 @@ describe("TreasureHuntCreator", () => {
       let [signature, solutionKey] = await getSignature(deployer, testSolution);
       let { r, v, s } = ethers.utils.splitSignature(signature);
 
-      let instance = await deploy([solutionKey], questsRootCid);
+      let instance = await deploy([solutionKey], keys, questsRootCid);
 
       await instance.connect(deployer).submit(v, r, s);
 
@@ -150,11 +161,40 @@ describe("TreasureHuntCreator", () => {
       let [signature, solutionKey] = await getSignature(deployer, testSolution);
       let { r, v, s } = ethers.utils.splitSignature(signature);
 
-      let instance = await deploy([solutionKey], questsRootCid);
+      let instance = await deploy([solutionKey], keys, questsRootCid);
       await instance.connect(deployer).submit(v, r, s);
 
       let result = await instance._chapterToPlayers(0, 0);
       expect(result).equal(deployer.address);
+    });
+  });
+
+  describe("submitKey", async () => {
+    it("should return an empty bitmap if player has no keys", async () => {
+      const instance = await deploy(solutions, keys, questsRootCid);
+      expect(await instance._playerToKeys(deployer.address)).equal(
+        BigNumber.from(0)
+      );
+    });
+
+    it("should add a key to the player bitmap", async () => {
+      const instance = await deploy(solutions, keys, questsRootCid);
+      const { r, v, s } = await getKeySignature(MNEMONICS[0], deployer.address);
+      await instance.connect(deployer).submitKey(v, r, s);
+      expect(await instance._playerToKeys(deployer.address)).equal(
+        BigNumber.from(1)
+      );
+    });
+
+    it("should reject a wrong key", async () => {
+      const w = Wallet.createRandom();
+      const signature = await w.signMessage(utils.arrayify(deployer.address));
+      const { r, v, s } = ethers.utils.splitSignature(signature);
+      const instance = await deploy(solutions, keys, questsRootCid);
+
+      await expect(instance.connect(deployer).submitKey(v, r, s)).revertedWith(
+        "Wrong key"
+      );
     });
   });
 
@@ -171,6 +211,7 @@ describe("TreasureHuntCreator", () => {
 
       let instance = await deploy(
         [solutionKey1, solutionKey2, solutionKey3],
+        keys,
         questsRootCid
       );
 
@@ -195,6 +236,7 @@ describe("TreasureHuntCreator", () => {
 
       let instance = await deploy(
         [solutionKey1, solutionKey2, solutionKey3],
+        keys,
         questsRootCid
       );
 
@@ -203,53 +245,51 @@ describe("TreasureHuntCreator", () => {
       let expectedLeaderboard;
 
       // player 1 solves chapter 1
-      let signature = await getSolutionSignature(
-        testSolution1,
-        player1.address
-      );
-      await instance
-        .connect(player1)
-        .submit(signature.v, signature.r, signature.s);
+      let sig = await getSolutionSignature(testSolution1, player1.address);
+      await instance.connect(player1).submit(sig.v, sig.r, sig.s);
       leaderboard = await instance.getLeaderboard(0);
       expectedLeaderboard = Array(PAGE_SIZE).fill(BigNumber.from(0));
-      expectedLeaderboard[0] = merge(player1.address, 1);
+      expectedLeaderboard[0] = leaderboardEntry(player1.address, [], 1);
       expect(leaderboard.map((n) => n.toString())).eql(
         expectedLeaderboard.map((n) => n.toString())
       );
 
+      // player 1 finds key 0
+      sig = await getKeySignature(MNEMONICS[0], player1.address);
+      await instance.connect(player1).submitKey(sig.v, sig.r, sig.s);
+
       // player 2 solves chapter 1
-      signature = await getSolutionSignature(testSolution1, player2.address);
-      await instance
-        .connect(player2)
-        .submit(signature.v, signature.r, signature.s);
+      sig = await getSolutionSignature(testSolution1, player2.address);
+      await instance.connect(player2).submit(sig.v, sig.r, sig.s);
 
       leaderboard = await instance.getLeaderboard(0);
       expectedLeaderboard = Array(PAGE_SIZE).fill(BigNumber.from(0));
-      expectedLeaderboard[0] = merge(player1.address, 1);
-      expectedLeaderboard[1] = merge(player2.address, 1);
+      expectedLeaderboard[0] = leaderboardEntry(player1.address, [0], 1);
+      expectedLeaderboard[1] = leaderboardEntry(player2.address, [], 1);
       expect(leaderboard.map((n) => n.toString())).eql(
         expectedLeaderboard.map((n) => n.toString())
       );
 
       // plot twist: player 3 solves chapter 1, 2, and 3
-      signature = await getSolutionSignature(testSolution1, player3.address);
-      await instance
-        .connect(player3)
-        .submit(signature.v, signature.r, signature.s);
-      signature = await getSolutionSignature(testSolution2, player3.address);
-      await instance
-        .connect(player3)
-        .submit(signature.v, signature.r, signature.s);
-      signature = await getSolutionSignature(testSolution3, player3.address);
-      await instance
-        .connect(player3)
-        .submit(signature.v, signature.r, signature.s);
+      sig = await getSolutionSignature(testSolution1, player3.address);
+      await instance.connect(player3).submit(sig.v, sig.r, sig.s);
+      sig = await getSolutionSignature(testSolution2, player3.address);
+      await instance.connect(player3).submit(sig.v, sig.r, sig.s);
+      sig = await getSolutionSignature(testSolution3, player3.address);
+      await instance.connect(player3).submit(sig.v, sig.r, sig.s);
+
+      // Player 3 finds keys 0 and 2
+      sig = await getKeySignature(MNEMONICS[0], player3.address);
+      await instance.connect(player3).submitKey(sig.v, sig.r, sig.s);
+      sig = await getKeySignature(MNEMONICS[2], player3.address);
+      await instance.connect(player3).submitKey(sig.v, sig.r, sig.s);
+
       leaderboard = await instance.getLeaderboard(0);
 
       expectedLeaderboard = Array(PAGE_SIZE).fill(BigNumber.from(0));
-      expectedLeaderboard[0] = merge(player1.address, 1);
-      expectedLeaderboard[1] = merge(player2.address, 1);
-      expectedLeaderboard[2] = merge(player3.address, 3);
+      expectedLeaderboard[0] = leaderboardEntry(player1.address, [0], 1);
+      expectedLeaderboard[1] = leaderboardEntry(player2.address, [], 1);
+      expectedLeaderboard[2] = leaderboardEntry(player3.address, [0, 2], 3);
       expect(leaderboard.map((n) => n.toString())).eql(
         expectedLeaderboard.map((n) => n.toString())
       );
@@ -258,7 +298,7 @@ describe("TreasureHuntCreator", () => {
 
   describe("setQuestsRootCid", async () => {
     it("should set root cid", async () => {
-      let instance = await deploy([], questsRootCid);
+      let instance = await deploy([], keys, questsRootCid);
       const newRootCid = cidToBytes(
         "bagaaierasords4njcts6vs7qvdjfcvgnume4hqohf65zsfguprqphs3icwea"
       );
@@ -274,7 +314,7 @@ describe("TreasureHuntCreator", () => {
 
     it("should forbid setting the root to non game masters", async () => {
       let user = accounts[1];
-      let instance = await deploy([], questsRootCid);
+      let instance = await deploy([], keys, questsRootCid);
       const newRootCid = cidToBytes(
         "bagaaierasords4njcts6vs7qvdjfcvgnume4hqohf65zsfguprqphs3icwea"
       );
@@ -290,7 +330,7 @@ describe("TreasureHuntCreator", () => {
   describe("addSolution", async () => {
     it("should forbid adding a chapter to non game masters", async () => {
       let user = accounts[1];
-      let instance = await deploy([], questsRootCid);
+      let instance = await deploy([], keys, questsRootCid);
 
       await expect(
         instance.connect(user).addSolution(solutions[0])
@@ -300,7 +340,7 @@ describe("TreasureHuntCreator", () => {
     });
 
     it("should add a new chapter from a game master", async () => {
-      let instance = await deploy([], questsRootCid);
+      let instance = await deploy([], keys, questsRootCid);
       let testGameMaster = accounts[1];
       let testSolution = solutions[0];
 

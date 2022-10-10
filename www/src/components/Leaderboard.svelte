@@ -4,7 +4,11 @@
 
   export let address: string;
   export let ensAddresses: ENSAddresses;
-  export let leaderboard: { address: string; chapter: number }[];
+  export let leaderboard: {
+    address: string;
+    chapter: number;
+    keys: (string | null)[];
+  }[];
 </script>
 
 <div class="thc--notification">
@@ -18,23 +22,22 @@
 <table class="leaderboard">
   <thead>
     <tr>
-      <td />
       <td>Address</td>
       <td>Chapter</td>
+      <td>Keys</td>
     </tr>
   </thead>
   <tbody>
-    {#each leaderboard as { address: playerAddress, chapter }}
+    {#each leaderboard as { address: playerAddress, chapter, keys }}
       <tr>
-        <td class="avatar">
+        <td>
           {#if ensAddresses[playerAddress] && ensAddresses[playerAddress].avatar}
             <img
+              class="avatar"
               src={ensAddresses[playerAddress].avatar}
               alt="Player's avatar"
             />
           {/if}
-        </td>
-        <td>
           {#if ensAddresses[playerAddress] && ensAddresses[playerAddress].ensName}
             <strong>
               {ensAddresses[playerAddress].ensName}
@@ -42,10 +45,20 @@
           {/if}
           <code>{shortAddress(playerAddress)}</code>
           {#if playerAddress.toLowerCase() === address.toLowerCase()}
+            <br />
             <span class="label hope">that's you</span>
           {/if}
         </td>
         <td>{chapter}</td>
+        <td>
+          {#each keys as key}
+            {#if key}
+              🔑
+            {:else}
+              ❔
+            {/if}
+          {/each}
+        </td>
       </tr>
     {/each}
   </tbody>

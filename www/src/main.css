@@ -103,6 +103,7 @@ main {
 }
 
 .thc--chapter-state div {
+  padding: 1rem;
   width: 100%;
   max-width: calc(var(--max-width) / 2);
 }

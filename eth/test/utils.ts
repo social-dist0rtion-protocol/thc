@@ -21,6 +21,12 @@ export async function getSolutionSignature(solution: string, address: string) {
   return utils.splitSignature(signature);
 }
 
+export async function getKeySignature(mnemonic: string, address: string) {
+  const wallet = Wallet.fromMnemonic(mnemonic);
+  const signature = await wallet.signMessage(utils.arrayify(address));
+  return utils.splitSignature(signature);
+}
+
 export async function getSignature(
   signer: SignerWithAddress,
   solution: string
@@ -35,4 +41,19 @@ export async function getSignature(
 
 export function merge(address: string, chapter: number) {
   return BigNumber.from(address).shl(96).or(BigNumber.from(chapter));
+}
+
+export function leaderboardEntry(
+  address: string,
+  keys: number[],
+  chapter: number
+) {
+  const a = BigNumber.from(address).shl(96);
+  let k = BigNumber.from(0);
+  for (let pos of keys) {
+    k = k.or(BigNumber.from(1).shl(pos));
+  }
+  k = k.shl(8);
+  const c = BigNumber.from(chapter);
+  return a.or(k).or(c);
 }

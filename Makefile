@@ -5,6 +5,7 @@ ETH_NETWORK ?= localhost
 ETH_ENDPOINT ?= http://localhost:8545
 CHAPTERS_SCRIPT ?= gen/chapters.ts
 CHAPTERS_FILE ?= gen/chapters.json
+MNEMONICS_FILE ?= try/chapters/mnemonics
 IPFS_HOST ?= localhost
 IPFS_PORT ?= 5001
 IPFS_PROTOCOL ?= http
@@ -21,7 +22,7 @@ frontend:
 
 backend: chapters
 	echo "Deploying contracts to testnet."
-	@cd $(ETH_DIR); npx hardhat deploy --network $(ETH_NETWORK) --chapters ../$(CHAPTERS_FILE)
+	@cd $(ETH_DIR); npx hardhat deploy --network $(ETH_NETWORK) --chapters ../$(CHAPTERS_FILE) --mnemonics ../${MNEMONICS_FILE}
 	echo "Backend deployed to testnet."
 
 update-chapters: chapters

@@ -100,6 +100,7 @@ footer {
   background-size: auto 100px;
   background-position: bottom;
   background-repeat: repeat-x;
+  background-attachment: fixed;
   bottom: 0;
   height: 100px;
   width: 100%;

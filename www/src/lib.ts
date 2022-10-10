@@ -1,4 +1,4 @@
-import { BigNumber, Wallet } from "ethers";
+import { BigNumber, utils, Wallet, Wordlist, wordlists } from "ethers";
 import {
   arrayify,
   keccak256,
@@ -25,12 +25,33 @@ export async function signatureFromSolution(address: string, solution: string) {
   return splitSignature(signature);
 }
 
-export async function parseLeaderboard(thc: TreasureHuntCreator) {
-  function parse(value: BigNumber) {
-    const address = value.div(BigNumber.from(2).pow(96)).toHexString();
-    const chapter = value.mask(96).toNumber();
+export async function signatureFromKey(address: string, mnemonic: string, wordlist?: Wordlist) {
+  const keyWallet = Wallet.fromMnemonic(mnemonic, undefined, wordlist);
+  // Sign the raw bytes, not the hex string
+  const signature = await keyWallet.signMessage(arrayify(address));
+  return splitSignature(signature);
+}
 
-    return { address: address, chapter };
+// Hardcoded for now
+const KEYS_NAMES = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "L", "M"];
+export async function parseLeaderboard(
+  thc: TreasureHuntCreator,
+  totalKeys: number
+) {
+  function parse(value: BigNumber) {
+    const address = value.shr(96).toHexString();
+    const keysBitmap = value.shr(8).mask(80);
+    const keys: (string | null)[] = [];
+    for (var i = 0; i < totalKeys; i++) {
+      if (keysBitmap.and(BigNumber.from(1).shl(i)).gt(0)) {
+        keys.push(KEYS_NAMES[i]);
+      } else {
+        keys.push(null);
+      }
+    }
+    const chapter = value.mask(8).toNumber();
+
+    return { address: address, chapter, keys };
   }
   async function getLeaderboard() {
     const ZERO = BigNumber.from(0);
@@ -52,4 +73,13 @@ export async function parseLeaderboard(thc: TreasureHuntCreator) {
   const leaderboard = await getLeaderboard();
   leaderboard.sort((a, b) => b.chapter - a.chapter);
   return leaderboard;
+}
+
+export function getCorrespondingWordlist(mnemonic: string) {
+    for (let locale in wordlists) {
+        const wordlist = wordlists[locale];
+        if (utils.isValidMnemonic(mnemonic, wordlist)) {
+            return wordlists[locale];
+        }
+    }
 }
