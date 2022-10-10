@@ -4,6 +4,7 @@ import { derived, readable, type Readable } from "svelte/store";
 import { ethereumEndpoint } from "./config";
 import { writableLocalStorage } from "./x";
 import { retryWrap } from "./x/retry";
+import "./registerWordlists";
 
 export const provider = readable(
   new ethers.providers.StaticJsonRpcProvider(ethereumEndpoint)

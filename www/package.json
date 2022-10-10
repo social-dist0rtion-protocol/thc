@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
+    "@ethersproject/wordlists": "^5.7.0",
     "@rollup/plugin-inject": "^4.0.4",
     "@rollup/plugin-replace": "^4.0.0",
     "@sveltejs/vite-plugin-svelte": "^1.0.3",
