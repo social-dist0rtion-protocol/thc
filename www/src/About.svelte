@@ -43,7 +43,7 @@
   only support `http` and `https` schemes).
 </p>
 
-<h3>I want to talk with the manager</h3>
+<h3>I want to speak with the manager</h3>
 <p>
   <strong>No Time to DAI</strong> is a treasure hunt challenge (THC for short)
   created by
