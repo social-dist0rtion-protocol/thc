@@ -90,6 +90,7 @@ main {
     radial-gradient(circle, rgba(48, 53, 75, 1) 20%, rgba(0, 0, 0, 1) 100%);
   background-size: cover;
   background-position: center;
+  background-attachment: fixed;
   padding-bottom: 100px;
 }
 
