@@ -169,11 +169,20 @@ describe("TreasureHuntCreator", () => {
   });
 
   describe("submitKey", async () => {
+    it("should return an empty bitmap if player has no keys", async () => {
+      const instance = await deploy(solutions, keys, questsRootCid);
+      expect(await instance._playerToKeys(deployer.address)).equal(
+        BigNumber.from(0)
+      );
+    });
+
     it("should add a key to the player bitmap", async () => {
       const instance = await deploy(solutions, keys, questsRootCid);
       const { r, v, s } = await getKeySignature(MNEMONICS[0], deployer.address);
       await instance.connect(deployer).submitKey(v, r, s);
-      let result = await instance._playerToKeys(deployer.address);
+      expect(await instance._playerToKeys(deployer.address)).equal(
+        BigNumber.from(1)
+      );
     });
 
     it("should reject a wrong key", async () => {
