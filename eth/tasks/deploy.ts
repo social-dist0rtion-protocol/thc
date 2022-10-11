@@ -45,7 +45,10 @@ task("deploy", "Push THC to network")
       await writeFile(networkFile, JSON.stringify(config, null, 2));
 
       console.log("Arguments file", argsFile);
-      await writeFile(argsFile, JSON.stringify([solutions, questsRootCidArg]));
+      await writeFile(
+        argsFile,
+        JSON.stringify([solutions, keys, questsRootCidArg])
+      );
 
       if (networkParam !== "localhost") {
         // It is recommended to wait for 5 confirmations before issuing the verification request
