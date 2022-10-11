@@ -33,6 +33,12 @@
       recover password). Be aware that if you use incognito you might lose your
       progress.
     </p>
+    <p>
+      <strong>
+        The game uses a burner wallet and runs on the Göerli test network, check
+        your address in the <a href="#/settings">settings</a> page.
+      </strong>
+    </p>
   </div>
 {/if}
 
