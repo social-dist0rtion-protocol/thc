@@ -210,7 +210,8 @@ export const ensAddresses: Readable<ENSAddresses | null> = derived(
   [provider, leaderboard],
   ([$provider, $leaderboard], set) => {
     window.clearInterval(ensAddressesTimerId);
-    if ($provider && $leaderboard) {
+    // FIXME: ENS on Görli is broken, don't waste calls
+    if (false && $provider && $leaderboard) {
       const update = retryWrap(async () => {
         console.log("Task: update ens addresses");
         const key = "ensAddresses";
@@ -226,6 +227,7 @@ export const ensAddresses: Readable<ENSAddresses | null> = derived(
           }
 
           if (Date.now() - a[address].lastUpdate > ENS_TIMEOUT) {
+            console.log("lookup ENS for address", address);
             try {
               const ensName = await $provider.lookupAddress(address);
               if (ensName) {
@@ -259,13 +261,15 @@ export const ensAddresses: Readable<ENSAddresses | null> = derived(
               console.error(e);
             }
           }
+          a[address].lastUpdate = Date.now();
+          db.set(key, a);
         }
       });
       ensAddressesTimerId = window.setInterval(update, 60 * 1000);
       update();
       return () => window.clearInterval(ensAddressesTimerId);
     } else {
-      set(null);
+      set({});
     }
   }
 );
