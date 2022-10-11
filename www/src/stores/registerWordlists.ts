@@ -2,6 +2,7 @@ import { ethers } from "ethers";
 
 import { langEs as es } from "@ethersproject/wordlists/lib/lang-es";
 import { langFr as fr } from "@ethersproject/wordlists/lib/lang-fr";
+import { langJa as ja } from "@ethersproject/wordlists/lib/lang-ja";
 import {
   langZhCn as zh_cn,
   langZhTw as zh_tw,
@@ -9,6 +10,7 @@ import {
 
 ethers.wordlists.es = es;
 ethers.wordlists.fr = fr;
+ethers.wordlists.ja = ja;
 ethers.wordlists.zh = zh_cn;
 ethers.wordlists.zh_cn = zh_cn;
 ethers.wordlists.zh_tw = zh_tw;
