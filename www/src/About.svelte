@@ -13,8 +13,8 @@
 
 <h3>What are keys and where do I get them?</h3>
 <p>
-  Keys are 24-word mnemonic phrases hidden in the game. If you find a key, you
-  can claim it in the "keys" section of the game. Insert the mnemonic in the
+  Keys are 12 or 24-word mnemonic phrases hidden in the game. If you find a key,
+  you can claim it in the "keys" section of the game. Insert the mnemonic in the
   input box and submit it. If it's correct it will appear in the leaderboard
   next to your address.
 </p>
