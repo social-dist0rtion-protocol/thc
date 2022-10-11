@@ -56,7 +56,10 @@
     the game.
   </p>
 {:else if $signer !== null && $thc !== null}
-  <p>Did you find a key? Submit it with this form.</p>
+  <p>
+    Did you find a key? Submit it with this form to add it to your score in the
+    leaderboard. More info in the <a href="#/about">FAQs</a>.
+  </p>
   <form on:submit|preventDefault={onSubmitKey}>
     <input
       disabled={$lowBalance}

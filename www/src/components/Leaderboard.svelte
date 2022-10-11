@@ -13,9 +13,11 @@
 
 <div class="thc--notification">
   <p>
-    Register your ENS domain to customize your <strong>username</strong> and
+    Register your ENS domain (<strong>on Görli!</strong>) to customize your
+    <strong>username</strong>
+    and
     <strong>avatar</strong>! Note: it can take up to 10 minutes for your ENS to
-    show up here.
+    show up here. More info in the <a href="#/about">FAQs</a>.
   </p>
 </div>
 
