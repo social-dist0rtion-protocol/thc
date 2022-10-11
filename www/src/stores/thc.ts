@@ -25,14 +25,16 @@ export type Chapter = {
   transactionHash: string | null;
 };
 
+const thcAddressLower = contractsAddresses["TreasureHuntCreator"].toLowerCase();
+
 // Chapter should be a number, but we store it as JSON so it's easier to cast it
 // to string
 export type Game = { [chapter: string]: Chapter };
 
-export const game = writableLocalStorage("game", {} as Game);
+export const game = writableLocalStorage(`${thcAddressLower}:game`, {} as Game);
 
 export const lastTransactionMined: Writable<null | string> =
-  writableLocalStorage("lastTransactionMined", null);
+  writableLocalStorage(`${thcAddressLower}:lastTransactionMined`, null);
 
 export const thc = derived(
   signer,
@@ -173,15 +175,6 @@ export const currentQuestHtml = derived(currentQuest, ($currentQuest) =>
   $currentQuest ? marked($currentQuest) : null
 );
 
-export const currentQuestHash = derived(currentQuest, ($currentQuest) =>
-  $currentQuest ? keccak256(toUtf8Bytes($currentQuest)) : null
-);
-
-export const currentQuestLastSeenHash = writableLocalStorage<string | null>(
-  "currentQuestLastSeenHash",
-  null
-);
-
 let leaderboardTimerId = -1;
 
 export const leaderboard: Readable<Awaited<
@@ -244,11 +237,19 @@ export const ensAddresses: Readable<ENSAddresses | null> = derived(
               const avatar = await $provider.getAvatar(address);
               if (avatar) {
                 if (avatar.startsWith("ipfs://")) {
-                    a[address].avatar = `https://gateway.pinata.cloud/ipfs/${avatar.replace('ipfs://', '')}`;
+                  a[
+                    address
+                  ].avatar = `https://gateway.pinata.cloud/ipfs/${avatar.replace(
+                    "ipfs://",
+                    ""
+                  )}`;
                 } else if (avatar.startsWith("bzz://")) {
-                    a[address].avatar = `https://bzz.link/bzz/${avatar.replace('bzz://', '')}/`;
+                  a[address].avatar = `https://bzz.link/bzz/${avatar.replace(
+                    "bzz://",
+                    ""
+                  )}/`;
                 } else {
-                    a[address].avatar = avatar;
+                  a[address].avatar = avatar;
                 }
                 a[address].lastUpdate = Date.now();
                 db.set(key, a);
