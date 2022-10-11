@@ -243,7 +243,13 @@ export const ensAddresses: Readable<ENSAddresses | null> = derived(
               }
               const avatar = await $provider.getAvatar(address);
               if (avatar) {
-                a[address].avatar = avatar;
+                if (avatar.startsWith("ipfs://")) {
+                    a[address].avatar = `https://gateway.pinata.cloud/ipfs/${avatar.replace('ipfs://', '')}`;
+                } else if (avatar.startsWith("bzz://")) {
+                    a[address].avatar = `https://bzz.link/bzz/${avatar.replace('bzz://', '')}/`;
+                } else {
+                    a[address].avatar = avatar;
+                }
                 a[address].lastUpdate = Date.now();
                 db.set(key, a);
                 set(a);
