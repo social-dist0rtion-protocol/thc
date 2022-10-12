@@ -15,6 +15,7 @@ specifiers:
   '@types/qrcode': ^1.5.0
   '@types/testing-library__jest-dom': ^5.14.5
   '@walletconnect/web3-provider': ^1.8.0
+  blockies-ts: ^1.0.0
   crypto-js: ^4.1.1
   ethers: ^5.7.0
   jsdom: ^20.0.0
@@ -37,6 +38,7 @@ specifiers:
 
 dependencies:
   '@types/marked': 4.0.6
+  blockies-ts: 1.0.0
   marked: 4.1.0
   multiformats: 9.9.0
   qrcode: 1.5.1
@@ -1350,6 +1352,10 @@ packages:
   /blakejs/1.1.1:
     resolution: {integrity: sha512-bLG6PHOCZJKNshTjGRBvET0vTciwQE6zFKOKKXPDJfwFBd4Ac0yBfPZqcGvGJap50l7ktvlpFqc2jGVaUgbJgg==}
     dev: true
+
+  /blockies-ts/1.0.0:
+    resolution: {integrity: sha512-mL9NO/FjYbFjaSDA5tw/qkUwEXrBG1bHSoPhAFG9CAzDaHTwQHzvYByAYUBmnqYciFsJvdxWKGtyOLgaSKoUkA==}
+    dev: false
 
   /bn.js/4.11.8:
     resolution: {integrity: sha512-ItfYfPLkWHUjckQCk8xC+LwxgK8NYcXywGigJgSwOP8Y2iyWT4f2vsZnoOXTTbo+o5yXmIUJ4gn5538SO5S3gA==}

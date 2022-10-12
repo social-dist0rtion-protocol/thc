@@ -25,7 +25,11 @@ export async function signatureFromSolution(address: string, solution: string) {
   return splitSignature(signature);
 }
 
-export async function signatureFromKey(address: string, mnemonic: string, wordlist?: Wordlist) {
+export async function signatureFromKey(
+  address: string,
+  mnemonic: string,
+  wordlist?: Wordlist
+) {
   const keyWallet = Wallet.fromMnemonic(mnemonic, undefined, wordlist);
   // Sign the raw bytes, not the hex string
   const signature = await keyWallet.signMessage(arrayify(address));
@@ -71,15 +75,19 @@ export async function parseLeaderboard(
   }
 
   const leaderboard = await getLeaderboard();
-  leaderboard.sort((a, b) => b.chapter - a.chapter);
+  leaderboard.sort(
+    (a, b) =>
+      b.chapter - a.chapter ||
+      b.keys.filter((x) => x).length - a.keys.filter((x) => x).length
+  );
   return leaderboard;
 }
 
 export function getCorrespondingWordlist(mnemonic: string) {
-    for (let locale in wordlists) {
-        const wordlist = wordlists[locale];
-        if (utils.isValidMnemonic(mnemonic, wordlist)) {
-            return wordlists[locale];
-        }
+  for (let locale in wordlists) {
+    const wordlist = wordlists[locale];
+    if (utils.isValidMnemonic(mnemonic, wordlist)) {
+      return wordlists[locale];
     }
+  }
 }

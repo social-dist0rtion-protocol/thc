@@ -1,6 +1,7 @@
 <script lang="ts">
   import { ensAddressesRefresh, type ENSAddresses } from "../stores/thc";
   import { shortAddress } from "../lib";
+  import * as blockies from "blockies-ts";
 
   export let address: string;
   export let ensAddresses: ENSAddresses;
@@ -26,6 +27,7 @@
 <table class="leaderboard">
   <thead>
     <tr>
+      <td />
       <td>Address</td>
       <td>Chapter</td>
       <td>Keys</td>
@@ -34,14 +36,21 @@
   <tbody>
     {#each leaderboard as { address: playerAddress, chapter, keys }}
       <tr>
-        <td>
+        <td class="avatar">
           {#if ensAddresses[playerAddress] && ensAddresses[playerAddress].avatar}
             <img
-              class="avatar"
               src={ensAddresses[playerAddress].avatar}
               alt="Player's avatar"
             />
+          {:else}
+            <img
+              src={blockies.create({ seed: playerAddress }).toDataURL()}
+              alt="Player's avatar"
+            />
           {/if}
+        </td>
+
+        <td class="ensname">
           {#if ensAddresses[playerAddress] && ensAddresses[playerAddress].ensName}
             <strong>
               {ensAddresses[playerAddress].ensName}
@@ -54,7 +63,7 @@
           {/if}
         </td>
         <td>{chapter}</td>
-        <td>
+        <td class="keys">
           {#each keys as key}
             {#if key}
               🔑
@@ -70,10 +79,12 @@
 
 <style>
   .avatar {
-    width: 4rem;
+    width: 2rem;
+    padding-right: 0.2rem;
   }
   img {
-    max-width: 3rem;
+    width: 2rem;
+    max-width: 2rem;
     display: block;
   }
   button {
@@ -81,5 +92,21 @@
     width: auto;
     padding: 0.2rem;
     font-size: inherit;
+  }
+  table {
+    border-collapse: separate;
+    border-spacing: 0 1.2rem;
+  }
+  .keys {
+    font-size: 0.8rem;
+  }
+  .ensname {
+  }
+  .ensname strong {
+    max-width: 7rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
   }
 </style>
