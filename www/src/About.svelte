@@ -27,12 +27,6 @@
 
 <h3>Why should I register an ENS name?</h3>
 <p>
-  <strong>
-    Note: ENS is currently broken on Göerli. We hope the ENS team can fix this
-    soon.
-  </strong>
-</p>
-<p>
   Addresses are cool but they are very difficult to pronounce and remember.
   Worry not, if you register an ENS name <strong>on Görli</strong> you can
   customize your name and avatar in the leadeboard! How cool is that!

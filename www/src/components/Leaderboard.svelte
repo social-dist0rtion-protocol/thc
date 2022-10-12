@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { ENSAddresses } from "src/stores/thc";
+  import { ensAddressesRefresh, type ENSAddresses } from "../stores/thc";
   import { shortAddress } from "../lib";
 
   export let address: string;
@@ -13,11 +13,13 @@
 
 <div class="thc--notification">
   <p>
-    Register your ENS domain (<strong>on Görli!</strong>) to customize your
+    <a href="#/about">Register</a> your ENS domain (<strong>on Görli!</strong>)
+    to customize your
     <strong>username</strong>
     and
-    <strong>avatar</strong>! Note: it can take up to 10 minutes for your ENS to
-    show up here. More info in the <a href="#/about">FAQs</a>.
+    <strong>avatar</strong>! Note: ENS names are refreshed every hour. You can
+    also <button on:click={ensAddressesRefresh}>refresh manually</button> if you
+    want.
   </p>
 </div>
 
@@ -73,5 +75,11 @@
   img {
     max-width: 3rem;
     display: block;
+  }
+  button {
+    display: inline;
+    width: auto;
+    padding: 0.2rem;
+    font-size: inherit;
   }
 </style>

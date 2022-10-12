@@ -185,7 +185,8 @@ export const leaderboard: Readable<Awaited<
     const update = retryWrap(async () => {
       set(await parseLeaderboard($thc, $totalKeys));
     });
-    leaderboardTimerId = window.setInterval(update, 10000);
+    // Reload every minute
+    leaderboardTimerId = window.setInterval(update, 60000);
     update();
     return () => window.clearInterval(leaderboardTimerId);
   } else {
@@ -201,17 +202,34 @@ export type ENSAddresses = {
   };
 };
 
-// Refresh every 10 minutes
-const ENS_TIMEOUT = 10 * 60 * 1000;
+// Refresh every hour
+const ENS_TIMEOUT = 60 * 60 * 1000;
 
 let ensAddressesTimerId = -1;
 
+export const ensAddressesRefreshTs = writable(Date.now());
+
+export function ensAddressesRefresh() {
+  db.set(
+    "ensAddresses",
+    (v: ENSAddresses | null) => {
+      if (v === null) {
+        return {};
+      }
+      for (let address in v) {
+        v[address].lastUpdate = 0;
+      }
+      return v;
+    },
+    {}
+  );
+  ensAddressesRefreshTs.set(Date.now());
+}
+
 export const ensAddresses: Readable<ENSAddresses | null> = derived(
-  [provider, leaderboard],
+  [provider, leaderboard, ensAddressesRefreshTs],
   ([$provider, $leaderboard], set) => {
-    window.clearInterval(ensAddressesTimerId);
-    // FIXME: ENS on Görli is broken, don't waste calls
-    if (false && $provider && $leaderboard) {
+    if ($provider && $leaderboard) {
       const update = retryWrap(async () => {
         console.log("Task: update ens addresses");
         const key = "ensAddresses";
@@ -235,27 +253,27 @@ export const ensAddresses: Readable<ENSAddresses | null> = derived(
                 a[address].lastUpdate = Date.now();
                 db.set(key, a);
                 set(a);
-              }
-              const avatar = await $provider.getAvatar(address);
-              if (avatar) {
-                if (avatar.startsWith("ipfs://")) {
-                  a[
-                    address
-                  ].avatar = `https://gateway.pinata.cloud/ipfs/${avatar.replace(
-                    "ipfs://",
-                    ""
-                  )}`;
-                } else if (avatar.startsWith("bzz://")) {
-                  a[address].avatar = `https://bzz.link/bzz/${avatar.replace(
-                    "bzz://",
-                    ""
-                  )}/`;
-                } else {
-                  a[address].avatar = avatar;
+                const avatar = await $provider.getAvatar(address);
+                if (avatar) {
+                  if (avatar.startsWith("ipfs://")) {
+                    a[
+                      address
+                    ].avatar = `https://gateway.pinata.cloud/ipfs/${avatar.replace(
+                      "ipfs://",
+                      ""
+                    )}`;
+                  } else if (avatar.startsWith("bzz://")) {
+                    a[address].avatar = `https://bzz.link/bzz/${avatar.replace(
+                      "bzz://",
+                      ""
+                    )}/`;
+                  } else {
+                    a[address].avatar = avatar;
+                  }
+                  a[address].lastUpdate = Date.now();
+                  db.set(key, a);
+                  set(a);
                 }
-                a[address].lastUpdate = Date.now();
-                db.set(key, a);
-                set(a);
               }
             } catch (e) {
               console.error(e);
@@ -265,9 +283,7 @@ export const ensAddresses: Readable<ENSAddresses | null> = derived(
           db.set(key, a);
         }
       });
-      ensAddressesTimerId = window.setInterval(update, 60 * 1000);
       update();
-      return () => window.clearInterval(ensAddressesTimerId);
     } else {
       set({});
     }
