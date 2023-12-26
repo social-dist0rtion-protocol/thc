@@ -13,6 +13,9 @@ import "solidity-coverage";
 import("./tasks").catch((e) => console.log("Cannot load tasks", e.toString()));
 
 const INFURA_API_KEY = process.env.INFURA_API_KEY || "";
+const SEPOLIA_PRIVATE_KEY =
+  process.env.SEPOLIA_PRIVATE_KEY! ||
+  "0xc87509a1c067bbde78beb793e6fa76530b6382a4c0241e5e4a9ec0a0f44dc0d3"; // well known private key
 const GOERLI_PRIVATE_KEY =
   process.env.GOERLI_PRIVATE_KEY! ||
   "0xc87509a1c067bbde78beb793e6fa76530b6382a4c0241e5e4a9ec0a0f44dc0d3"; // well known private key
@@ -43,6 +46,10 @@ const config: HardhatUserConfig = {
       //url: `https://rpc.goerli.mudit.blog/`,
       url: "https://goerli.infura.io/v3/c1bdd6d54d094e5c94ba409696a1b5f6",
       accounts: [GOERLI_PRIVATE_KEY],
+    },
+    sepolia: {
+      url: "https://sepolia.publicgoods.network",
+      accounts: [SEPOLIA_PRIVATE_KEY],
     },
   },
   etherscan: {
