@@ -12,6 +12,30 @@ const IPFS_HOST = process.env["IPFS_HOST"];
 const IPFS_PORT = parseInt(process.env["IPFS_PORT"] || "5001", 10);
 const IPFS_TOKEN = process.env["IPFS_TOKEN"];
 
+async function inlineImagesInMarkdown(filePath: string): Promise<string> {
+  try {
+    let markdown = await readFile(filePath, "utf8");
+
+    const imageRegex = /!\[\]\((\.\/.+?\.(jpg|jpeg|png|gif))\)/g;
+    let match: RegExpExecArray | null;
+
+    while ((match = imageRegex.exec(markdown))) {
+      const imagePath = match[1];
+      const fullImagePath = path.join(path.dirname(filePath), imagePath);
+      const imageBase64 = await readFile(fullImagePath, "base64");
+      const imageExtension = path.extname(imagePath).substring(1);
+      const dataUri = `data:image/${imageExtension};base64,${imageBase64}`;
+
+      markdown = markdown.replace(match[0], `![](${dataUri})`);
+    }
+
+    return markdown;
+  } catch (error) {
+    console.error("Error processing markdown file:", error);
+    throw error;
+  }
+}
+
 async function readFileAndTrim(f: string) {
   let solution = "";
   try {
@@ -30,7 +54,8 @@ async function chapter(dirIn: string, dirOut: string, prevSolution: string) {
   const solutionFileIn = path.join(dirIn, "solution");
   const addressFileOut = path.join(dirOut, "solution.address");
   const questFileOut = path.join(dirOut, "quest.aes.md");
-  const questIn = await readFile(questFileIn);
+  // const questIn = await readFile(questFileIn);
+  const questIn = await inlineImagesInMarkdown(questFileIn);
   let questOut: string;
 
   await mkdir(dirOut, { recursive: true });
