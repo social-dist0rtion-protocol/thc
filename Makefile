@@ -1,9 +1,8 @@
-INPUT_DIR ?= try/chapters
-OUTPUT_DIR ?= try/build
+INPUT_DIR ?= ../try/chapters
+OUTPUT_DIR ?= ../try/build
 ETH_DIR ?= eth
 ETH_NETWORK ?= localhost
 ETH_ENDPOINT ?= http://localhost:8545
-CHAPTERS_SCRIPT ?= gen/chapters.ts
 CHAPTERS_FILE ?= gen/chapters.json
 MNEMONICS_FILE ?= try/chapters/mnemonics
 IPFS_HOST ?= localhost
@@ -16,9 +15,7 @@ game: backend frontend
 
 frontend:
 	echo "Deploying client to ipfs."
-	cd app && IPFS_LOCATION=${IPFS_LOCATION} IPFS_PROTOCOL=${IPFS_PROTOCOL} IPFS_HOST=${IPFS_HOST} IPFS_PORT=${IPFS_PORT} FUND_ENDPOINT=${FUND_ENDPOINT} ETH_NETWORK=$(ETH_NETWORK) ETH_ENDPOINT=$(ETH_ENDPOINT) npm run build
-	#cd gen && IPFS_LOCATION=${IPFS_LOCATION} IPFS_PROTOCOL=${IPFS_PROTOCOL} IPFS_HOST=${IPFS_HOST} IPFS_PORT=${IPFS_PORT} node push_client.js ../app/build
-	#echo "Frotend deployed to ipfs."
+	cd app && FUND_ENDPOINT=${FUND_ENDPOINT} ETH_NETWORK=$(ETH_NETWORK) ETH_ENDPOINT=$(ETH_ENDPOINT) npm run build
 
 backend: chapters
 	echo "Deploying contracts to testnet."
@@ -31,7 +28,7 @@ update-chapters: chapters
 
 chapters:
 	echo "Generating chapters."
-	IPFS_LOCATION=${IPFS_LOCATION} IPFS_PROTOCOL=${IPFS_PROTOCOL} IPFS_HOST=${IPFS_HOST} IPFS_PORT=${IPFS_PORT} pnpx ts-node $(CHAPTERS_SCRIPT) $(INPUT_DIR) $(OUTPUT_DIR) > $(CHAPTERS_FILE)
+	@cd gen; npx ts-node chapters.ts $(INPUT_DIR) $(OUTPUT_DIR) > ../$(CHAPTERS_FILE)
 
 install-deps:
 	cd app && pnpm install

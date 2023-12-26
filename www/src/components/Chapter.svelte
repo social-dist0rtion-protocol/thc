@@ -6,6 +6,8 @@
   export let lowBalance: boolean;
   export let onSubmitSolution: (v: string) => Promise<boolean>;
 
+  console.log("current", currentQuestHtml);
+
   let solution = "";
 
   function onReset() {
