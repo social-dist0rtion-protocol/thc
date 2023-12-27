@@ -2,9 +2,8 @@ import { readFileSync } from "fs";
 import { readFile, writeFile } from "fs/promises";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { TreasureHuntCreator__factory } from "../typechain";
-import { CID } from "multiformats";
 import { Wallet, utils, wordlists } from "ethers";
-import { toUtf8Bytes } from "ethers/lib/utils";
+import { keccak256, toUtf8Bytes } from "ethers/lib/utils";
 
 const CONFIG_FILE_PATH = "./deployments";
 
@@ -101,8 +100,12 @@ export function loadKeys(path: string) {
     .split("\n")
     .map((x) => x.trim())
     .map((x) => {
-      const wordlist = getCorrespondingWordlist(x);
-      return Wallet.fromMnemonic(x, undefined, wordlist).address;
+      x = x.toLowerCase();
+      // Generate the hash of the value
+      const hash = keccak256(toUtf8Bytes(x));
+      // Generate wallet using the 32 bytes from the hash
+      const solutionWallet = new Wallet(hash);
+      return solutionWallet.address;
     });
 
   return keys;

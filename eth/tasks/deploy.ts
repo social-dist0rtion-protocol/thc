@@ -5,10 +5,10 @@ import { loadChapters, loadKeys } from "./utils";
 
 task("deploy", "Push THC to network")
   .addParam("chapters", "The file with all chapters")
-  .addParam("mnemonics", "The file with all mnemonics")
+  .addParam("keysPath", "The file with all keys")
   .setAction(
     async (
-      { chapters, mnemonics }: { chapters: string; mnemonics: string },
+      { chapters, keysPath }: { chapters: string; keysPath: string },
       hre
     ) => {
       console.log("Deploy contract Treasure Hunt Creator");
@@ -21,7 +21,7 @@ task("deploy", "Push THC to network")
 
       const { cid, solutions } = loadChapters(chapters);
       console.log(cid);
-      const keys = loadKeys(mnemonics);
+      const keys = loadKeys(keysPath);
 
       const thcContract = await thcFactory.deploy(solutions, keys, cid);
       console.log("  Address", thcContract.address);
