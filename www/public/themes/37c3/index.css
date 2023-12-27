@@ -64,19 +64,19 @@ button,
 }
 
 button {
-  color: black;
-  background-color: #88c43f;
+  color: white;
+  background-color: #3141f5;
   border: 0;
   transition: all 0.5s;
 }
 
 button:hover {
-  background-color: #a0dd54;
+  background-color: #0d1470;
 }
 
 button:disabled {
   color: rgb(148, 148, 148);
-  background-color: #88c43f4b;
+  background-color: #7a7a7a;
   cursor: not-allowed;
 }
 
