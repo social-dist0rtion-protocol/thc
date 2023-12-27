@@ -64,7 +64,7 @@
 
   {#if lowBalance}
     <div class="thc--notification warning">
-      <p>Your wallet is low in balance, refill it with some GörliETH.</p>
+      <p>Your wallet is low in balance, refill it with some SepoliaETH.</p>
     </div>
   {/if}
 </article>

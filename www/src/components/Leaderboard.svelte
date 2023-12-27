@@ -14,8 +14,8 @@
 
 <div class="thc--notification">
   <p>
-    <a href="#/about">Register</a> your ENS domain (<strong>on Görli!</strong>)
-    to customize your
+    <a href="#/about">Register</a> your ENS domain (<strong>on Sepolia!</strong
+    >) to customize your
     <strong>username</strong>
     and
     <strong>avatar</strong>! Note: ENS names are refreshed every hour. You can
