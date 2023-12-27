@@ -1,16 +1,16 @@
 <h1>FAQ</h1>
 
+<h3>I'm stuck, can I get a hint?</h3>
+<p>
+  Call us at <code>7377</code>.
+</p>
+
 <h3>What are keys and where do I get them?</h3>
 <p>
   Keys are secrets hidden in the game. If you find a key, you can claim it in
   the "keys" section of the game. Insert the key in the input box and submit it.
   If it's correct a fancy 🔑 will appear in the leaderboard next to your
   address.
-</p>
-
-<h3>I'm stuck, can I get a hint?</h3>
-<p>
-  Call us at <code>3737</code>.
 </p>
 
 <h3>I want to speak to the manager</h3>
