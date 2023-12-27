@@ -1,4 +1,4 @@
-import { arrayify, keccak256, toUtf8Bytes } from "ethers/lib/utils";
+import { keccak256, toUtf8Bytes } from "ethers/lib/utils";
 import {
   derived,
   get,
@@ -6,7 +6,6 @@ import {
   type Readable,
   type Writable,
 } from "svelte/store";
-import { CID } from "multiformats";
 import { TreasureHuntCreator__factory } from "../../../eth/typechain";
 import { provider, signer } from "./burnerWallet";
 import { contractsAddresses } from "./config";
@@ -55,9 +54,8 @@ export const questsRootCID: Readable<string | null> = derived(
     if ($thc) {
       const update = retryWrap(async () => {
         const cid = await $thc.getQuestsRootCID();
-        const ipfsHash = cid;
-        console.log("Update quests root CID", ipfsHash);
-        set(ipfsHash);
+        console.log("Update quests root CID", cid);
+        set(cid);
       }, true);
       const timerId = window.setInterval(update, 30000);
       update();
