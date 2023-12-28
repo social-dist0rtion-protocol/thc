@@ -16,6 +16,7 @@ module.exports = {
 
       try {
         let transaction = await wallet.sendTransaction(tx);
+        await transaction.wait(1);
         return transaction.hash;
       } catch (err) {
         console.log(err.stack);
