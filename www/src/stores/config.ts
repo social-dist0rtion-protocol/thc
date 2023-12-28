@@ -12,6 +12,9 @@ export const ipfsGateway =
 
 export const infuraKey = import.meta.env.VITE_INFURA_API_KEY;
 
+export const ethereumFaucetEndpoint = import.meta.env
+  .VITE_ETHEREUM_FAUCET_ENDPOINT;
+
 export const ethereumEndpoint = import.meta.env.VITE_ETHEREUM_ENDPOINT;
 export const ethereumChainId = parseInt(
   import.meta.env.VITE_ETHEREUM_CHAIN_ID,

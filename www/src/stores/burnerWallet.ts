@@ -1,6 +1,6 @@
 import { BigNumber, ethers, Wallet } from "ethers";
 import { parseEther } from "ethers/lib/utils";
-import { derived, readable, type Readable } from "svelte/store";
+import { derived, readable, writable, type Readable } from "svelte/store";
 import { ethereumEndpoint } from "./config";
 import { writableLocalStorage } from "./x";
 import { retryWrap } from "./x/retry";
@@ -37,9 +37,11 @@ export const address = derived(signer, ($signer) =>
   $signer ? $signer.address : null
 );
 
+export const reloadBalanceTrigger = writable(60000);
+
 export const balance: Readable<BigNumber | null> = derived(
-  signer,
-  ($signer, set) => {
+  [signer, reloadBalanceTrigger],
+  ([$signer], set) => {
     if ($signer) {
       const update = retryWrap(async () => {
         const balance = await $signer.getBalance();
