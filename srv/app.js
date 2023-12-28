@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const tokens = require("./tokens");
 const app = express();
@@ -8,6 +9,7 @@ app.get("/", (req, res) => res.send("Hello World!"));
 app.get("/tokens", async function (req, res) {
   try {
     let address = req.query.address;
+    // AMOUNT is in ETHER
     let amount = process.env.AMOUNT;
     let hash = await tokens.send(address, amount);
     console.log("Amount " + amount + " → " + address + " tx " + hash);
@@ -24,4 +26,4 @@ app.get("/tokens", async function (req, res) {
   }
 });
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+app.listen(port, () => console.log(`Ready to send you shittons of money at ${port}!`));

@@ -1,7 +1,7 @@
-# Deploy
-ssh root@45.55.58.235
+# Run
 
-docker pull dist0rtionproto/gas-station
-docker ps -q | xargs -n1 docker rm -f 
-
-docker run -d -p 80:3000 -e MNEMONIC="your mnemonic" -e AMOUNT="0.0001" --name gas-station dist0rtionproto/gas-station
+1. `cp .env-copy .env`
+2. Add your private key that has funds
+3. Deploy to a server
+4. Install node+npm and pm2 `npm i -g pm2`
+5. Start using the ecosystem file `pm2 start ecosystem.config.js`
