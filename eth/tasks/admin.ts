@@ -7,6 +7,7 @@ import { readFileSync } from "fs";
 task("root-set", "Set root CID")
   .addPositionalParam("cid", "The file with all chapters")
   .setAction(async ({ cid }: { cid: string }, hre) => {
+    throw "not implemented";
     const thcContract = (await loadContract(
       hre,
       "TreasureHuntCreator"
@@ -22,16 +23,34 @@ task("root-set", "Set root CID")
     );
   });
 
+import * as readline from "readline";
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+const question = (prompt: string) =>
+  new Promise<string>((resolve) => {
+    rl.question(prompt, resolve);
+  });
+
 task("root-set-from-chapters", "Set root CID from chapters file")
   .addParam("chapters", "The file with all chapters")
   .setAction(async ({ chapters }: { chapters: string }, hre) => {
-    const { cid, cidBytes } = loadChapters(chapters);
+    const answer = await question(
+      "Make sure you've update the app otherwise you'll break everything and you will be blamed forever. Please type 'GoOoooOOoo' to continue.\n"
+    );
+
+    if (answer !== "GoOoooOOoo") {
+      process.exit(0);
+    }
+
+    const { cid } = loadChapters(chapters);
     const thcContract = (await loadContract(
       hre,
       "TreasureHuntCreator"
     )) as TreasureHuntCreator;
     console.log(`Setting root CID ${cid} for contract ${thcContract.address}`);
-    const tx = await thcContract.setQuestsRootCID(cidBytes);
+    const tx = await thcContract.setQuestsRootCID(cid);
     console.log(`  Transaction submitted. Waiting for 3 confirmation....`);
     const receipt = await tx.wait(3);
     console.log(

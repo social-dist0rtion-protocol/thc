@@ -22,7 +22,7 @@ backend: chapters
 	@cd $(ETH_DIR); npx hardhat deploy --network $(ETH_NETWORK) --chapters ../$(CHAPTERS_FILE) --keys-path ../${KEYS_FILE}
 	echo "Backend deployed to testnet."
 
-update-chapters: chapters
+update-chapters:
 	echo "Update chapters."
 	@cd $(ETH_DIR); npx hardhat --network $(ETH_NETWORK) root-set-from-chapters --chapters ../$(CHAPTERS_FILE)
 
