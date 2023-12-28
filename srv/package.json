@@ -8,6 +8,7 @@
     "connect": "ssh root@49.13.157.148"
   },
   "dependencies": {
+    "cors": "2.8.5",
     "dotenv": "16.3.1",
     "ethers": "5.0.24",
     "express": "4.17.1"
