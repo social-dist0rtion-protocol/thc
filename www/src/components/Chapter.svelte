@@ -69,7 +69,11 @@
     <div class="thc--notification warning">
       <p>Your wallet is low in balance, refill it to play the game</p>
       {#if refillWalletStatus === "waiting"}
-        <p>Please wait, it may take up to 15 seconds</p>
+        <p>
+          Please wait, on average it takes 15 seconds. But you know things can
+          go south and sometimes it may take few minutes, if it's stuck try to
+          reload.
+        </p>
       {/if}
       {#if refillWalletStatus === "error"}
         <p>There was an error, please retry</p>
