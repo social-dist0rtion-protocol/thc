@@ -67,9 +67,9 @@
 
   {#if lowBalance}
     <div class="thc--notification warning">
-      <p>Your wallet is low in balance</p>
+      <p>Your wallet is low in balance, refill it to play the game</p>
       {#if refillWalletStatus === "waiting"}
-        <p>Please wait</p>
+        <p>Please wait, it may take up to 15 seconds</p>
       {/if}
       {#if refillWalletStatus === "error"}
         <p>There was an error, please retry</p>
