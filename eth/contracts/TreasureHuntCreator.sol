@@ -3,6 +3,7 @@ pragma solidity >=0.8.12 <0.9.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
+import {ITreasureHuntCommendation} from "./ITreasureHuntCommendation.sol";
 import {ERC2771Context} from "@gelatonetwork/relay-context/contracts/vendor/ERC2771Context.sol";
 
 contract TreasureHuntCreator is Ownable, AccessControl, ERC2771Context {
@@ -15,60 +16,65 @@ contract TreasureHuntCreator is Ownable, AccessControl, ERC2771Context {
 
     uint256 constant PAGE_SIZE = 32;
 
-    mapping(uint96 => address[]) public _chapterToPlayers;
-    mapping(address => uint96) public _playerToCurrentChapter;
-    mapping(address => uint8) public _keyToPos;
-    mapping(address => uint80) public _playerToKeys;
+    mapping(uint96 => address[]) public chapterToPlayers;
+    mapping(address => uint96) public playerToCurrentChapter;
+    mapping(address => uint8) public keyToPos;
+    mapping(address => uint80) public playerToKeys;
     uint8 public totalKeys;
-    address[] public _solutions;
-    address[] public _players;
-    address[] public _gameMasters;
+    address[] public solutions;
+    address[] public players;
+    address[] public gameMasters;
 
-    bytes public _questsRootCid;
+    bytes public questsRootCid;
+    ITreasureHuntCommendation public prize;
 
     constructor(
-        address[] memory solutions,
+        address[] memory solutions_,
         address[] memory keys,
-        bytes memory questsRootCid,
-        address trustedForwarder
+        address trustedForwarder,
+        address prize_
     ) ERC2771Context(trustedForwarder) {
-        _solutions = solutions;
-        _questsRootCid = questsRootCid;
+        solutions = solutions_;
+        prize = ITreasureHuntCommendation(prize_);
         for (uint8 i; i < keys.length; i++) {
             // Add 1 otherwise it's impossible to know if the first key (index
             // 0) exists or not
-            _keyToPos[keys[i]] = i + 1;
+            keyToPos[keys[i]] = i + 1;
         }
         totalKeys = uint8(keys.length);
         _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _grantRole(GAME_MASTER_ROLE, _msgSender());
     }
 
-    function setQuestsRootCID(
-        bytes memory questsRootCid
+    function setup(
+        bytes memory questsRootCid_
     ) external onlyRole(GAME_MASTER_ROLE) {
-        _questsRootCid = questsRootCid;
+        questsRootCid = questsRootCid_;
+        require(
+            prize.hasRole(prize.TREASURE_HUNT_ROLE(), address(this)),
+            "Game not verified yet"
+        );
     }
 
     function getQuestsRootCID() external view returns (bytes memory) {
-        return _questsRootCid;
+        return questsRootCid;
     }
 
     function addSolution(address solution) public onlyRole(GAME_MASTER_ROLE) {
-        _solutions.push(solution);
+        solutions.push(solution);
     }
 
     function totalChapters() public view returns (uint256) {
-        return _solutions.length;
+        return solutions.length;
     }
 
     function currentChapter() public view returns (uint96) {
-        return _playerToCurrentChapter[_msgSender()];
+        return playerToCurrentChapter[_msgSender()];
     }
 
     function submit(uint8 v, bytes32 r, bytes32 s) public {
-        uint96 playerChapter = _playerToCurrentChapter[_msgSender()];
-        address playerChapterSolution = _solutions[playerChapter];
+        uint96 playerChapter = playerToCurrentChapter[_msgSender()];
+        address playerChapterSolution = solutions[playerChapter];
         bytes32 addressHash = getAddressHash(_msgSender());
 
         require(
@@ -76,24 +82,44 @@ contract TreasureHuntCreator is Ownable, AccessControl, ERC2771Context {
             "Wrong solution."
         );
 
-        if (_playerToCurrentChapter[_msgSender()] == 0) {
-            _players.push(_msgSender());
+        if (playerToCurrentChapter[_msgSender()] == 0) {
+            players.push(_msgSender());
         }
-        _playerToCurrentChapter[_msgSender()]++;
-        _chapterToPlayers[playerChapter].push(_msgSender());
+        playerToCurrentChapter[_msgSender()]++;
+        chapterToPlayers[playerChapter].push(_msgSender());
+        _rewardMain(playerChapter, _msgSender());
+
         emit ChapterCompleted(playerChapter, _msgSender());
     }
 
     function submitKey(uint8 v, bytes32 r, bytes32 s) public {
         address signer = ecrecover(getAddressHash(_msgSender()), v, r, s);
-        uint8 pos = _keyToPos[signer];
+        uint8 pos = keyToPos[signer];
         require(pos > 0, "Wrong key");
-        _playerToKeys[_msgSender()] |= uint80(1 << (pos - 1));
+        playerToKeys[_msgSender()] |= uint80(1 << (pos - 1));
+        _rewardKeys(playerToKeys[_msgSender()], _msgSender());
     }
 
     function getAddressHash(address a) public pure returns (bytes32) {
         return
             keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n20", a));
+    }
+
+    function _rewardMain(uint256 chapter, address player) internal {
+        if (chapter == totalChapters()) {
+            uint256 peopleInThisChapter = chapterToPlayers[uint96(chapter)]
+                .length;
+            uint256 position = peopleInThisChapter > 3
+                ? 4
+                : peopleInThisChapter;
+            prize.mint(player, position);
+        }
+    }
+
+    function _rewardKeys(uint256 keys, address player) internal {
+        if (keys == 2 ** totalKeys - 1) {
+            prize.mint(player, 5);
+        }
     }
 
     // 160 bit address
@@ -104,18 +130,14 @@ contract TreasureHuntCreator is Ownable, AccessControl, ERC2771Context {
         uint256 page
     ) public view returns (uint256[PAGE_SIZE] memory leaderboard) {
         uint256 offset = page * PAGE_SIZE;
-        for (
-            uint256 i = 0;
-            i < PAGE_SIZE && i + offset < _players.length;
-            i++
-        ) {
-            address player = _players[i + offset];
-            uint80 keys = _playerToKeys[player];
+        for (uint256 i = 0; i < PAGE_SIZE && i + offset < players.length; i++) {
+            address player = players[i + offset];
+            uint80 keys = playerToKeys[player];
 
             leaderboard[i] =
                 (uint256(uint160(player)) << 96) |
                 (uint256(keys) << 8) |
-                uint256(uint8(_playerToCurrentChapter[player]));
+                uint256(uint8(playerToCurrentChapter[player]));
         }
     }
 
