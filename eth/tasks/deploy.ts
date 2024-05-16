@@ -3,6 +3,8 @@ import { writeFile } from "fs/promises";
 import { TreasureHuntCreator__factory } from "../typechain";
 import { loadChapters, loadKeys } from "./utils";
 
+const GELATOR_RELAYER = "0xd8253782c45a12053594b9deb72d8e8ab2fca54c";
+
 task("deploy", "Push THC to network")
   .addParam("chapters", "The file with all chapters")
   .addParam("mnemonics", "The file with all mnemonics")
@@ -22,7 +24,12 @@ task("deploy", "Push THC to network")
       const { cidBytes, solutions } = loadChapters(chapters);
       const keys = loadKeys(mnemonics);
 
-      const thcContract = await thcFactory.deploy(solutions, keys, cidBytes);
+      const thcContract = await thcFactory.deploy(
+        solutions,
+        keys,
+        cidBytes,
+        GELATOR_RELAYER
+      );
       console.log("  Address", thcContract.address);
       const receipt = await thcContract.deployed();
       console.log("  Receipt", receipt.deployTransaction.hash);

@@ -12,11 +12,11 @@ import "solidity-coverage";
 
 import("./tasks").catch((e) => console.log("Cannot load tasks", e.toString()));
 
-const INFURA_API_KEY = process.env.INFURA_API_KEY || "";
-const SEPOLIA_PRIVATE_KEY =
+const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY!;
+const PRIVATE_KEY =
   process.env.SEPOLIA_PRIVATE_KEY! ||
   "0xc87509a1c067bbde78beb793e6fa76530b6382a4c0241e5e4a9ec0a0f44dc0d3"; // well known private key
-const GOERLI_PRIVATE_KEY =
+const TEST_PRIVATE_KEY =
   process.env.GOERLI_PRIVATE_KEY! ||
   "0xc87509a1c067bbde78beb793e6fa76530b6382a4c0241e5e4a9ec0a0f44dc0d3"; // well known private key
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY;
@@ -27,7 +27,7 @@ const config: HardhatUserConfig = {
   solidity: {
     compilers: [
       {
-        version: "0.8.16",
+        version: "0.8.21",
         settings: {
           optimizer: {
             enabled: true,
@@ -42,14 +42,13 @@ const config: HardhatUserConfig = {
     localhost: {
       url: "http://localhost:8545",
     },
-    goerli: {
-      //url: `https://rpc.goerli.mudit.blog/`,
-      url: "https://goerli.infura.io/v3/c1bdd6d54d094e5c94ba409696a1b5f6",
-      accounts: [GOERLI_PRIVATE_KEY],
+    optimism: {
+      url: `https://opt-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY!}`,
+      accounts: [PRIVATE_KEY],
     },
     sepolia: {
       url: "https://sepolia.publicgoods.network",
-      accounts: [SEPOLIA_PRIVATE_KEY],
+      accounts: [TEST_PRIVATE_KEY],
     },
   },
   etherscan: {
