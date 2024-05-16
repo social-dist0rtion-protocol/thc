@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { ethereumFaucetEndpoint } from "../stores/config";
+  import { reloadBalanceTrigger } from "../stores/burnerWallet";
+
   export let currentQuestHtml: string;
   export let currentChapter: number;
   export let totalChapters: number;
@@ -6,7 +9,22 @@
   export let lowBalance: boolean;
   export let onSubmitSolution: (v: string) => Promise<boolean>;
 
+  console.log("current", currentQuestHtml);
+
   let solution = "";
+
+  let refillWalletStatus: null | "error" | "waiting" = null;
+
+  async function refillWallet() {
+    refillWalletStatus = "waiting";
+    try {
+      await fetch(`${ethereumFaucetEndpoint}/tokens?address=${address}`);
+      $reloadBalanceTrigger = Date.now();
+    } catch (e) {
+      console.error(e);
+      refillWalletStatus = "error";
+    }
+  }
 
   function onReset() {
     let sure = prompt(
@@ -35,8 +53,8 @@
     </p>
     <p>
       <strong>
-        The game uses a burner wallet and runs on the Göerli test network, check
-        your address in the <a href="#/settings">settings</a> page.
+        The game uses a burner wallet and runs on the Sepolia test network,
+        check your address in the <a href="#/settings">settings</a> page.
       </strong>
     </p>
   </div>
@@ -46,6 +64,25 @@
   <section class="thc--chapter-text">
     {@html currentQuestHtml}
   </section>
+
+  {#if lowBalance}
+    <div class="thc--notification warning">
+      <p>Your wallet is low in balance, refill it to play the game</p>
+      {#if refillWalletStatus === "waiting"}
+        <p>
+          Please wait, on average it takes 15 seconds. But you know things can
+          go south and sometimes it may take few minutes, if it's stuck try to
+          reload.
+        </p>
+      {/if}
+      {#if refillWalletStatus === "error"}
+        <p>There was an error, please retry</p>
+      {/if}
+      <button disabled={refillWalletStatus !== null} on:click={refillWallet}
+        >Refill Wallet (it's free!)</button
+      >
+    </div>
+  {/if}
 
   {#if currentChapter !== totalChapters - 1}
     <form on:submit|preventDefault={onSubmit}>
@@ -58,12 +95,6 @@
         >Submit</button
       >
     </form>
-  {/if}
-
-  {#if lowBalance}
-    <div class="thc--notification warning">
-      <p>Your wallet is low in balance, refill it with some GörliETH.</p>
-    </div>
   {/if}
 </article>
 

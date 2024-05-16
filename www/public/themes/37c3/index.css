@@ -1,0 +1,126 @@
+@font-face {
+  font-family: "Maison Neue Mono";
+  font-weight: 400;
+  src: url(./fonts/Maison-Neue-Mono.ttf);
+}
+@font-face {
+  font-family: Roboto;
+  font-weight: 400;
+  src: url(./fonts/Roboto-Regular.ttf);
+}
+@font-face {
+  font-family: Roboto;
+  font-weight: 400;
+  font-style: italic;
+  src: url(./fonts/Roboto-Italic.ttf);
+}
+@font-face {
+  font-family: Roboto;
+  font-weight: 700;
+  src: url(./fonts/Roboto-Bold.ttf);
+}
+@font-face {
+  font-family: Roboto;
+  font-weight: 700;
+  font-style: italic;
+  src: url(./fonts/Roboto-BoldItalic.ttf);
+}
+
+:root {
+  --root-size: 16px;
+  --font-display: "Maison Neue Mono";
+}
+
+html {
+  background-color: black;
+  color: white;
+  font-family: Roboto, sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.thc--header a {
+  color: white;
+  text-transform: uppercase;
+}
+
+.thc--header a {
+  font-size: 1rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+button,
+.thc--header a {
+  font-family: var(--font-display);
+}
+
+button {
+  color: white;
+  background-color: #3141f5;
+  border: 0;
+  transition: all 0.5s;
+}
+
+button:hover {
+  background-color: #0d1470;
+}
+
+button:disabled {
+  color: rgb(148, 148, 148);
+  background-color: #7a7a7a;
+  cursor: not-allowed;
+}
+
+main {
+  margin: 4rem auto 0 auto;
+  max-width: 40rem;
+}
+
+#app {
+  background: url(./images/bg.png);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  padding-bottom: 100px;
+}
+
+footer {
+  position: fixed;
+  content: " ";
+  background-size: auto 100px;
+  background-position: bottom;
+  background-repeat: repeat-x;
+  background-attachment: fixed;
+  bottom: 0;
+  height: 100px;
+  width: 100%;
+  opacity: 0.5;
+}
+
+.thc--header a {
+  padding: 0.5rem;
+}
+
+.thc--chapter {
+  padding: 2rem;
+  background-color: rgba(0, 0, 0, 0.666);
+  color: white;
+}
+
+.thc--chapter-text {
+  font-size: 1.2rem;
+  margin: 2rem 0;
+}
+
+.thc--chapter-state {
+  background-color: rgba(0, 0, 0, 0.888);
+}

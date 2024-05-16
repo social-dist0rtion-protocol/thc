@@ -78,6 +78,16 @@ async function chapter(dirIn: string, dirOut: string, prevSolution: string) {
 }
 
 async function upload(directory: string) {
+  const filenames = await readdir(directory);
+  let hash = "";
+  for (let filename in filenames) {
+    const content = await readFile(path.join(directory, filename), "utf8");
+    hash = keccak256(toUtf8Bytes(content + hash));
+  }
+  return hash;
+}
+
+async function uploadIPFS(directory: string) {
   const ipfs = ipfsCreate({
     host: IPFS_HOST,
     port: IPFS_PORT,
@@ -109,6 +119,7 @@ async function main(dirIn: string, dirOut: string) {
   const v = content.filter((x) => x.isDirectory());
   const padding = v[0].name.length;
   const result = [];
+  const chapters = [];
 
   await mkdir(questsDir, { recursive: true });
 
@@ -133,6 +144,8 @@ async function main(dirIn: string, dirOut: string) {
     // put encrypted quest in one folder, named after the chapter number
     await rename(questFile, path.join(questsDir, `${i}`));
 
+    chapters.push(quest);
+
     result.push({
       solutionAddress,
       quest,
@@ -145,6 +158,16 @@ async function main(dirIn: string, dirOut: string) {
 
   for (let i = 0; i < v.length; i++) {
     result[i].questHash = `${dirCid}/${i}`;
+  }
+
+  // God forgive me this code is shit
+  const wwwPublicPath = path.join("../www/public/game-data", dirCid);
+  await mkdir(wwwPublicPath, {
+    recursive: true,
+  });
+
+  for (let i = 0; i < chapters.length; i++) {
+    await writeFile(path.join(wwwPublicPath, i.toString()), chapters[i]);
   }
 
   return result;

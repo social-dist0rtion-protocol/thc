@@ -1,25 +1,19 @@
 <script lang="ts">
   import { fuckFuckFuckFuckFuck, thc } from "./stores/thc";
   import { lowBalance, signer } from "./stores/burnerWallet";
-  import { getCorrespondingWordlist, signatureFromKey } from "./lib";
   import { fade } from "svelte/transition";
-  import { isValidMnemonic } from "ethers/lib/utils";
+  import { signatureFromSolution } from "./lib";
 
   let state: "IDLE" | "CHECK" | "MINING" | "SUCCESS" | "WRONG" | "ERROR" =
     "IDLE";
   let error: string;
-  let mnemonic: string = "";
+  let key: string = "";
 
   async function onSubmitKey() {
     const address = $signer!.address;
     const contract = $thc!;
     state = "CHECK";
-    const wordlist = getCorrespondingWordlist(mnemonic);
-    if (!wordlist) {
-      state = "WRONG";
-      return;
-    }
-    const { r, s, v } = await signatureFromKey(address, mnemonic, wordlist);
+    const { r, s, v } = await signatureFromSolution(address, key);
     try {
       const tx = await contract.submitKey(v, r, s);
       console.log(tx);
@@ -43,7 +37,7 @@
   }
 
   function onCloseModal() {
-    mnemonic = "";
+    key = "";
     state = "IDLE";
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -61,12 +55,8 @@
     leaderboard. More info in the <a href="#/about">FAQs</a>.
   </p>
   <form on:submit|preventDefault={onSubmitKey}>
-    <input
-      disabled={$lowBalance}
-      placeholder="Mnemonic seedphrase (12 or 24 words)"
-      bind:value={mnemonic}
-    />
-    <button disabled={$lowBalance || mnemonic.length === 0} type="submit"
+    <input disabled={$lowBalance} placeholder="Key" bind:value={key} />
+    <button disabled={$lowBalance || key.length === 0} type="submit"
       >Submit</button
     >
   </form>
@@ -78,7 +68,7 @@
           <h2>Checking</h2>
           <p>Checking</p>
         {:else if state === "WRONG"}
-          <h2>Wrong mnemonic</h2>
+          <h2>Wrong Key</h2>
           <button on:click={() => (state = "IDLE")}>Try again</button>
         {:else if state === "ERROR"}
           <p>
@@ -86,7 +76,7 @@
           </p>
           <pre>{error}</pre>
         {:else}
-          <h2>Correct mnemonic</h2>
+          <h2>Correct Key</h2>
           {#if state === "MINING"}
             <p>Please wait some seconds because blockchains are fast.</p>
             <p>

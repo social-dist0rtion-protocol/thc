@@ -84,13 +84,13 @@
 
 <h2>Network</h2>
 
-<p>Görli</p>
+<p>Sepolia</p>
 
 <h2>Smart Contract</h2>
 
 <p class="scroll">
   {#if $thc}
-    <a href="https://goerli.etherscan.io/address/{$thc.address}"
+    <a href="https://sepolia.etherscan.io/address/{$thc.address}"
       >{$thc.address}</a
     >
   {:else}

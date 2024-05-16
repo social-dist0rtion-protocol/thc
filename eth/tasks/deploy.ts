@@ -7,10 +7,10 @@ const GELATOR_RELAYER = "0xd8253782c45a12053594b9deb72d8e8ab2fca54c";
 
 task("deploy", "Push THC to network")
   .addParam("chapters", "The file with all chapters")
-  .addParam("mnemonics", "The file with all mnemonics")
+  .addParam("keysPath", "The file with all keys")
   .setAction(
     async (
-      { chapters, mnemonics }: { chapters: string; mnemonics: string },
+      { chapters, keysPath }: { chapters: string; keysPath: string },
       hre
     ) => {
       console.log("Deploy contract Treasure Hunt Creator");
@@ -21,13 +21,14 @@ task("deploy", "Push THC to network")
       )) as TreasureHuntCreator__factory;
       console.log(`  Chapters file: ${chapters}`);
 
-      const { cidBytes, solutions } = loadChapters(chapters);
-      const keys = loadKeys(mnemonics);
+      const { cid, solutions } = loadChapters(chapters);
+      console.log(cid);
+      const keys = loadKeys(keysPath);
 
       const thcContract = await thcFactory.deploy(
         solutions,
         keys,
-        cidBytes,
+        cid,
         GELATOR_RELAYER
       );
       console.log("  Address", thcContract.address);

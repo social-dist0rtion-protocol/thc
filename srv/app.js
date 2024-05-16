@@ -4,6 +4,7 @@ const https = require("https");
 const express = require("express");
 const cors = require("cors");
 const tokens = require("./tokens");
+var cors = require("cors");
 const app = express();
 const port = 3000;
 

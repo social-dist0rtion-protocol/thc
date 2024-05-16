@@ -12,10 +12,11 @@
   }[];
 </script>
 
+<!--
 <div class="thc--notification">
   <p>
-    <a href="#/about">Register</a> your ENS domain (<strong>on Görli!</strong>)
-    to customize your
+    <a href="#/about">Register</a> your ENS domain (<strong>on Sepolia!</strong
+    >) to customize your
     <strong>username</strong>
     and
     <strong>avatar</strong>! Note: ENS names are refreshed every hour. You can
@@ -23,6 +24,7 @@
     want.
   </p>
 </div>
+-->
 
 <table class="leaderboard">
   <thead>
@@ -30,7 +32,10 @@
       <td />
       <td>Address</td>
       <td>Chapter</td>
+      <!--
+
       <td>Keys</td>
+      -->
     </tr>
   </thead>
   <tbody>
@@ -63,6 +68,7 @@
           {/if}
         </td>
         <td>{chapter}</td>
+        <!--
         <td class="keys">
           {#each keys as key}
             {#if key}
@@ -72,6 +78,7 @@
             {/if}
           {/each}
         </td>
+      -->
       </tr>
     {/each}
   </tbody>

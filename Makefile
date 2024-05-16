@@ -1,37 +1,25 @@
-INPUT_DIR ?= try/chapters
+INPUT_DIR ?= ../37c3-thc/chapters
 OUTPUT_DIR ?= try/build
 ETH_DIR ?= eth
-ETH_NETWORK ?= localhost
-ETH_ENDPOINT ?= http://localhost:8545
-CHAPTERS_SCRIPT ?= gen/chapters.ts
+ETH_NETWORK ?= sepolia
 CHAPTERS_FILE ?= gen/chapters.json
-MNEMONICS_FILE ?= try/chapters/mnemonics
-IPFS_HOST ?= localhost
-IPFS_PORT ?= 5001
-IPFS_PROTOCOL ?= http
-IPFS_LOCATION ?= http://localhost:8080/ipfs/ #https://ipfs.io/ipfs/
+KEYS_FILE ?= try/chapters/keys
 
 game: backend frontend
 	echo "Game fully built and deployed."
 
-frontend:
-	echo "Deploying client to ipfs."
-	cd app && IPFS_LOCATION=${IPFS_LOCATION} IPFS_PROTOCOL=${IPFS_PROTOCOL} IPFS_HOST=${IPFS_HOST} IPFS_PORT=${IPFS_PORT} FUND_ENDPOINT=${FUND_ENDPOINT} ETH_NETWORK=$(ETH_NETWORK) ETH_ENDPOINT=$(ETH_ENDPOINT) npm run build
-	#cd gen && IPFS_LOCATION=${IPFS_LOCATION} IPFS_PROTOCOL=${IPFS_PROTOCOL} IPFS_HOST=${IPFS_HOST} IPFS_PORT=${IPFS_PORT} node push_client.js ../app/build
-	#echo "Frotend deployed to ipfs."
-
 backend: chapters
-	echo "Deploying contracts to testnet."
-	@cd $(ETH_DIR); npx hardhat deploy --network $(ETH_NETWORK) --chapters ../$(CHAPTERS_FILE) --mnemonics ../${MNEMONICS_FILE}
-	echo "Backend deployed to testnet."
+	echo "Deploying contracts."
+	@cd $(ETH_DIR); npx hardhat deploy --network $(ETH_NETWORK) --chapters ../$(CHAPTERS_FILE) --keys-path ../${KEYS_FILE}
+	echo "Backend deployed."
 
-update-chapters: chapters
+update-chapters:
 	echo "Update chapters."
 	@cd $(ETH_DIR); npx hardhat --network $(ETH_NETWORK) root-set-from-chapters --chapters ../$(CHAPTERS_FILE)
 
 chapters:
 	echo "Generating chapters."
-	IPFS_LOCATION=${IPFS_LOCATION} IPFS_PROTOCOL=${IPFS_PROTOCOL} IPFS_HOST=${IPFS_HOST} IPFS_PORT=${IPFS_PORT} pnpx ts-node $(CHAPTERS_SCRIPT) $(INPUT_DIR) $(OUTPUT_DIR) > $(CHAPTERS_FILE)
+	@cd gen; npx ts-node chapters.ts ../$(INPUT_DIR) ../$(OUTPUT_DIR) > ../$(CHAPTERS_FILE)
 
 install-deps:
 	cd app && pnpm install

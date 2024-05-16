@@ -2,8 +2,8 @@ import { readFileSync } from "fs";
 import { readFile, writeFile } from "fs/promises";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { TreasureHuntCreator__factory } from "../typechain";
-import { CID } from "multiformats";
 import { Wallet, utils, wordlists } from "ethers";
+import { keccak256, toUtf8Bytes } from "ethers/lib/utils";
 
 const CONFIG_FILE_PATH = "./deployments";
 
@@ -89,7 +89,7 @@ export function loadChapters(path: string) {
   });
   const cid = chaptersData[0].questHash.split("/")[0];
 
-  const cidBytes = CID.parse(cid).bytes;
+  const cidBytes = toUtf8Bytes(cid);
 
   return { cid, cidBytes, solutions };
 }
@@ -100,18 +100,22 @@ export function loadKeys(path: string) {
     .split("\n")
     .map((x) => x.trim())
     .map((x) => {
-        const wordlist = getCorrespondingWordlist(x);
-        return Wallet.fromMnemonic(x, undefined, wordlist).address
+      x = x.toLowerCase();
+      // Generate the hash of the value
+      const hash = keccak256(toUtf8Bytes(x));
+      // Generate wallet using the 32 bytes from the hash
+      const solutionWallet = new Wallet(hash);
+      return solutionWallet.address;
     });
 
   return keys;
 }
 
 export function getCorrespondingWordlist(mnemonic: string) {
-    for (let locale in wordlists) {
-        const wordlist = wordlists[locale];
-        if (utils.isValidMnemonic(mnemonic, wordlist)) {
-            return wordlists[locale];
-        }
+  for (let locale in wordlists) {
+    const wordlist = wordlists[locale];
+    if (utils.isValidMnemonic(mnemonic, wordlist)) {
+      return wordlists[locale];
     }
+  }
 }

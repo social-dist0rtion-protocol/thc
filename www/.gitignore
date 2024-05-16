@@ -1,4 +1,5 @@
 .env
+public/game-data
 
 # Logs
 logs

@@ -35,7 +35,11 @@ export default async ({ mode }) => {
     "CHAPTERS",
   ]);
 
+  console.log(env);
+
   const smartContractPath = env?.SMART_CONTRACT_PATH;
+
+  console.log(smartContractPath);
   if (!smartContractPath) {
     console.error("Cannot find smart contract directory");
     process.exit(1);

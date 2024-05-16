@@ -1,4 +1,4 @@
-import { arrayify, keccak256, toUtf8Bytes } from "ethers/lib/utils";
+import { keccak256, toUtf8Bytes } from "ethers/lib/utils";
 import {
   derived,
   get,
@@ -6,10 +6,9 @@ import {
   type Readable,
   type Writable,
 } from "svelte/store";
-import { CID } from "multiformats";
 import { TreasureHuntCreator__factory } from "../../../eth/typechain";
 import { provider, signer } from "./burnerWallet";
-import { contractsAddresses, ipfsGateway } from "./config";
+import { contractsAddresses } from "./config";
 import { writableLocalStorage } from "./x";
 import CryptoJS from "crypto-js";
 import { retry, retryWrap } from "./x/retry";
@@ -55,10 +54,8 @@ export const questsRootCID: Readable<string | null> = derived(
     if ($thc) {
       const update = retryWrap(async () => {
         const cid = await $thc.getQuestsRootCID();
-        const hashBuffer = arrayify(cid);
-        const ipfsHash = CID.decode(hashBuffer).toV0().toString();
-        console.log("Update quests root CID", ipfsHash);
-        set(ipfsHash);
+        console.log("Update quests root CID", cid);
+        set(cid);
       }, true);
       const timerId = window.setInterval(update, 30000);
       update();
@@ -136,13 +133,10 @@ export const currentQuest: Readable<string | null> = derived(
         return;
       }
       retry(async () => {
-        const ipfsUrl = new URL(
-          $questsRootCID + "/" + $currentChapter,
-          ipfsGateway
-        );
+        const contentUrl = `/game-data/${$questsRootCID}/${$currentChapter}`;
         let quest: string;
         try {
-          const response = await fetch(ipfsUrl);
+          const response = await fetch(contentUrl);
           console.log("IPFS response:", response);
           quest = await response.text();
         } catch (e) {

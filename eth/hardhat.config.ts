@@ -47,7 +47,7 @@ const config: HardhatUserConfig = {
       accounts: [PRIVATE_KEY],
     },
     sepolia: {
-      url: "https://sepolia.publicgoods.network",
+      url: "https://eth-sepolia.g.alchemy.com/v2/b9iDb59-u1ySOnZoqJBxQSN2nlRutFMr",
       accounts: [TEST_PRIVATE_KEY],
     },
   },
