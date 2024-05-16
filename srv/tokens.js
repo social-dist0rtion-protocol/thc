@@ -19,9 +19,11 @@ module.exports = {
         await transaction.wait(1);
         return transaction.hash;
       } catch (err) {
+        console.log(err.stack);
         throw "Transaction failed";
       }
     } catch (err) {
+      console.log(err.stack);
       throw "Invalid address";
     }
   },
