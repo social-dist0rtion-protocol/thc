@@ -3,9 +3,10 @@ pragma solidity >=0.8.12 <0.9.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
-import {ITreasureHuntCommendation} from "./ITreasureHuntCommendation.sol";
+import {ITreasure} from "./ITreasure.sol";
 import {GelatoRelayContextERC2771} from "@gelatonetwork/relay-context/contracts/GelatoRelayContextERC2771.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
+import "hardhat/console.sol";
 
 contract TreasureHuntCreator is
     Ownable,
@@ -35,7 +36,7 @@ contract TreasureHuntCreator is
     address[] public gameMasters;
 
     bytes public questsRootCid;
-    ITreasureHuntCommendation public prize;
+    ITreasure public prize;
 
     constructor(
         address[] memory solutions_,
@@ -43,7 +44,7 @@ contract TreasureHuntCreator is
         address prize_
     ) {
         solutions = solutions_;
-        prize = ITreasureHuntCommendation(prize_);
+        prize = ITreasure(prize_);
         for (uint8 i; i < keys.length; i++) {
             // Add 1 otherwise it's impossible to know if the first key (index
             // 0) exists or not
@@ -114,7 +115,7 @@ contract TreasureHuntCreator is
     }
 
     function _rewardMain(uint256 chapter, address player) internal {
-        if (chapter == totalChapters()) {
+        if (chapter == totalChapters() - 1) {
             uint256 peopleInThisChapter = chapterToPlayers[uint96(chapter)]
                 .length;
             uint256 position = peopleInThisChapter > 3

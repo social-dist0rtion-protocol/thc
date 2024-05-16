@@ -3,6 +3,8 @@ import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
 import { solidity } from "ethereum-waffle";
 import {
+  Treasure,
+  Treasure__factory,
   TreasureHuntCreator,
   TreasureHuntCreator__factory,
 } from "../typechain";
@@ -23,6 +25,7 @@ const PAGE_SIZE = 32;
 
 describe("TreasureHuntCreator", () => {
   let thcFactory: TreasureHuntCreator__factory;
+  let treasure: Treasure;
   let accounts: SignerWithAddress[];
   let totalPlayers: number;
   let questsRootCid: Uint8Array;
@@ -35,6 +38,12 @@ describe("TreasureHuntCreator", () => {
       accounts[0]
     )) as TreasureHuntCreator__factory;
 
+    const treasureFactory = (await ethers.getContractFactory(
+      "Treasure",
+      accounts[0]
+    )) as Treasure__factory;
+    treasure = (await treasureFactory.deploy()) as Treasure;
+
     totalPlayers = accounts.length;
     questsRootCid = cidToBytes(
       "QmUYWv6RaHHWkk5BMHJH4xKPEKNqAYKomeiTVobAMyxsbz"
@@ -45,7 +54,7 @@ describe("TreasureHuntCreator", () => {
     solutions: string[],
     questsRootCid: Uint8Array
   ): Promise<TreasureHuntCreator> {
-    const thc = await thcFactory.deploy(solutions, [], questsRootCid);
+    const thc = await thcFactory.deploy(solutions, [], treasure.address);
     await thc.deployed();
 
     return thc;
