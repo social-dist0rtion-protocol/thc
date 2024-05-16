@@ -40,7 +40,7 @@ const config: HardhatUserConfig = {
   networks: {
     hardhat: {},
     localhost: {
-      url: "http://localhost:8545",
+      url: "http://127.0.0.1:8545",
     },
     optimism: {
       url: `https://opt-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY!}`,

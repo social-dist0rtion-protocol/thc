@@ -1,7 +1,7 @@
-INPUT_DIR ?= ../37c3-thc/chapters
+INPUT_DIR ?= try/chapters
 OUTPUT_DIR ?= try/build
 ETH_DIR ?= eth
-ETH_NETWORK ?= sepolia
+ETH_NETWORK ?= localhost
 CHAPTERS_FILE ?= gen/chapters.json
 KEYS_FILE ?= try/chapters/keys
 

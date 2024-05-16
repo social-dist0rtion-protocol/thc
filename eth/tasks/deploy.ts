@@ -3,7 +3,7 @@ import { writeFile } from "fs/promises";
 import { TreasureHuntCreator__factory } from "../typechain";
 import { loadChapters, loadKeys } from "./utils";
 
-const GELATOR_RELAYER = "0xd8253782c45a12053594b9deb72d8e8ab2fca54c";
+const GELATO_RELAYER = "0xd8253782c45a12053594b9deb72d8e8ab2fca54c";
 
 task("deploy", "Push THC to network")
   .addParam("chapters", "The file with all chapters")
@@ -29,7 +29,7 @@ task("deploy", "Push THC to network")
         solutions,
         keys,
         cid,
-        GELATOR_RELAYER
+        GELATO_RELAYER
       );
       console.log("  Address", thcContract.address);
       const receipt = await thcContract.deployed();

@@ -5,16 +5,12 @@ import replace from "@rollup/plugin-replace";
 export default async () => {
   process.env = {
     ...process.env,
-    ...{
-      VITE_IPFS_GATEWAY: "",
-    },
   };
   return defineConfig({
     plugins: [
       svelte({ hot: !process.env.VITEST }),
       replace({
         __VITE_CONTRACTS_ADDRESSES__: JSON.stringify({}),
-        __VITE_IPFS_GATEWAY__: "",
       }),
     ],
     ///@ts-ignore
