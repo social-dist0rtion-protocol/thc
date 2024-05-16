@@ -3,9 +3,18 @@ pragma solidity >=0.8.12 <0.9.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
-import {ERC2771Context} from "@gelatonetwork/relay-context/contracts/vendor/ERC2771Context.sol";
+import {GelatoRelayContextERC2771} from "@gelatonetwork/relay-context/contracts/GelatoRelayContextERC2771.sol";
+import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 
-contract TreasureHuntCreator is Ownable, AccessControl, ERC2771Context {
+contract TreasureHuntCreator is
+    Ownable,
+    AccessControl,
+    GelatoRelayContextERC2771
+{
+    using Address for address payable;
+    mapping(address => uint256) public contextCounter;
+    event IncrementCounter(address msgSender);
+
     bytes32 public constant GAME_MASTER_ROLE = keccak256("GAME_MASTER_ROLE");
 
     event ChapterCompleted(
@@ -29,9 +38,8 @@ contract TreasureHuntCreator is Ownable, AccessControl, ERC2771Context {
     constructor(
         address[] memory solutions,
         address[] memory keys,
-        bytes memory questsRootCid,
-        address trustedForwarder
-    ) ERC2771Context(trustedForwarder) {
+        bytes memory questsRootCid
+    ) {
         _solutions = solutions;
         _questsRootCid = questsRootCid;
         for (uint8 i; i < keys.length; i++) {
@@ -119,22 +127,18 @@ contract TreasureHuntCreator is Ownable, AccessControl, ERC2771Context {
         }
     }
 
-    // Overrides
-    function _msgSender()
-        internal
-        view
-        override(ERC2771Context, Context)
-        returns (address)
-    {
-        return super._msgSender();
+    // GELATO STUFF
+    function increment() external onlyGelatoRelayERC2771 {
+        _transferRelayFee();
+        contextCounter[_getMsgSender()]++;
+        emit IncrementCounter(_getMsgSender());
     }
 
-    function _msgData()
-        internal
-        view
-        override(ERC2771Context, Context)
-        returns (bytes calldata)
-    {
-        return super._msgData();
+    function incrementFeeCapped(
+        uint256 maxFee
+    ) external onlyGelatoRelayERC2771 {
+        _transferRelayFeeCapped(maxFee);
+        contextCounter[_getMsgSender()]++;
+        emit IncrementCounter(_getMsgSender());
     }
 }

@@ -9,8 +9,8 @@ dependencies:
     specifier: ^3.2.0
     version: 3.2.0
   '@openzeppelin/contracts':
-    specifier: ^4.7.3
-    version: 4.7.3
+    specifier: ^4.9.3
+    version: 4.9.3
 
 devDependencies:
   '@ethersproject/providers':
@@ -1016,10 +1016,6 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
-
-  /@openzeppelin/contracts@4.7.3:
-    resolution: {integrity: sha512-dGRS0agJzu8ybo44pCIf3xBaPQN/65AIXNgK8+4gzKd5kbvlqyxryUYVLJv7fK98Seyd2hDZzVEHSWAh0Bt1Yw==}
-    dev: false
 
   /@openzeppelin/contracts@4.9.3:
     resolution: {integrity: sha512-He3LieZ1pP2TNt5JbkPA4PNT9WC3gOTOlDcFGJW4Le4QKqwmiNJCRt44APfxMxvq7OugU/cqYuPcSBzOw38DAg==}

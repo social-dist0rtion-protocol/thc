@@ -25,12 +25,7 @@ task("deploy", "Push THC to network")
       console.log(cid);
       const keys = loadKeys(keysPath);
 
-      const thcContract = await thcFactory.deploy(
-        solutions,
-        keys,
-        cid,
-        GELATO_RELAYER
-      );
+      const thcContract = await thcFactory.deploy(solutions, keys, cid);
       console.log("  Address", thcContract.address);
       const receipt = await thcContract.deployed();
       console.log("  Receipt", receipt.deployTransaction.hash);
