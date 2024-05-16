@@ -3,8 +3,6 @@ import { writeFile } from "fs/promises";
 import { TreasureHuntCreator__factory } from "../typechain";
 import { loadChapters, loadKeys } from "./utils";
 
-const GELATO_RELAYER = "0xd8253782c45a12053594b9deb72d8e8ab2fca54c";
-
 task("deploy", "Push THC to network")
   .addParam("chapters", "The file with all chapters")
   .addParam("keysPath", "The file with all keys")
@@ -25,11 +23,15 @@ task("deploy", "Push THC to network")
       console.log(cid);
       const keys = loadKeys(keysPath);
 
-      const thcContract = await thcFactory.deploy(solutions, keys, cid);
-      console.log("  Address", thcContract.address);
+      const thcContract = await thcFactory.deploy(
+        solutions,
+        keys,
+        "0x0000000000000000000000000000000000000000"
+      );
       const receipt = await thcContract.deployed();
       console.log("  Receipt", receipt.deployTransaction.hash);
 
+      await thcContract.setup(cid);
       const questsRootCidArg = await thcContract.getQuestsRootCID();
 
       const { chainId } = await hre.ethers.provider.getNetwork();

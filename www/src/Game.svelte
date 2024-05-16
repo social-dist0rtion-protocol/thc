@@ -8,7 +8,7 @@
     totalChapters,
     fuckFuckFuckFuckFuck,
   } from "./stores/thc";
-  import { lowBalance, signer } from "./stores/burnerWallet";
+  import { lowBalance, signer, address } from "./stores/burnerWallet";
   import Chapter from "./components/Chapter.svelte";
   import { signatureFromSolution } from "./lib";
   import { fade } from "svelte/transition";
@@ -30,7 +30,21 @@
     // used
     $game[chapterNumber.toString()].solution = solution;
     try {
-      const tx = await contract.submit(v, r, s);
+      // const tx = await contract.submit(v, r, s);
+      const { data } = await contract.populateTransaction.submit(v, r, s);
+
+      const relay = new GelatoRelay();
+      const request: CallWithSyncFeeERC2771Request = {
+        chainId: BigInt($chainId!),
+        target: contract.address,
+        data: data!,
+        user: addr!,
+        feeToken: "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9",
+        isRelayContext: true,
+      };
+
+      const relayResponse = await relay.callWithSyncFeeERC2771(request, sign!);
+
       console.log(tx);
       state = "MINING";
       const receipt = await tx.wait();
@@ -87,8 +101,6 @@
     currentChapter={$currentChapter}
     currentQuestHtml={$currentQuestHtml}
     totalChapters={$totalChapters}
-    address={$signer.address}
-    lowBalance={$lowBalance}
     {onSubmitSolution}
   />
 

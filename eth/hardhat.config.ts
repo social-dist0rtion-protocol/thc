@@ -10,7 +10,7 @@ import { HardhatUserConfig } from "hardhat/types";
 import "@nomiclabs/hardhat-etherscan";
 import "solidity-coverage";
 
-//import("./tasks").catch((e) => console.log("Cannot load tasks", e.toString()));
+import("./tasks").catch((e) => console.log("Cannot load tasks", e.toString()));
 
 const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY!;
 const PRIVATE_KEY =
