@@ -1,7 +1,4 @@
 <script lang="ts">
-  import { ethereumFaucetEndpoint } from "../stores/config";
-  import { reloadBalanceTrigger } from "../stores/burnerWallet";
-
   export let currentQuestHtml: string;
   export let currentChapter: number;
   export let totalChapters: number;

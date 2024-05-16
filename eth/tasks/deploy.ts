@@ -1,6 +1,7 @@
 import { task } from "hardhat/config";
 import { writeFile } from "fs/promises";
 import { TreasureHuntCreator__factory } from "../typechain";
+
 import { loadChapters, loadKeys } from "./utils";
 
 task("deploy", "Push THC to network")
@@ -28,17 +29,19 @@ task("deploy", "Push THC to network")
         keys,
         "0x0000000000000000000000000000000000000000"
       );
-      const receipt = await thcContract.deployed();
-      console.log("  Receipt", receipt.deployTransaction.hash);
+      const receipt = thcContract.deploymentTransaction();
+      console.log("  Receipt", receipt?.hash);
+      console.log("wait");
+      await new Promise((r) => setTimeout(r, 10000));
+      console.log("ended");
 
       await thcContract.setup(cid);
-      const questsRootCidArg = await thcContract.getQuestsRootCID();
 
       const { chainId } = await hre.ethers.provider.getNetwork();
 
       const config = {
-        [chainId]: {
-          TreasureHuntCreator: thcContract.address,
+        [Number(chainId)]: {
+          TreasureHuntCreator: await thcContract.getAddress(),
         },
       };
 
@@ -50,17 +53,15 @@ task("deploy", "Push THC to network")
       await writeFile(networkFile, JSON.stringify(config, null, 2));
 
       console.log("Arguments file", argsFile);
-      await writeFile(
-        argsFile,
-        JSON.stringify([solutions, keys, questsRootCidArg])
-      );
+      await writeFile(argsFile, JSON.stringify([solutions, keys, cid]));
 
+      return;
       if (networkParam !== "localhost") {
         // It is recommended to wait for 5 confirmations before issuing the verification request
         console.log("Verfication in progress...");
-        await thcContract.deployTransaction.wait(3);
+        await thcContract.deploymentTransaction()?.wait(3);
         await hre.run("verify", {
-          address: thcContract.address,
+          address: await thcContract.getAddress(),
           constructorArgs: argsFile,
           contract: "contracts/TreasureHuntCreator.sol:TreasureHuntCreator",
         });

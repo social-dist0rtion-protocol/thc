@@ -16,6 +16,7 @@ class DB {
   }
 
   set<T>(key: string, valueOrFunction: ValueOrFunction<T>, fallback?: T) {
+    console.log("PORCO DUIIIOOOOO", key, valueOrFunction);
     let value: T;
     if (valueOrFunction instanceof Function) {
       const prev = this.get<T>(key, fallback);

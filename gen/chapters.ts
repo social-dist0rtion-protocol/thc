@@ -1,7 +1,6 @@
 import { readFile, writeFile, readdir, mkdir, rename } from "fs/promises";
 import path from "path";
-import { ethers } from "ethers";
-import { toUtf8Bytes, keccak256 } from "ethers/lib/utils";
+import { Wallet, keccak256, toUtf8Bytes } from "ethers";
 import CryptoJS from "crypto-js";
 import { create as ipfsCreate, globSource } from "ipfs-http-client";
 
@@ -62,7 +61,7 @@ async function chapter(dirIn: string, dirOut: string, prevSolution: string) {
 
   const solutionBuffer = await readFileAndTrim(solutionFileIn);
   const solutionHash = keccak256(toUtf8Bytes(solutionBuffer));
-  const address = new ethers.Wallet(solutionHash).address;
+  const address = new Wallet(solutionHash).address;
   await writeFile(addressFileOut, address);
 
   if (prevSolution.length) {

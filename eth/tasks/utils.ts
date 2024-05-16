@@ -2,8 +2,7 @@ import { readFileSync } from "fs";
 import { readFile, writeFile } from "fs/promises";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { TreasureHuntCreator__factory } from "../typechain";
-import { Wallet, utils, wordlists } from "ethers";
-import { keccak256, toUtf8Bytes } from "ethers/lib/utils";
+import { Mnemonic, Wallet, keccak256, toUtf8Bytes, wordlists } from "ethers";
 
 const CONFIG_FILE_PATH = "./deployments";
 
@@ -52,9 +51,9 @@ export async function deployContract(
   const contract = await factory.deploy(...args);
 
   console.log("   Waiting for 5 confirmations...");
-  await contract.deployTransaction.wait(5);
+  await contract.deploymentTransaction()?.wait(5);
 
-  await storeContractAddress(hre, contractName, contract.address);
+  await storeContractAddress(hre, contractName, await contract.getAddress());
 
   return contract;
 }
@@ -69,7 +68,7 @@ export async function loadContract(
   );
   const [deployer] = await hre.ethers.getSigners();
   const { chainId } = await hre.ethers.provider.getNetwork();
-  const addresses = networks[chainId];
+  const addresses = networks[Number(chainId)];
 
   let contract;
   if (addresses !== undefined && contractName in addresses) {
@@ -114,7 +113,7 @@ export function loadKeys(path: string) {
 export function getCorrespondingWordlist(mnemonic: string) {
   for (let locale in wordlists) {
     const wordlist = wordlists[locale];
-    if (utils.isValidMnemonic(mnemonic, wordlist)) {
+    if (Mnemonic.isValidMnemonic(mnemonic, wordlist)) {
       return wordlists[locale];
     }
   }

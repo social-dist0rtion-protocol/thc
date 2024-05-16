@@ -8,19 +8,24 @@
     totalChapters,
     fuckFuckFuckFuckFuck,
   } from "./stores/thc";
-  import { lowBalance, signer, address } from "./stores/burnerWallet";
+  import { signer } from "./stores/burnerWallet";
   import Chapter from "./components/Chapter.svelte";
   import { signatureFromSolution } from "./lib";
   import { fade } from "svelte/transition";
   import Update from "./components/Update.svelte";
+  import {
+    GelatoRelay,
+    type CallWithSyncFeeERC2771Request,
+  } from "@gelatonetwork/relay-sdk";
 
   let state: "IDLE" | "CHECK" | "MINING" | "SUCCESS" | "WRONG" | "ERROR" =
     "IDLE";
   let error: string;
+  $: sign = $signer;
 
   // This function is called by the child component
   async function onSubmitSolution(solution: string) {
-    const address = $signer!.address;
+    const address = await $signer!.getAddress();
     const contract = $thc!;
     const chapterNumber = $currentChapter!;
     solution = solution.toLowerCase();
@@ -31,20 +36,22 @@
     $game[chapterNumber.toString()].solution = solution;
     try {
       // const tx = await contract.submit(v, r, s);
-      const { data } = await contract.populateTransaction.submit(v, r, s);
+      const { data } = await contract.submit.populateTransaction(v, r, s);
 
       const relay = new GelatoRelay();
       const request: CallWithSyncFeeERC2771Request = {
-        chainId: BigInt($chainId!),
-        target: contract.address,
+        chainId: BigInt(11155111),
+        target: "0xC957945F761747CBe06e99388C8B9206138170b7",
         data: data!,
-        user: addr!,
+        user: address,
         feeToken: "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9",
         isRelayContext: true,
       };
 
       const relayResponse = await relay.callWithSyncFeeERC2771(request, sign!);
+      console.log(relayResponse);
 
+      /*
       console.log(tx);
       state = "MINING";
       const receipt = await tx.wait();
@@ -53,6 +60,7 @@
       state = "SUCCESS";
       $lastTransactionMined = tx.hash;
       $game[chapterNumber.toString()].transactionHash = tx.hash;
+      */
       return true;
     } catch (e: any) {
       const msg = e.toString() as string;

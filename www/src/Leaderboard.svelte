@@ -1,13 +1,14 @@
 <script lang="ts">
-  import { address } from "./stores/burnerWallet";
+  import { signer } from "./stores/burnerWallet";
   import { leaderboard, ensAddresses } from "./stores/thc";
   import Leaderboard from "./components/Leaderboard.svelte";
+  $: address = $signer?.getAddress();
 </script>
 
 <h1>Leaderboard</h1>
-{#if $leaderboard && $address && $ensAddresses}
+{#if $leaderboard && address && $ensAddresses}
   <Leaderboard
-    address={$address}
+    {address}
     ensAddresses={$ensAddresses}
     leaderboard={$leaderboard}
   />

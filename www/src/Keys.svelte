@@ -1,6 +1,6 @@
 <script lang="ts">
   import { fuckFuckFuckFuckFuck, thc } from "./stores/thc";
-  import { lowBalance, signer } from "./stores/burnerWallet";
+  import { signer } from "./stores/burnerWallet";
   import { fade } from "svelte/transition";
   import { signatureFromSolution } from "./lib";
 
@@ -55,10 +55,8 @@
     leaderboard. More info in the <a href="#/about">FAQs</a>.
   </p>
   <form on:submit|preventDefault={onSubmitKey}>
-    <input disabled={$lowBalance} placeholder="Key" bind:value={key} />
-    <button disabled={$lowBalance || key.length === 0} type="submit"
-      >Submit</button
-    >
+    <input placeholder="Key" bind:value={key} />
+    <button disabled={key.length === 0} type="submit">Submit</button>
   </form>
 
   {#if state !== "IDLE"}

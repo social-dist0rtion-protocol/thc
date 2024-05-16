@@ -50,8 +50,8 @@ contract TreasureHuntCreator is
             keyToPos[keys[i]] = i + 1;
         }
         totalKeys = uint8(keys.length);
-        _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
-        _grantRole(GAME_MASTER_ROLE, _msgSender());
+        _grantRole(DEFAULT_ADMIN_ROLE, _getMsgSender());
+        _grantRole(GAME_MASTER_ROLE, _getMsgSender());
     }
 
     function setup(
@@ -79,35 +79,35 @@ contract TreasureHuntCreator is
     }
 
     function currentChapter() public view returns (uint96) {
-        return playerToCurrentChapter[_msgSender()];
+        return playerToCurrentChapter[_getMsgSender()];
     }
 
     function submit(uint8 v, bytes32 r, bytes32 s) public {
-        uint96 playerChapter = playerToCurrentChapter[_msgSender()];
+        uint96 playerChapter = playerToCurrentChapter[_getMsgSender()];
         address playerChapterSolution = solutions[playerChapter];
-        bytes32 addressHash = getAddressHash(_msgSender());
+        bytes32 addressHash = getAddressHash(_getMsgSender());
 
         require(
             ecrecover(addressHash, v, r, s) == playerChapterSolution,
             "Wrong solution."
         );
 
-        if (playerToCurrentChapter[_msgSender()] == 0) {
-            players.push(_msgSender());
+        if (playerToCurrentChapter[_getMsgSender()] == 0) {
+            players.push(_getMsgSender());
         }
-        playerToCurrentChapter[_msgSender()]++;
-        chapterToPlayers[playerChapter].push(_msgSender());
-        _rewardMain(playerChapter, _msgSender());
+        playerToCurrentChapter[_getMsgSender()]++;
+        chapterToPlayers[playerChapter].push(_getMsgSender());
+        _rewardMain(playerChapter, _getMsgSender());
 
-        emit ChapterCompleted(playerChapter, _msgSender());
+        emit ChapterCompleted(playerChapter, _getMsgSender());
     }
 
     function submitKey(uint8 v, bytes32 r, bytes32 s) public {
-        address signer = ecrecover(getAddressHash(_msgSender()), v, r, s);
+        address signer = ecrecover(getAddressHash(_getMsgSender()), v, r, s);
         uint8 pos = keyToPos[signer];
         require(pos > 0, "Wrong key");
-        playerToKeys[_msgSender()] |= uint80(1 << (pos - 1));
-        _rewardKeys(playerToKeys[_msgSender()], _msgSender());
+        playerToKeys[_getMsgSender()] |= uint80(1 << (pos - 1));
+        _rewardKeys(playerToKeys[_getMsgSender()], _getMsgSender());
     }
 
     function getAddressHash(address a) public pure returns (bytes32) {

@@ -26,7 +26,7 @@
     "@types/testing-library__jest-dom": "^5.14.5",
     "@walletconnect/web3-provider": "^1.8.0",
     "crypto-js": "^4.1.1",
-    "ethers": "^5.7.0",
+    "ethers": "^6.7.0",
     "jsdom": "^20.0.0",
     "rollup-plugin-polyfill-node": "^0.10.2",
     "svelte": "^3.49.0",
