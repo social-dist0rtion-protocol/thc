@@ -2,6 +2,7 @@ import {
   Mnemonic,
   Signature,
   Wallet,
+  getBytes,
   keccak256,
   toUtf8Bytes,
   wordlists,
@@ -22,7 +23,7 @@ export async function signatureFromSolution(address: string, solution: string) {
   const solutionWallet = new Wallet(hash);
 
   // Sign the raw bytes, not the hex string
-  const signature = await solutionWallet.signMessage(toUtf8Bytes(address));
+  const signature = await solutionWallet.signMessage(getBytes(address));
   return Signature.from(signature);
 }
 

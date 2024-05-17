@@ -100,6 +100,10 @@ contract TreasureHuntCreator is
         _rewardMain(playerChapter, _getMsgSender());
 
         emit ChapterCompleted(playerChapter, _getMsgSender());
+
+        if (_isGelatoRelayERC2771(msg.sender)) {
+            _transferRelayFee();
+        }
     }
 
     function submitKey(uint8 v, bytes32 r, bytes32 s) public {
