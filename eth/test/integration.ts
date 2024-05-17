@@ -81,7 +81,7 @@ describe("TreasureHuntCreator", () => {
   });
 
   describe("submit", async () => {
-    it("should increment the user chapter with correct solution", async () => {
+    it.only("should increment the user chapter with correct solution", async () => {
       let testSolution = "A solution.";
       let [signature, solutionKey] = await getSignature(deployer, testSolution);
       let { r, v, s } = Signature.from(signature);

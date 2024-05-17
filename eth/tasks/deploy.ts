@@ -1,8 +1,12 @@
 import { task } from "hardhat/config";
 import { writeFile } from "fs/promises";
-import { TreasureHuntCreator__factory } from "../typechain";
+import {
+  TreasureHuntCreator,
+  TreasureHuntCreator__factory,
+} from "../typechain";
 
-import { loadChapters, loadKeys } from "./utils";
+import { loadChapters, loadContract, loadKeys } from "./utils";
+import { toUtf8Bytes } from "ethers";
 
 task("deploy", "Push THC to network")
   .addParam("chapters", "The file with all chapters")
@@ -68,3 +72,18 @@ task("deploy", "Push THC to network")
       }
     }
   );
+
+task("submit", "send tx").setAction(async (_, hre) => {
+  const thcContract = (await loadContract(
+    hre,
+    "TreasureHuntCreator"
+  )) as TreasureHuntCreator;
+
+  const r = await thcContract.submit(
+    0,
+    toUtf8Bytes("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+    toUtf8Bytes("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
+  );
+  console.log(r.hash);
+  await r.wait(4);
+});

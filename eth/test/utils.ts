@@ -1,5 +1,5 @@
 import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
-import { Signature, Wallet, keccak256, toUtf8Bytes } from "ethers";
+import { Signature, Wallet, getBytes, keccak256, toUtf8Bytes } from "ethers";
 import { CID } from "multiformats/cid";
 
 export function cidToBytes(cid: string) {
@@ -28,7 +28,7 @@ export async function getSignature(
   let solutionBytes = toUtf8Bytes(solution);
   let solutionDigest = keccak256(solutionBytes);
   let wallet = new Wallet(solutionDigest);
-  let signature = await wallet.signMessage(toUtf8Bytes(signer.address));
+  let signature = await wallet.signMessage(getBytes(signer.address));
 
   return [signature, wallet.address];
 }

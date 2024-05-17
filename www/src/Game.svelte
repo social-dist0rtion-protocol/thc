@@ -17,11 +17,13 @@
     GelatoRelay,
     type CallWithSyncFeeERC2771Request,
   } from "@gelatonetwork/relay-sdk";
+  import { contractsAddresses } from "./stores/config";
 
   let state: "IDLE" | "CHECK" | "MINING" | "SUCCESS" | "WRONG" | "ERROR" =
     "IDLE";
   let error: string;
   $: sign = $signer;
+  console.log("sending to", contractsAddresses["TreasureHuntCreator"]);
 
   // This function is called by the child component
   async function onSubmitSolution(solution: string) {
@@ -30,7 +32,11 @@
     const chapterNumber = $currentChapter!;
     solution = solution.toLowerCase();
     state = "CHECK";
+    console.log("sending from", address);
+    console.log("sending to", contractsAddresses["TreasureHuntCreator"]);
+
     const { r, s, v } = await signatureFromSolution(address, solution);
+    console.log("sending ", v, r, s);
     // Store the solution, if it's wrong it's not a problem since it won't be
     // used
     $game[chapterNumber.toString()].solution = solution;
@@ -41,7 +47,7 @@
       const relay = new GelatoRelay();
       const request: CallWithSyncFeeERC2771Request = {
         chainId: BigInt(11155111),
-        target: "0xC957945F761747CBe06e99388C8B9206138170b7",
+        target: contractsAddresses["TreasureHuntCreator"],
         data: data!,
         user: address,
         feeToken: "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9",
