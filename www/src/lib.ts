@@ -198,11 +198,10 @@ function _prepareSubmitSolutionOrKey(
     reset();
     try {
       const r = await relayCall(solution);
-      if (!r.txHash) {
-        throw new Error("something weird happened");
+      if (r.txHash) {
+        onSuccess({ txHash: r.txHash, solution });
+        return true;
       }
-      onSuccess(r);
-      return true;
     } catch (e) {
       const msg = (e as any).toString() as string;
       if (msg.toLowerCase().includes("wrong solution")) {
@@ -212,8 +211,8 @@ function _prepareSubmitSolutionOrKey(
         status.set("ERROR");
         error.set(msg);
       }
-      return false;
     }
+    return false;
   }
 
   function reset() {
