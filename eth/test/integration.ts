@@ -388,21 +388,11 @@ describe("TreasureHuntCreator", () => {
         keys
       );
 
-      await Promise.all(
-        [deployer, alice, bob, carl, dean].map(
-          async (x) => await solve(instance, testSolution1, x)
-        )
-      );
-      await Promise.all(
-        [deployer, alice, bob, carl, dean].map(
-          async (x) => await solve(instance, testSolution2, x)
-        )
-      );
-      await Promise.all(
-        [deployer, alice, bob, carl, dean].map(
-          async (x) => await solve(instance, testSolution3, x)
-        )
-      );
+      for (const player of [deployer, alice, bob, carl, dean]) {
+        await solve(instance, testSolution1, player);
+        await solve(instance, testSolution2, player);
+        await solve(instance, testSolution3, player);
+      }
 
       const balances = await Promise.all(
         [deployer, alice, bob, carl, dean].map(async (x) =>
