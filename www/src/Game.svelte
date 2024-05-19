@@ -8,7 +8,11 @@
     fuckFuckFuckFuckFuck,
   } from "./stores/thc";
   import Chapter from "./components/Chapter.svelte";
-  import { prepareSubmitSolution } from "./lib";
+  import {
+    addressFromSolution,
+    addressToChapterIndex,
+    prepareSubmitSolution,
+  } from "./lib";
   import { fade } from "svelte/transition";
   import Update from "./components/Update.svelte";
 
@@ -17,6 +21,7 @@
 
   export let signer: Signer;
   export let thc: TreasureHuntCreator;
+  export let wrongAnswer: boolean;
 
   const { submit, status, txHash, error, reset } = prepareSubmitSolution(
     thc,
@@ -31,6 +36,7 @@
 
   function onCloseModal() {
     reset();
+    wrongAnswer = false;
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -38,6 +44,17 @@
     if ($currentChapter !== null) {
       $game[$currentChapter.toString()].questHashLastSeen =
         $game[$currentChapter.toString()].questHash;
+    }
+  }
+
+  async function onSubmitSolution(solution: string) {
+    if (!$currentChapter) return;
+    const address = await addressFromSolution(solution);
+
+    if (addressToChapterIndex(address) === $currentChapter + 1) {
+      return submit(solution);
+    } else {
+      wrongAnswer = true;
     }
   }
 
@@ -65,6 +82,15 @@
     totalChapters={$totalChapters}
     onSubmitSolution={submit}
   />
+
+  {#if wrongAnswer}
+    <div transition:fade class="thc--chapter-state">
+      <div>
+        <h2>Wrong answer</h2>
+        <button on:click={reset}>Try again</button>
+      </div>
+    </div>
+  {/if}
 
   {#if $status !== undefined}
     <div transition:fade class="thc--chapter-state">

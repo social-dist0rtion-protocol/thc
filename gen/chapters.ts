@@ -68,7 +68,12 @@ async function chapter(dirIn: string, dirOut: string, prevSolution: string) {
     questOut = questIn.toString();
   }
   await writeFile(questFileOut, questOut);
-  return { fileOut: questFileOut, address, quest: questOut };
+  return {
+    fileOut: questFileOut,
+    address,
+    quest: questOut,
+    plaintext: questIn,
+  };
 }
 
 async function readKeys(dirIn: string) {
@@ -89,19 +94,28 @@ async function readKeys(dirIn: string) {
   return addresses;
 }
 
-async function upload(directory: string) {
-  const filenames = await readdir(directory);
+async function calculateHashChapters(chapters: string[]) {
   let hash = "";
-  for (let filename in filenames) {
-    const content = await readFile(path.join(directory, filename), "utf8");
-    hash = keccak256(toUtf8Bytes(content + hash));
+  for (const chapter of chapters) {
+    console.log("content\n", chapter);
+    hash = keccak256(toUtf8Bytes(chapter + hash));
+    console.log("hash:", hash);
   }
   return hash;
 }
 
 async function processChapter(dirIn: string, dirOut: string, solution: string) {
-  const { fileOut, address, quest } = await chapter(dirIn, dirOut, solution);
-  return { solutionAddress: address, quest: quest, questFile: fileOut };
+  const { fileOut, address, quest, plaintext } = await chapter(
+    dirIn,
+    dirOut,
+    solution
+  );
+  return {
+    solutionAddress: address,
+    quest: quest,
+    questFile: fileOut,
+    plaintext,
+  };
 }
 
 async function main(dirIn: string, dirOut: string) {
@@ -111,6 +125,7 @@ async function main(dirIn: string, dirOut: string) {
   const padding = v[0].name.length;
   const quests = [];
   const chapters = [];
+  const plaintextChapters = [];
   const keys = await readKeys(dirIn);
 
   await mkdir(questsDir, { recursive: true });
@@ -127,15 +142,16 @@ async function main(dirIn: string, dirOut: string) {
     );
 
     // collect chapter data
-    const { solutionAddress, quest, questFile } = await processChapter(
-      path.join(dirIn, name),
-      path.join(dirOut, name),
-      solution
-    );
+    const { solutionAddress, quest, questFile, plaintext } =
+      await processChapter(
+        path.join(dirIn, name),
+        path.join(dirOut, name),
+        solution
+      );
 
     // put encrypted quest in one folder, named after the chapter number
     await rename(questFile, path.join(questsDir, `${i}`));
-
+    plaintextChapters.push(plaintext);
     quests.push(quest);
 
     chapters.push({
@@ -146,7 +162,7 @@ async function main(dirIn: string, dirOut: string) {
   }
 
   // add all encrypted quests at once
-  const dirCid = await upload(questsDir);
+  const dirCid = await calculateHashChapters(plaintextChapters);
 
   for (let i = 0; i < v.length; i++) {
     chapters[i].questHash = `${dirCid}/${i}`;
@@ -155,19 +171,22 @@ async function main(dirIn: string, dirOut: string) {
   // God forgive me this code is shit
   // God forgive me this code is shit
   // God forgive me this code is shit
-  const wwwPublicPath = path.join("../www/public/game-data", dirCid);
+  const wwwPublicPath = path.join("../www/game-data", dirCid);
   await mkdir(wwwPublicPath, {
     recursive: true,
   });
   for (let i = 0; i < quests.length; i++) {
     await writeFile(path.join(wwwPublicPath, i.toString()), quests[i]);
   }
-  await writeFile(path.join(wwwPublicPath, "keys"), JSON.stringify(keys));
+  await writeFile(
+    path.join(path.join("../www/src/"), "metadata.json"),
+    JSON.stringify({ keys, chapters: chapters.map((c) => c.solutionAddress) })
+  );
   // God forgive me this code is shit
   // God forgive me this code is shit
   // God forgive me this code is shit
 
-  return chapters;
+  //return chapters;
 }
 
 main(DIR_IN, DIR_OUT)

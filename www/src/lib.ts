@@ -15,6 +15,7 @@ import {
   type CallWithSyncFeeERC2771Request,
 } from "@gelatonetwork/relay-sdk";
 import { contractsAddresses } from "./stores/config";
+import metadata from "./metadata.json";
 
 export async function sleep(ms: number) {
   return new Promise((r) => setTimeout(r, ms));
@@ -24,19 +25,21 @@ export function shortAddress(a: string) {
   return a.substring(0, 6) + "…" + a.substring(16, 20);
 }
 
+export async function addressFromSolution(solution: string) {
+  solution = solution.toLowerCase();
+  const hash = keccak256(toUtf8Bytes(solution));
+  const solutionWallet = new Wallet(hash);
+  return solutionWallet.address;
+}
+
 export async function signatureFromSolution(address: string, solution: string) {
   solution = solution.toLowerCase();
-
-  // Generate the hash of the value
   const hash = keccak256(toUtf8Bytes(solution));
-
-  // Generate wallet using the 32 bytes from the hash
   const solutionWallet = new Wallet(hash);
-
-  // Sign the raw bytes, not the hex string
   const signature = await solutionWallet.signMessage(getBytes(address));
   return Signature.from(signature);
 }
+
 const KEYS_NAMES = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "L", "M"];
 export async function parseLeaderboard(
   thc: TreasureHuntCreator,
@@ -256,4 +259,30 @@ export function prepareSubmitKey(
   }) => void
 ) {
   return _prepareSubmitSolutionOrKey(thc, signer, onSuccess, false);
+}
+
+export function addressToChapterIndex(address: string) {
+  let i = 0;
+  address = address.toLowerCase();
+  for (; i < metadata.chapters.length; i++) {
+    if (address === metadata.chapters[i].toLowerCase()) {
+      return i;
+    }
+  }
+  if (i === metadata.chapters.length) {
+    return -1;
+  }
+}
+
+export function addressToKeyIndex(address: string) {
+  let i = 0;
+  address = address.toLowerCase();
+  for (; i < metadata.keys.length; i++) {
+    if (address === metadata.keys[i].address.toLowerCase()) {
+      return i;
+    }
+  }
+  if (i === metadata.keys.length) {
+    return -1;
+  }
 }
