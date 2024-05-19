@@ -3,16 +3,22 @@ OUTPUT_DIR ?= try/build
 ETH_DIR ?= eth
 ETH_NETWORK ?= localhost
 CHAPTERS_FILE ?= gen/chapters.json
-KEYS_FILE ?= try/chapters/keys
+KEYS_FILE ?= try/chapters/keys.csv
 
 game: backend frontend
 	echo "Game fully built and deployed."
 
+treasure:
+	echo "Deploying treasure contract."
+	@cd $(ETH_DIR); npx hardhat compile
+	@cd $(ETH_DIR); npx hardhat deploy:treasure --network $(ETH_NETWORK)
+	echo "Treasure deployed."
+
 backend: chapters
 	echo "Deploying contracts."
 	@cd $(ETH_DIR); npx hardhat compile
-	@cd $(ETH_DIR); npx hardhat deploy --network $(ETH_NETWORK) --chapters ../$(CHAPTERS_FILE) --keys-path ../${KEYS_FILE}
-	echo "Backend deployed."
+	@cd $(ETH_DIR); npx hardhat deploy:thc --network $(ETH_NETWORK) --chapters ../$(CHAPTERS_FILE) --keys-path ../${KEYS_FILE}
+	echo "TreasureHuntCreator deployed."
 
 update-chapters:
 	echo "Update chapters."

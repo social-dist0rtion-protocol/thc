@@ -65,17 +65,11 @@
           {/if}
         </td>
         <td>{chapter}</td>
-        <!--
         <td class="keys">
           {#each keys as key}
-            {#if key}
-              🔑
-            {:else}
-              ❔
-            {/if}
+            {key}
           {/each}
         </td>
-      -->
       </tr>
     {/each}
   </tbody>

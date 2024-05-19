@@ -40,21 +40,20 @@ export async function signatureFromSolution(address: string, solution: string) {
   return Signature.from(signature);
 }
 
-const KEYS_NAMES = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "L", "M"];
 export async function parseLeaderboard(
   thc: TreasureHuntCreator,
   totalKeys: number
 ) {
   function parse(value: bigint) {
-    const address = (value >> 96n).toString(16).padStart(40, "0");
+    const address = "0x" + (value >> 96n).toString(16).padStart(40, "0");
     const keysBitmap = (value >> 8n) & ((1n << 80n) - 1n);
     const keys = [];
 
     for (let i = 0; i < totalKeys; i++) {
       if ((keysBitmap & (1n << BigInt(i))) > 0n) {
-        keys.push(KEYS_NAMES[i]);
+        keys.push(metadata.keys[i].emoji);
       } else {
-        keys.push(null);
+        keys.push("?");
       }
     }
 
