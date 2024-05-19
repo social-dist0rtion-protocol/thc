@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/hardhat-typescript-template/contracts#readme",
   "devDependencies": {
+    "@nomicfoundation/hardhat-chai-matchers": "^2.0.6",
     "@types/chai": "^4.3.16",
     "@types/chai-as-promised": "^7.1.8",
     "@types/mocha": "^9.1.1",
@@ -40,13 +41,11 @@
   },
   "dependencies": {
     "@gelatonetwork/relay-context": "^3.2.0",
-    "@nomicfoundation/hardhat-chai-matchers": "^2.0.6",
     "@nomicfoundation/hardhat-ethers": "^3.0.6",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.10",
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "@openzeppelin/contracts": "^4.9.6",
     "@typechain/ethers-v6": "^0.5.1",
-    "@typechain/hardhat": "^9.1.0",
-    "ethereum-waffle": "^4.0.10"
+    "@typechain/hardhat": "^9.1.0"
   }
 }

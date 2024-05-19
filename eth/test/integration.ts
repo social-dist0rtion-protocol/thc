@@ -7,7 +7,7 @@ import {
   TreasureHuntCreator,
   TreasureHuntCreator__factory,
 } from "../typechain";
-import { Signature, Wallet, keccak256, toUtf8Bytes } from "ethers";
+import { Signature, Wallet, hexlify, keccak256, toUtf8Bytes } from "ethers";
 import {
   cidToBytes,
   getSignature,
@@ -81,7 +81,7 @@ describe("TreasureHuntCreator", () => {
   });
 
   describe("submit", async () => {
-    it.only("should increment the user chapter with correct solution", async () => {
+    it("should increment the user chapter with correct solution", async () => {
       let testSolution = "A solution.";
       let [signature, solutionKey] = await getSignature(deployer, testSolution);
       let { r, v, s } = Signature.from(signature);
@@ -90,7 +90,7 @@ describe("TreasureHuntCreator", () => {
       await instance.connect(deployer).submit(v, r, s);
 
       let result = await instance.playerToCurrentChapter(deployer.address);
-      expect(result).equal(1);
+      expect(result).equal(1n);
     });
 
     it("should fail with wrong solution", async () => {
@@ -126,7 +126,7 @@ describe("TreasureHuntCreator", () => {
       // await expect(instance.connect(deployer).submit(v, r, s)).revertedWith("");
 
       let result = await instance.playerToCurrentChapter(deployer.address);
-      expect(result).equal(0);
+      expect(result).equal(0n);
     });
 
     it("should not add player to list upon failure", async () => {
@@ -249,7 +249,7 @@ describe("TreasureHuntCreator", () => {
       );
 
       // player 1 finds key 0
-      //sig = await getKeySignature(KEYS[0], player1.address);
+      sig = await getSolutionSignature(KEYS[0], player1.address);
       await instance.connect(player1).submitKey(sig.v, sig.r, sig.s);
 
       // player 2 solves chapter 1
@@ -273,9 +273,9 @@ describe("TreasureHuntCreator", () => {
       await instance.connect(player3).submit(sig.v, sig.r, sig.s);
 
       // Player 3 finds keys 0 and 2
-      //sig = await getKeySignature(KEYS[0], player3.address);
+      sig = await getSolutionSignature(KEYS[0], player3.address);
       await instance.connect(player3).submitKey(sig.v, sig.r, sig.s);
-      //sig = await getKeySignature(KEYS[2], player3.address);
+      sig = await getSolutionSignature(KEYS[2], player3.address);
       await instance.connect(player3).submitKey(sig.v, sig.r, sig.s);
 
       leaderboard = await instance.getLeaderboard(0);
@@ -290,20 +290,17 @@ describe("TreasureHuntCreator", () => {
     });
   });
 
-  describe("setQuestsRootCid", async () => {
+  describe("setup", async () => {
     it("should set root cid", async () => {
       let instance = await deploy([], keys);
-      const newRootCid = cidToBytes(
-        "bagaaierasords4njcts6vs7qvdjfcvgnume4hqohf65zsfguprqphs3icwea"
-      );
+      const newRootCid = toUtf8Bytes("ABCD");
       let testGameMaster = accounts[1];
-      await instance.grantRole(GAME_MASTER_ROLE, testGameMaster.address);
 
+      await instance.grantRole(GAME_MASTER_ROLE, testGameMaster.address);
       await instance.connect(testGameMaster).setup(newRootCid);
 
       let result = await instance.getQuestsRootCID();
-
-      expect(toUtf8Bytes(result)).eql(newRootCid);
+      expect(result).eql(hexlify(newRootCid));
     });
 
     it("should forbid setting the root to non game masters", async () => {
@@ -313,9 +310,9 @@ describe("TreasureHuntCreator", () => {
         "bagaaierasords4njcts6vs7qvdjfcvgnume4hqohf65zsfguprqphs3icwea"
       );
 
-      // await expect(instance.connect(user).setup(newRootCid)).revertedWith(
-      //   `AccessControl: account ${user.address.toLocaleLowerCase()} is missing role ${GAME_MASTER_ROLE}`
-      // );
+      await expect(instance.connect(user).setup(newRootCid)).revertedWith(
+        `AccessControl: account ${user.address.toLocaleLowerCase()} is missing role ${GAME_MASTER_ROLE}`
+      );
     });
   });
 
@@ -324,11 +321,11 @@ describe("TreasureHuntCreator", () => {
       let user = accounts[1];
       let instance = await deploy([], keys);
 
-      // await expect(
-      //   instance.connect(user).addSolution(solutions[0])
-      // ).revertedWith(
-      //   `AccessControl: account ${user.address.toLocaleLowerCase()} is missing role ${GAME_MASTER_ROLE}`
-      // );
+      await expect(
+        instance.connect(user).addSolution(solutions[0])
+      ).revertedWith(
+        `AccessControl: account ${user.address.toLocaleLowerCase()} is missing role ${GAME_MASTER_ROLE}`
+      );
     });
 
     it("should add a new chapter from a game master", async () => {

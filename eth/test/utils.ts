@@ -17,7 +17,7 @@ export async function getSolutionSignature(solution: string, address: string) {
   let solutionBytes = toUtf8Bytes(solution);
   let solutionDigest = keccak256(solutionBytes);
   let wallet = new Wallet(solutionDigest);
-  let signature = await wallet.signMessage(toUtf8Bytes(address));
+  let signature = await wallet.signMessage(getBytes(address));
   return Signature.from(signature);
 }
 
