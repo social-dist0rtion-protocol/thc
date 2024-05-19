@@ -2,6 +2,7 @@ import { config as dotEnvConfig } from "dotenv";
 dotEnvConfig();
 
 import "@nomicfoundation/hardhat-chai-matchers";
+import "@openzeppelin/hardhat-upgrades";
 import "@nomicfoundation/hardhat-ethers";
 import "@typechain/hardhat";
 import "hardhat-gas-reporter";

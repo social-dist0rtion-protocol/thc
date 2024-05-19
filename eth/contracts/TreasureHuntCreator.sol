@@ -59,12 +59,11 @@ contract TreasureHuntCreator is
         bytes memory questsRootCid_
     ) external onlyRole(GAME_MASTER_ROLE) {
         questsRootCid = questsRootCid_;
-        /*
+
         require(
             prize.hasRole(prize.TREASURE_HUNT_ROLE(), address(this)),
             "Game not verified yet"
         );
-        */
     }
 
     function getQuestsRootCID() external view returns (bytes memory) {

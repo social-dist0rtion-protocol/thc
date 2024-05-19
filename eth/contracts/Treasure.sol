@@ -1,25 +1,35 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity >=0.8.12 <0.9.0;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/access/AccessControl.sol";
-import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC1155/ERC1155Upgradeable.sol";
 import "./IRenderer.sol";
-import "hardhat/console.sol";
 
-contract Treasure is Ownable, AccessControl, ERC1155 {
+contract Treasure is
+    OwnableUpgradeable,
+    AccessControlUpgradeable,
+    ERC1155Upgradeable
+{
     bytes32 public constant TREASURE_HUNT_ROLE =
         keccak256("TREASURE_HUNT_ROLE");
 
     mapping(address => IRenderer) public renderers;
 
-    constructor() ERC1155("") {
+    function initialize() public initializer {
+        __Ownable_init();
+        __ERC1155_init("");
         _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
     }
 
     function supportsInterface(
         bytes4 interfaceId
-    ) public view override(ERC1155, AccessControl) returns (bool) {
+    )
+        public
+        view
+        override(ERC1155Upgradeable, AccessControlUpgradeable)
+        returns (bool)
+    {
         return super.supportsInterface(interfaceId);
     }
 

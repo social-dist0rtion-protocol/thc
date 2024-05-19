@@ -2,7 +2,6 @@ import { task } from "hardhat/config";
 import { TreasureHuntCreator } from "../typechain";
 import { CID } from "multiformats";
 import { loadChapters, loadContract } from "./utils";
-import { readFileSync } from "fs";
 
 task("root-set", "Set root CID")
   .addPositionalParam("cid", "The file with all chapters")
@@ -12,15 +11,15 @@ task("root-set", "Set root CID")
       hre,
       "TreasureHuntCreator"
     )) as TreasureHuntCreator;
-    console.log(`Setting root CID ${cid} for contract ${thcContract.address}`);
+    console.log(
+      `Setting root CID ${cid} for contract ${thcContract.getAddress()}`
+    );
     const cidBytes = CID.parse(cid).bytes;
     const tx = await thcContract.setup(cidBytes);
 
     console.log(`  Transaction submitted. Waiting for 3 confirmation....`);
     const receipt = await tx.wait(3);
-    console.log(
-      `  Root CID successfully set. Receipt: ${receipt.transactionHash}`
-    );
+    console.log(`  Root CID successfully set. Receipt: ${receipt?.hash}`);
   });
 
 import * as readline from "readline";
@@ -45,26 +44,18 @@ task("root-set-from-chapters", "Set root CID from chapters file")
     }
 
     const { cid } = loadChapters(chapters);
-    const thcContract = (await loadContract(
-      hre,
-      "TreasureHuntCreator"
-    )) as TreasureHuntCreator;
+    const thcContract = await loadContract(hre, "TreasureHuntCreator");
     console.log(`Setting root CID ${cid} for contract ${thcContract.address}`);
     const tx = await thcContract.setup(cid);
     console.log(`  Transaction submitted. Waiting for 3 confirmation....`);
     const receipt = await tx.wait(3);
-    console.log(
-      `  Root CID successfully set. Receipt: ${receipt.transactionHash}`
-    );
+    console.log(`  Root CID successfully set. Receipt: ${receipt?.hash}`);
   });
 
 task("master-add", "Add a game master")
   .addPositionalParam("address", "The address of the game master")
   .setAction(async ({ address }: { address: string }, hre) => {
-    const thcContract = (await loadContract(
-      hre,
-      "TreasureHuntCreator"
-    )) as TreasureHuntCreator;
+    const thcContract = await loadContract(hre, "TreasureHuntCreator");
     console.log(
       `Adding Game Master ${address} to contract ${thcContract.address}`
     );
@@ -73,7 +64,5 @@ task("master-add", "Add a game master")
 
     console.log(`  Transaction submitted. Waiting for 3 confirmation....`);
     const receipt = await tx.wait(3);
-    console.log(
-      `  Game Master successfully added. Receipt: ${receipt.transactionHash}`
-    );
+    console.log(`  Game Master successfully added. Receipt: ${receipt?.hash}`);
   });
