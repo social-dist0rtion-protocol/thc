@@ -71,7 +71,11 @@
 <h2>Wallet address</h2>
 
 <p class="scroll">
-  {$signer ? $signer.address : "loading…"}
+  {#if $signer}
+    {#await $signer.getAddress() then addr}
+      {addr}
+    {/await}
+  {/if}
 </p>
 
 <canvas bind:this={canvas} />
@@ -84,11 +88,9 @@
 
 <p class="scroll">
   {#if $thc}
-    <a href="https://sepolia.etherscan.io/address/{$thc.address}"
-      >{$thc.address}</a
-    >
-  {:else}
-    loading…
+    {#await $thc.getAddress() then addr}
+      <a href="https://sepolia.etherscan.io/address/{addr}">{addr}</a>
+    {/await}
   {/if}
 </p>
 
