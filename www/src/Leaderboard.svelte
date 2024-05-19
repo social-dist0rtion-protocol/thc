@@ -7,9 +7,11 @@
 
 <h1>Leaderboard</h1>
 {#if $leaderboard && address && $ensAddresses}
-  <Leaderboard
-    {address}
-    ensAddresses={$ensAddresses}
-    leaderboard={$leaderboard}
-  />
+  {#await address then addr}
+    <Leaderboard
+      address={addr}
+      ensAddresses={$ensAddresses}
+      leaderboard={$leaderboard}
+    />
+  {/await}
 {/if}

@@ -32,10 +32,7 @@
       <td />
       <td>Address</td>
       <td>Chapter</td>
-      <!--
-
-      <td>Keys</td>
-      -->
+      <td>Documents</td>
     </tr>
   </thead>
   <tbody>
