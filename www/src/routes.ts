@@ -1,13 +1,13 @@
-import Game from "./Game.svelte";
-import Keys from "./Keys.svelte";
 import Leaderboard from "./Leaderboard.svelte";
 import Settings from "./Settings.svelte";
 import About from "./About.svelte";
 import NotFound from "./NotFound.svelte";
+import GameLoader from "./GameLoader.svelte";
+import KeysLoader from "./KeysLoader.svelte";
 
 export const routes = {
-  "/": Game,
-  "/keys": Keys,
+  "/": GameLoader,
+  "/keys": KeysLoader,
   "/leaderboard": Leaderboard,
   "/settings": Settings,
   "/about": About,

@@ -3,11 +3,9 @@
     <li>
       <a href="#/">Game</a>
     </li>
-    <!--
     <li>
-      <a href="#/keys">Keys</a>
+      <a href="#/keys">Documents</a>
     </li>
-    -->
     <li>
       <a href="#/leaderboard">Leaderboard</a>
     </li>

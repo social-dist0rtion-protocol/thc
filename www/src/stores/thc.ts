@@ -137,7 +137,7 @@ export const currentQuest: Readable<string | null> = derived(
         let quest: string;
         try {
           const response = await fetch(contentUrl);
-          console.log("IPFS response:", response);
+          //console.log("Content response:", response);
           quest = await response.text();
         } catch (e) {
           console.log(e);
