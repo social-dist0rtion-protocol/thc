@@ -426,16 +426,11 @@ describe("TreasureHuntCreator", () => {
         keys
       );
 
-      await Promise.all(
-        [testSolution1, testSolution2, testSolution3].map(
-          async (s) =>
-            await Promise.all(
-              [deployer, alice, bob, carl, dean].map(
-                async (x) => await solve(instance, s, x)
-              )
-            )
-        )
-      );
+      for (const player of [deployer, alice, bob, carl, dean]) {
+        await solve(instance, testSolution1, player);
+        await solve(instance, testSolution2, player);
+        await solve(instance, testSolution3, player);
+      }
 
       await unpackAndStore(instance, "gold", 1);
       await unpackAndStore(instance, "silver", 2);
