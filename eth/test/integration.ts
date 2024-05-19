@@ -4,12 +4,14 @@ import { ethers } from "hardhat";
 import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
 import {
+  DisappearRenderer,
+  DisappearRenderer__factory,
   Treasure,
   Treasure__factory,
   TreasureHuntCreator,
   TreasureHuntCreator__factory,
 } from "../typechain";
-import { Signature, Wallet, hexlify, keccak256, toUtf8Bytes } from "ethers";
+import { Signature, Wallet, keccak256, toUtf8Bytes } from "ethers";
 import {
   cidToBytes,
   getSignature,
@@ -18,6 +20,7 @@ import {
   leaderboardEntry,
 } from "./utils";
 import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
+import { writeFileSync } from "fs";
 
 chai.use(chaiAsPromised);
 const { expect } = chai;
@@ -34,6 +37,7 @@ const KEYS = [
 describe("TreasureHuntCreator", () => {
   let thcFactory: TreasureHuntCreator__factory;
   let treasure: Treasure;
+  let renderer: DisappearRenderer;
   let accounts: SignerWithAddress[];
   let totalPlayers: number;
   let solutions: string[];
@@ -53,6 +57,12 @@ describe("TreasureHuntCreator", () => {
       alice
     )) as Treasure__factory;
     treasure = (await TreasureFactory.deploy()) as Treasure;
+
+    const RendererFactory = (await ethers.getContractFactory(
+      "DisappearRenderer",
+      alice
+    )) as DisappearRenderer__factory;
+    renderer = (await RendererFactory.deploy()) as DisappearRenderer;
 
     thcFactory = (await ethers.getContractFactory(
       "TreasureHuntCreator",
@@ -80,6 +90,8 @@ describe("TreasureHuntCreator", () => {
       thc.getAddress()
     );
     await thc.setup(questsRootCid);
+
+    await treasure.updateRenderer(thc.getAddress(), renderer.getAddress());
 
     return thc;
   }
@@ -115,6 +127,24 @@ describe("TreasureHuntCreator", () => {
     let [signature, solutionKey] = await getSignature(player, solution);
     let { r, v, s } = Signature.from(signature);
     await thc.connect(player).submitKey(v, r, s);
+  }
+
+  async function unpackAndStore(
+    instance: TreasureHuntCreator,
+    badgeName: string,
+    badgeId: number
+  ) {
+    const meta = "data:application/json;base64,";
+    const metaImage = "data:image/svg+xml,";
+    const badge = await treasure.uri(
+      encodeTokenId(await instance.getAddress(), badgeId)
+    );
+
+    const json = JSON.parse(atob(badge.substring(meta.length)));
+    const image = json["image"].substring(metaImage.length);
+
+    writeFileSync(`${badgeName}.json`, json.toString());
+    writeFileSync(`${badgeName}.svg`, image);
   }
 
   describe("constructor", async () => {
@@ -384,6 +414,37 @@ describe("TreasureHuntCreator", () => {
       expect(balances[3]).equal(1n);
       expect(balances[4]).equal(1n);
     });
+
+    it("should render badges", async () => {
+      let testSolution1 = "A solution 1";
+      let solutionKey1 = await getSolutionAddress(testSolution1);
+
+      let testSolution2 = "A solution 2";
+      let solutionKey2 = await getSolutionAddress(testSolution2);
+
+      let testSolution3 = "A solution 3";
+      let solutionKey3 = await getSolutionAddress(testSolution3);
+
+      let instance = await deploy(
+        [solutionKey1, solutionKey2, solutionKey3],
+        keys
+      );
+
+      await Promise.all(
+        [testSolution1, testSolution2, testSolution3].map(
+          async (s) =>
+            await Promise.all(
+              [deployer, alice, bob, carl, dean].map(
+                async (x) => await solve(instance, s, x)
+              )
+            )
+        )
+      );
+
+      await unpackAndStore(instance, "gold", 1);
+      await unpackAndStore(instance, "silver", 2);
+      await unpackAndStore(instance, "bronze", 3);
+    });
   });
 
   describe("submitKey", async () => {
@@ -412,6 +473,16 @@ describe("TreasureHuntCreator", () => {
       );
 
       expect(result).equal(1);
+    });
+
+    it("should render key badge for who finds all keys", async () => {
+      const instance = await deploy(solutions, keys);
+
+      for (let i = 0; i < KEYS.length; i++) {
+        await submitKey(instance, KEYS[i], alice);
+      }
+
+      await unpackAndStore(instance, "key", 4);
     });
 
     it("should reject a wrong key", async () => {
