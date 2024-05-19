@@ -9,8 +9,11 @@ dependencies:
     specifier: ^3.2.0
     version: 3.2.0
   '@openzeppelin/contracts':
-    specifier: ^4.7.3
-    version: 4.9.3
+    specifier: ^5.0.2
+    version: 5.0.2
+  '@openzeppelin/contracts-upgradeable':
+    specifier: ^5.0.2
+    version: 5.0.2(@openzeppelin/contracts@5.0.2)
 
 devDependencies:
   '@ethersproject/providers':
@@ -1165,8 +1168,20 @@ packages:
       - supports-color
     dev: true
 
+  /@openzeppelin/contracts-upgradeable@5.0.2(@openzeppelin/contracts@5.0.2):
+    resolution: {integrity: sha512-0MmkHSHiW2NRFiT9/r5Lu4eJq5UJ4/tzlOgYXNAIj/ONkQTVnz22pLxDvp4C4uZ9he7ZFvGn3Driptn1/iU7tQ==}
+    peerDependencies:
+      '@openzeppelin/contracts': 5.0.2
+    dependencies:
+      '@openzeppelin/contracts': 5.0.2
+    dev: false
+
   /@openzeppelin/contracts@4.9.3:
     resolution: {integrity: sha512-He3LieZ1pP2TNt5JbkPA4PNT9WC3gOTOlDcFGJW4Le4QKqwmiNJCRt44APfxMxvq7OugU/cqYuPcSBzOw38DAg==}
+    dev: false
+
+  /@openzeppelin/contracts@5.0.2:
+    resolution: {integrity: sha512-ytPc6eLGcHHnapAZ9S+5qsdomhjo6QBHTDRRBFfTxXIpsicMhVPouPgmUPebZZZGX7vt9USA+Z+0M0dSVtSUEA==}
     dev: false
 
   /@protobufjs/aspromise@1.1.2:
