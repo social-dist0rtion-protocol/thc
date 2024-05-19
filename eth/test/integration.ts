@@ -20,7 +20,7 @@ import {
   leaderboardEntry,
 } from "./utils";
 import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
-import { writeFileSync } from "fs";
+import { mkdirSync, writeFileSync } from "fs";
 
 chai.use(chaiAsPromised);
 const { expect } = chai;
@@ -146,8 +146,9 @@ describe("TreasureHuntCreator", () => {
     const json = JSON.parse(atob(badge.substring(meta.length)));
     const image = json["image"].substring(metaImage.length);
 
-    writeFileSync(`${badgeName}.json`, json.toString());
-    writeFileSync(`${badgeName}.svg`, image);
+    mkdirSync("artifacts/tests/", { recursive: true });
+    writeFileSync(`artifacts/tests/${badgeName}.json`, json.toString());
+    writeFileSync(`artifacts/tests/${badgeName}.svg`, image);
   }
 
   describe("constructor", async () => {
@@ -595,6 +596,31 @@ describe("TreasureHuntCreator", () => {
 
       let result = await instance.getQuestsRootCID();
       expect(result).eql(newRootCid);
+    });
+
+    it("should forbid setting the root to non game masters", async () => {
+      let instance = await deploy([], keys);
+      const newRootCid = "0x61626364";
+      await treasure.grantRole(
+        await treasure.TREASURE_HUNT_ROLE(),
+        await instance.getAddress()
+      );
+      await expect(instance.connect(alice).setup(newRootCid)).revertedWith(
+        `AccessControl: account ${alice.address.toLocaleLowerCase()} is missing role ${GAME_MASTER_ROLE}`
+      );
+    });
+
+    it("should fail when treasure hunt not granted special role on treasure", async () => {
+      const instance = await thcFactory.deploy(
+        solutions,
+        keys,
+        treasure.getAddress()
+      );
+      const newRootCid = "0x61626364";
+
+      await expect(instance.setup(newRootCid)).revertedWith(
+        `Game not verified yet`
+      );
     });
 
     it("should forbid setting the root to non game masters", async () => {

@@ -1,5 +1,7 @@
 {
   "11155111": {
-    "TreasureHuntCreator": "0xd3F9eF106748fFF0cad8Da29Dd5eEF2031Cb3E44"
+    "TreasureHuntCreator": "0x2A5f83B0Bc9ea91a711Df2fCB6bd06F69e858cf0",
+    "Treasure": "0xA3C3375e63c253924668981baAE57f6DF626d6C8",
+    "DisappearRenderer": "0x7eAeA2d72637307b5EcdDBf6Dc2e93112e2dBE2d"
   }
 }

@@ -1,13 +1,27 @@
 import { readFileSync } from "fs";
 import { readFile, writeFile } from "fs/promises";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
-import { TreasureHuntCreator__factory } from "../typechain";
-import { Mnemonic, Wallet, keccak256, toUtf8Bytes, wordlists } from "ethers";
+import {
+  DisappearRenderer__factory,
+  TreasureHuntCreator__factory,
+  Treasure__factory,
+} from "../typechain";
+import {
+  BaseContract,
+  Contract,
+  Mnemonic,
+  Wallet,
+  keccak256,
+  toUtf8Bytes,
+  wordlists,
+} from "ethers";
 
 const CONFIG_FILE_PATH = "./deployments";
 
 const FACTORIES: Record<string, any> = {
   TreasureHuntCreator: TreasureHuntCreator__factory,
+  Treasure: Treasure__factory,
+  DisappearRenderer: DisappearRenderer__factory,
 };
 
 type Chapter = {
@@ -21,22 +35,37 @@ export async function storeContractAddress(
   address: string,
   configPath: string = CONFIG_FILE_PATH
 ) {
-  const networks: any = JSON.parse(
-    await readFile(`${configPath}/${hre.network.name}.network.json`, "utf8")
-  );
-  const chainId = hre.network.config.chainId!;
+  const networkFile = `${configPath}/${hre.network.name}.network.json`;
+  const networks: any = JSON.parse(await readFile(networkFile, "utf8"));
+  const chainId = (await hre.ethers.provider.getNetwork()).chainId.toString();
 
   let addresses: any = {};
   if (chainId in networks) addresses = networks[chainId];
   else networks[chainId] = addresses;
-
   addresses[contractName] = address;
 
-  await writeFile(configPath, JSON.stringify(networks, null, 2));
+  await writeFile(networkFile, JSON.stringify(networks, null, 2));
 
   console.log(
-    `   Address ${address} stored for ${contractName} at ${configPath}`
+    `   Address ${address} stored for ${contractName} at ${networkFile}`
   );
+
+  return networkFile;
+}
+
+export async function storeContractArgs(
+  hre: HardhatRuntimeEnvironment,
+  contractName: string,
+  args: any[],
+  configPath: string = CONFIG_FILE_PATH
+) {
+  await hre.ethers.getSigners();
+  const argsFile = `./${configPath}/${contractName}.${hre.network.name}.args.json`;
+  await writeFile(argsFile, JSON.stringify(args[0]));
+
+  console.log(`   Args stored for ${contractName} at ${argsFile}`);
+
+  return argsFile;
 }
 
 export async function deployContract(
@@ -44,18 +73,48 @@ export async function deployContract(
   contractName: string,
   libraries = {},
   ...args: any[]
-) {
+): Promise<[Contract, string, string]> {
+  console.log(`Deploy ${contractName} to ${hre.network.name}...`);
   const factory = await hre.ethers.getContractFactory(contractName, {
     libraries: libraries,
   });
   const contract = await factory.deploy(...args);
 
   console.log("   Waiting for 5 confirmations...");
+  await contract.deploymentTransaction()?.wait(1);
+
+  const networkFile = await storeContractAddress(
+    hre,
+    contractName,
+    await contract.getAddress()
+  );
+  const argsFile = await storeContractArgs(hre, contractName, args);
+
+  return [contract as Contract, networkFile, argsFile];
+}
+
+export async function deployUpgradeableContract(
+  hre: HardhatRuntimeEnvironment,
+  contractName: string,
+  libraries = {},
+  ...args: any[]
+): Promise<[Contract, string, string]> {
+  console.log(`Deploying ${contractName} to ${hre.network.name}`);
+  const factory = await hre.ethers.getContractFactory(contractName, {
+    libraries: libraries,
+  });
+  const contract = await hre.upgrades.deployProxy(factory, ...args);
+  console.log("   Waiting for 5 confirmations...");
   await contract.deploymentTransaction()?.wait(5);
 
-  await storeContractAddress(hre, contractName, await contract.getAddress());
+  const networkFile = await storeContractAddress(
+    hre,
+    contractName,
+    await contract.getAddress()
+  );
+  const argsFile = await storeContractArgs(hre, contractName, args);
 
-  return contract;
+  return [contract, networkFile, argsFile];
 }
 
 export async function loadContract(
