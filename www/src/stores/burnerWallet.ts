@@ -1,4 +1,5 @@
 import {
+  BrowserProvider,
   HDNodeWallet,
   JsonRpcProvider,
   Mnemonic,
@@ -10,9 +11,7 @@ import { ethereumEndpoint } from "./config";
 import { writableLocalStorage } from "./x";
 import { retryWrap } from "./x/retry";
 import "./registerWordlists";
-
-export const provider = readable(new JsonRpcProvider(ethereumEndpoint));
-window.Wallet = Wallet;
+import { modal } from "./web3Modal";
 
 export const privateKey = writable<string | undefined>();
 
@@ -21,11 +20,21 @@ export const mnemonic = writableLocalStorage(
   () => Wallet.createRandom().mnemonic?.phrase
 );
 
+const useNativeWallet = writableLocalStorage("useNativeWallet", false);
+
+export const provider = readable(new JsonRpcProvider(ethereumEndpoint));
 export const signer: Readable<Signer | undefined> = derived(
-  [provider, mnemonic],
-  ([$provider, $mnemonic], set) => {
-    if ($provider && $mnemonic) {
-      //const start = Date.now();
+  [provider, mnemonic, useNativeWallet],
+  ([$provider, $mnemonic, $useNativeWallet], set) => {
+    if ($useNativeWallet) {
+      const walletProvider = modal.getWalletProvider();
+      if (!walletProvider) {
+        console.log("No wallet provider");
+        return;
+      }
+      const ethersProvider = new BrowserProvider(walletProvider);
+      ethersProvider.getSigner().then(set);
+    } else if ($provider && $mnemonic) {
       try {
         const hdWallet = HDNodeWallet.fromMnemonic(
           Mnemonic.fromPhrase($mnemonic)
@@ -37,10 +46,24 @@ export const signer: Readable<Signer | undefined> = derived(
         //mnemonic.set(undefined);
         //window.location.reload();
       }
-      //console.log(Date.now() - start);
     } else {
       set(undefined);
     }
+  }
+);
+
+modal.subscribeProvider(
+  ({ provider, providerType, address, error, chainId, isConnected }) => {
+    useNativeWallet.set(isConnected);
+    console.log(
+      "change",
+      provider,
+      providerType,
+      address,
+      error,
+      chainId,
+      isConnected
+    );
   }
 );
 

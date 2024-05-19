@@ -1,68 +1,52 @@
-import Web3Modal from "web3modal";
+import { createWeb3Modal, defaultConfig } from "@web3modal/ethers";
+import { ethereumEndpoint } from "./config";
+import { BrowserProvider } from "ethers";
 
-// Would definitely prefer to import walletconnect with
-// import WalletConnectProvider from "@walletconnect/web3-provider";
-// but it's a nightmare, see https://github.com/vitejs/vite/issues/7257#issuecomment-1079579892
-import WalletConnectProvider from "@walletconnect/web3-provider/dist/umd/index.min.js";
-import { infuraKey } from "./config";
+// 1. Get projectId at https://cloud.walletconnect.com
+const projectId = "79d61b41ea6f830547a2ed792050e048";
 
-let web3Modal: Web3Modal;
-let web3ModalConnection: any;
+// 2. Set chains
+const mainnet = {
+  chainId: 11155111,
+  name: "Ethereum",
+  currency: "ETH",
+  explorerUrl: "https://sepolia.etherscan.io",
+  rpcUrl: ethereumEndpoint,
+};
 
-/**
- * Initialize Web3Modal.
- *
- * @returns An initialized instance of Web3Modal.
- */
-export async function initWeb3Modal() {
-  if (web3Modal) {
-    return web3Modal;
-  }
-  const providerOptions = {
-    walletconnect: {
-      package: WalletConnectProvider,
-      options: {
-        /*
-        rpc: {
-          137: "https://matic-mainnet.chainstacklabs.com",
-        },
-        */
-        infuraId: infuraKey,
-      },
-    },
-  };
-  web3Modal = new Web3Modal({
-    //network: import.meta.env.VITE_ETHEREUM_DEFAULT_NETWORK,
-    //cacheProvider: true,
-    providerOptions,
-  });
-  return web3Modal;
-}
+// 3. Create your application's metadata object
+const metadata = {
+  name: "Disappear",
+  description: "Disappear",
+  url: "http://localhost:5174/", // url must match your domain & subdomain
+  icons: ["https://avatars.githubusercontent.com/u/37784886"],
+};
 
-/**
- * Prompt the user to connect their wallet.
- *
- * @returns A connection to the web3 agent.
- */
-export async function connectWeb3Modal() {
-  if (!web3Modal) {
-    initWeb3Modal();
-  }
-  if (web3ModalConnection) {
-    web3ModalConnection.removeAllListeners();
-  }
-  web3ModalConnection = await web3Modal.connect();
-  return web3ModalConnection;
-}
+// 4. Create Ethers config
+const ethersConfig = defaultConfig({
+  /*Required*/
+  metadata,
 
-/**
- * Disconnect to the web3 agent.
- */
-export async function disconnectWeb3Modal() {
-  if (web3Modal) {
-    web3Modal.clearCachedProvider();
+  /*Optional*/
+  rpcUrl: ethereumEndpoint, // used for the Coinbase SDK
+  defaultChainId: 11155111, // used for the Coinbase SDK
+});
+
+// 5. Create a Web3Modal instance
+export const modal = createWeb3Modal({
+  ethersConfig,
+  chains: [mainnet],
+  projectId,
+  enableAnalytics: true, // Optional - defaults to your Cloud configuration
+  enableOnramp: true, // Optional - false as default
+});
+
+export async function connect() {
+  await modal.open();
+  const walletProvider = modal.getWalletProvider();
+  if (!walletProvider) {
+    throw new Error("Cannot get wallet provider");
   }
-  if (web3ModalConnection) {
-    web3ModalConnection.removeAllListeners();
-  }
+  const ethersProvider = new BrowserProvider(walletProvider);
+  const signer = await ethersProvider.getSigner();
 }

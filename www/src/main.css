@@ -51,7 +51,8 @@ a:visited {
 textarea,
 input,
 button,
-p, li {
+p,
+li {
   font-size: 1rem;
   line-height: 140%;
 }
@@ -131,4 +132,8 @@ main {
 
 .thc--notification.warning {
   background-color: rgba(255, 131, 0, 0.666);
+}
+
+.thc--notification.notice {
+  background-color: rgba(100, 255, 0, 0.666);
 }

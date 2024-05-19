@@ -1,4 +1,4 @@
-import { ethers, Signer, BigNumber } from "ethers";
+import { ethers } from "ethers";
 import { derived, writable, type Readable } from "svelte/store";
 import { ethereumEndpoint, ethereumChainId } from "./config";
 import { addEthereumChain } from "./networks";

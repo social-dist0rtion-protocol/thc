@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { modal } from "../stores/web3Modal";
   export let currentQuestHtml: string;
   export let currentChapter: number;
   export let totalChapters: number;
@@ -17,14 +18,19 @@
   <div class="thc--notification warning">
     <p>
       This game stores the session in your browser (no cookie, no login, no
-      recover password). Be aware that if you use incognito you might lose your
+      password recovery). Be aware that if you use incognito you might lose your
       progress.
     </p>
     <p>
-      <strong>
-        The game uses a burner wallet and runs on the Sepolia test network,
-        check your address in the <a href="#/settings">settings</a> page.
-      </strong>
+      The game uses a burner wallet and runs on the Optimism network. All
+      transactions are sponsored by us using gelato.network. Check your address
+      in the <a href="#/settings">settings</a> page.
+    </p>
+  </div>
+  <div class="thc--notification notice">
+    <p>
+      BTW if you prefer you can also connect your wallet to play
+      <button on:click={() => modal.open()}>Connect</button>
     </p>
   </div>
 {/if}
