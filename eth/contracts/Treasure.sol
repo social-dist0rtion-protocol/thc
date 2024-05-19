@@ -41,10 +41,6 @@ contract Treasure is Ownable, AccessControl, ERC1155 {
 
     function uri(uint256 tokenId) public view override returns (string memory) {
         return
-            string(
-                renderers[address(uint160(tokenId >> 96))].render(
-                    uint96(tokenId)
-                )
-            );
+            renderers[address(uint160(tokenId >> 96))].render(uint96(tokenId));
     }
 }

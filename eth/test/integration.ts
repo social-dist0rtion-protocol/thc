@@ -5,6 +5,8 @@ import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
 import { solidity } from "ethereum-waffle";
 import {
+  DisappearRenderer,
+  DisappearRenderer__factory,
   Treasure,
   Treasure__factory,
   TreasureHuntCreator,
@@ -21,7 +23,8 @@ import {
   leaderboardEntry,
   merge,
 } from "./utils";
-import { keccak256, toUtf8Bytes } from "ethers/lib/utils";
+import { base64, keccak256, toUtf8Bytes } from "ethers/lib/utils";
+import { writeFileSync } from "fs";
 
 chai.use(solidity);
 chai.use(chaiAsPromised);
@@ -39,6 +42,7 @@ const KEYS = [
 describe("TreasureHuntCreator", () => {
   let thcFactory: TreasureHuntCreator__factory;
   let treasure: Treasure;
+  let renderer: DisappearRenderer;
   let accounts: SignerWithAddress[];
   let totalPlayers: number;
   let solutions: string[];
@@ -58,6 +62,12 @@ describe("TreasureHuntCreator", () => {
       alice
     )) as Treasure__factory;
     treasure = (await TreasureFactory.deploy()) as Treasure;
+
+    const RendererFactory = (await ethers.getContractFactory(
+      "DisappearRenderer",
+      alice
+    )) as DisappearRenderer__factory;
+    renderer = (await RendererFactory.deploy()) as DisappearRenderer;
 
     thcFactory = (await ethers.getContractFactory(
       "TreasureHuntCreator",
@@ -85,6 +95,8 @@ describe("TreasureHuntCreator", () => {
     await treasure.grantRole(await treasure.TREASURE_HUNT_ROLE(), thc.address);
     await thc.setup(questsRootCid);
     await thc.deployed();
+
+    await treasure.updateRenderer(thc.address, renderer.address);
 
     return thc;
   }
@@ -378,6 +390,52 @@ describe("TreasureHuntCreator", () => {
       expect(balances[2].toNumber()).equal(0);
       expect(balances[3].toNumber()).equal(1);
       expect(balances[4].toNumber()).equal(1);
+    });
+
+    it.only("should render badges", async () => {
+      let testSolution1 = "A solution 1";
+      let solutionKey1 = await getSolutionAddress(testSolution1);
+
+      let testSolution2 = "A solution 2";
+      let solutionKey2 = await getSolutionAddress(testSolution2);
+
+      let testSolution3 = "A solution 3";
+      let solutionKey3 = await getSolutionAddress(testSolution3);
+
+      let instance = await deploy(
+        [solutionKey1, solutionKey2, solutionKey3],
+        keys,
+        questsRootCid
+      );
+
+      await Promise.all(
+        [testSolution1, testSolution2, testSolution3].map(
+          async (s) =>
+            await Promise.all(
+              [deployer, alice, bob, carl, dean].map(
+                async (x) => await solve(instance, s, x)
+              )
+            )
+        )
+      );
+
+      async function unpackAndStore(badgeName: string, badgeId: number) {
+        const meta = "data:application/json;base64,";
+        const metaImage = "data:image/svg+xml,";
+        const badge = await treasure.uri(
+          encodeTokenId(instance.address, badgeId)
+        );
+        console.log(atob(badge.substring(meta.length)));
+        const json = JSON.parse(atob(badge.substring(meta.length)));
+        const image = json["image"].substring(metaImage.length);
+
+        writeFileSync(`${badgeName}.json`, json.toString());
+        writeFileSync(`${badgeName}.svg`, image);
+      }
+
+      await unpackAndStore("gold", 1);
+      await unpackAndStore("silver", 2);
+      await unpackAndStore("bronze", 3);
     });
   });
 
