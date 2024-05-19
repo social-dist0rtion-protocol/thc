@@ -125,6 +125,22 @@ describe("TreasureHuntCreator", () => {
     await thc.connect(player).submitKey(v, r, s);
   }
 
+  async function unpackAndStore(
+    instance: TreasureHuntCreator,
+    badgeName: string,
+    badgeId: number
+  ) {
+    const meta = "data:application/json;base64,";
+    const metaImage = "data:image/svg+xml,";
+    const badge = await treasure.uri(encodeTokenId(instance.address, badgeId));
+
+    const json = JSON.parse(atob(badge.substring(meta.length)));
+    const image = json["image"].substring(metaImage.length);
+
+    writeFileSync(`${badgeName}.json`, json.toString());
+    writeFileSync(`${badgeName}.svg`, image);
+  }
+
   describe("constructor", async () => {
     it("should initialize chapters with solutions and quests", async () => {
       let instance = await deploy(solutions, keys, questsRootCid);
@@ -419,23 +435,9 @@ describe("TreasureHuntCreator", () => {
         )
       );
 
-      async function unpackAndStore(badgeName: string, badgeId: number) {
-        const meta = "data:application/json;base64,";
-        const metaImage = "data:image/svg+xml,";
-        const badge = await treasure.uri(
-          encodeTokenId(instance.address, badgeId)
-        );
-        console.log(atob(badge.substring(meta.length)));
-        const json = JSON.parse(atob(badge.substring(meta.length)));
-        const image = json["image"].substring(metaImage.length);
-
-        writeFileSync(`${badgeName}.json`, json.toString());
-        writeFileSync(`${badgeName}.svg`, image);
-      }
-
-      await unpackAndStore("gold", 1);
-      await unpackAndStore("silver", 2);
-      await unpackAndStore("bronze", 3);
+      await unpackAndStore(instance, "gold", 1);
+      await unpackAndStore(instance, "silver", 2);
+      await unpackAndStore(instance, "bronze", 3);
     });
   });
 
@@ -468,6 +470,16 @@ describe("TreasureHuntCreator", () => {
       );
 
       expect(result).equal(1);
+    });
+
+    it("should render key badge for who finds all keys", async () => {
+      const instance = await deploy(solutions, keys, questsRootCid);
+
+      for (let i = 0; i < KEYS.length; i++) {
+        await submitKey(instance, KEYS[i], alice);
+      }
+
+      await unpackAndStore(instance, "key", 4);
     });
 
     it("should reject a wrong key", async () => {
