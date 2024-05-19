@@ -191,7 +191,7 @@ describe("TreasureHuntCreator", () => {
       );
     });
 
-    it.skip("should not increment any counter with wrong", async () => {
+    it("should not increment any counter with wrong", async () => {
       let testRightSolution = "Right solution";
       let testWrongSolution = "Wrong solution";
 
@@ -203,7 +203,9 @@ describe("TreasureHuntCreator", () => {
       let { r, v, s } = Signature.from(signatureWrong);
       let instance = await deploy([solutionKey], keys);
 
-      //await expect(instance.connect(deployer).submit(v, r, s)).revertedWith("");
+      await expect(instance.connect(deployer).submit(v, r, s)).revertedWith(
+        "Wrong solution."
+      );
 
       let result = await instance.playerToCurrentChapter(deployer.address);
       expect(result).equal(0n);
