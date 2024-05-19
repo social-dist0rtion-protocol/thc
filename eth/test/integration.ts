@@ -173,14 +173,12 @@ describe("TreasureHuntCreator", () => {
       expect(await instance.playerToKeys(deployer.address)).equal(0n);
     });
 
-    /*
     it("should add a key to the player bitmap", async () => {
       const instance = await deploy(solutions, keys);
-      const { r, v, s } = await getKeySignature(KEYS[0], deployer.address);
+      const { r, v, s } = await getSolutionSignature(KEYS[0], deployer.address);
       await instance.connect(deployer).submitKey(v, r, s);
       expect(await instance.playerToKeys(deployer.address)).equal(1n);
     });
-    */
 
     it("should reject a wrong key", async () => {
       const w = Wallet.createRandom();
@@ -188,9 +186,9 @@ describe("TreasureHuntCreator", () => {
       const { r, v, s } = Signature.from(signature);
       const instance = await deploy(solutions, keys);
 
-      // await expect(instance.connect(deployer).submitKey(v, r, s)).revertedWith(
-      // "Wrong key"
-      // );
+      await expect(instance.connect(deployer).submitKey(v, r, s)).revertedWith(
+        "Wrong key"
+      );
     });
   });
 
@@ -293,22 +291,20 @@ describe("TreasureHuntCreator", () => {
   describe("setup", async () => {
     it("should set root cid", async () => {
       let instance = await deploy([], keys);
-      const newRootCid = toUtf8Bytes("ABCD");
+      const newRootCid = "0x61626364";
       let testGameMaster = accounts[1];
 
       await instance.grantRole(GAME_MASTER_ROLE, testGameMaster.address);
       await instance.connect(testGameMaster).setup(newRootCid);
 
       let result = await instance.getQuestsRootCID();
-      expect(result).eql(hexlify(newRootCid));
+      expect(result).eql(newRootCid);
     });
 
     it("should forbid setting the root to non game masters", async () => {
       let user = accounts[1];
       let instance = await deploy([], keys);
-      const newRootCid = cidToBytes(
-        "bagaaierasords4njcts6vs7qvdjfcvgnume4hqohf65zsfguprqphs3icwea"
-      );
+      const newRootCid = "0x61626364";
 
       await expect(instance.connect(user).setup(newRootCid)).revertedWith(
         `AccessControl: account ${user.address.toLocaleLowerCase()} is missing role ${GAME_MASTER_ROLE}`

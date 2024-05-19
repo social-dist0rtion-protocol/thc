@@ -1,7 +1,6 @@
 import { ethers } from "hardhat";
 import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
-import { solidity } from "ethereum-waffle";
 import {
   TreasureHuntCreator,
   TreasureHuntCreator__factory,
@@ -14,13 +13,12 @@ import {
 } from "./utils";
 import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
 
-chai.use(solidity);
 chai.use(chaiAsPromised);
 const { expect } = chai;
 
 const PAGE_SIZE = 32;
 
-describe("TreasureHuntCreator", () => {
+describe("TreasureHuntCreator Pagination", () => {
   let thcFactory: TreasureHuntCreator__factory;
   let accounts: SignerWithAddress[];
   let totalPlayers: number;
@@ -44,7 +42,11 @@ describe("TreasureHuntCreator", () => {
     solutions: string[],
     questsRootCid: Uint8Array
   ): Promise<TreasureHuntCreator> {
-    const thc = await thcFactory.deploy(solutions, [], questsRootCid);
+    const thc = await thcFactory.deploy(
+      solutions,
+      [],
+      "0x0000000000000000000000000000000000000000"
+    );
 
     return thc;
   }
@@ -64,7 +66,7 @@ describe("TreasureHuntCreator", () => {
       questsRootCid
     );
 
-    let expectedLeaderboard = Array(PAGE_SIZE * 2).fill(BigNumber.from(0));
+    let expectedLeaderboard = Array(PAGE_SIZE * 2).fill(0);
 
     let leaderboard = await thc.getLeaderboard(0);
 
