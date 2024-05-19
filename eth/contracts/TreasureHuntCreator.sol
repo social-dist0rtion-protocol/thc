@@ -112,6 +112,10 @@ contract TreasureHuntCreator is
         require(pos > 0, "Wrong key");
         playerToKeys[_getMsgSender()] |= uint80(1 << (pos - 1));
         _rewardKeys(playerToKeys[_getMsgSender()], _getMsgSender());
+
+        if (_isGelatoRelayERC2771(msg.sender)) {
+            _transferRelayFee();
+        }
     }
 
     function getAddressHash(address a) public pure returns (bytes32) {
@@ -153,20 +157,5 @@ contract TreasureHuntCreator is
                 (uint256(keys) << 8) |
                 uint256(uint8(playerToCurrentChapter[player]));
         }
-    }
-
-    // GELATO STUFF
-    function increment() external onlyGelatoRelayERC2771 {
-        _transferRelayFee();
-        contextCounter[_getMsgSender()]++;
-        emit IncrementCounter(_getMsgSender());
-    }
-
-    function incrementFeeCapped(
-        uint256 maxFee
-    ) external onlyGelatoRelayERC2771 {
-        _transferRelayFeeCapped(maxFee);
-        contextCounter[_getMsgSender()]++;
-        emit IncrementCounter(_getMsgSender());
     }
 }

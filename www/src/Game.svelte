@@ -21,7 +21,7 @@
 
   export let signer: Signer;
   export let thc: TreasureHuntCreator;
-  export let wrongAnswer: boolean;
+  let wrongAnswer: boolean;
 
   const { submit, status, txHash, error, reset } = prepareSubmitSolution(
     thc,
@@ -34,10 +34,12 @@
     }
   );
 
-  function onCloseModal() {
+  function onCloseModal(scrollToTop?: boolean) {
     reset();
     wrongAnswer = false;
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (scrollToTop) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   }
 
   function onQuestUpdatedConfirm() {
@@ -48,13 +50,15 @@
   }
 
   async function onSubmitSolution(solution: string) {
-    if (!$currentChapter) return;
+    console.log("sol", solution, $currentChapter);
+    if ($currentChapter === null) return false;
     const address = await addressFromSolution(solution);
 
-    if (addressToChapterIndex(address) === $currentChapter + 1) {
+    if (addressToChapterIndex(address) === $currentChapter) {
       return submit(solution);
     } else {
       wrongAnswer = true;
+      return false;
     }
   }
 
@@ -80,14 +84,14 @@
     currentChapter={$currentChapter}
     currentQuestHtml={$currentQuestHtml}
     totalChapters={$totalChapters}
-    onSubmitSolution={submit}
+    {onSubmitSolution}
   />
 
   {#if wrongAnswer}
     <div transition:fade class="thc--chapter-state">
       <div>
         <h2>Wrong answer</h2>
-        <button on:click={reset}>Try again</button>
+        <button on:click={() => onCloseModal(false)}>Try again</button>
       </div>
     </div>
   {/if}
@@ -95,12 +99,9 @@
   {#if $status !== undefined}
     <div transition:fade class="thc--chapter-state">
       <div>
-        {#if $status === "WRONG"}
-          <h2>Wrong answer</h2>
-          <button on:click={reset}>Try again</button>
-        {:else if $status === "ERROR"}
+        {#if $status === "ERROR"}
           <p>
-            Something bad happened, get in contact with us, we can help you.
+            Something bad happened 🤕 get in contact with us, we can help you.
           </p>
           <pre>{$error}</pre>
         {:else}
@@ -110,12 +111,13 @@
             <p>
               Keep this window open, wait, cross your fingers, don't enter any
               Faraday cage, don't drop your mobile phone in the toilet or in any
-              other liquid, make sure you have enough battery left, don't lock
-              your mobile phone.
+              other liquid, don't accept candies from strangers unless you are
+              in Görlitzer Park, make sure you have enough battery left, don't
+              lock your mobile phone.
             </p>
           {:else if $status === "SUCCESS"}
             <p>Your score has been updated.</p>
-            <button on:click={onCloseModal}>Go to next chapter</button>
+            <button on:click={() => onCloseModal()}>Go to next chapter</button>
           {/if}
         {/if}
       </div>

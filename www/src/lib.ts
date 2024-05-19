@@ -139,7 +139,6 @@ function _prepareSubmitSolutionOrKey(
     };
 
     const relayResponse = await relay.callWithSyncFeeERC2771(request, signer);
-    console.log(relayResponse);
 
     while (true) {
       console.log("Polling task", relayResponse.taskId);
@@ -198,10 +197,11 @@ function _prepareSubmitSolutionOrKey(
   }
 
   async function submit(solution: string) {
+    console.log("submit", solution);
     reset();
     try {
       const r = await relayCall(solution);
-      if (r.txHash) {
+      if (r && r.txHash) {
         onSuccess({ txHash: r.txHash, solution });
         return true;
       }
@@ -269,9 +269,7 @@ export function addressToChapterIndex(address: string) {
       return i;
     }
   }
-  if (i === metadata.chapters.length) {
-    return -1;
-  }
+  return -1;
 }
 
 export function addressToKeyIndex(address: string) {
@@ -282,7 +280,5 @@ export function addressToKeyIndex(address: string) {
       return i;
     }
   }
-  if (i === metadata.keys.length) {
-    return -1;
-  }
+  return -1;
 }

@@ -4,20 +4,7 @@
   export let totalChapters: number;
   export let onSubmitSolution: (v: string) => Promise<boolean>;
 
-  console.log("current", currentQuestHtml);
-
   let solution = "";
-
-  function onReset() {
-    let sure = prompt(
-      'WARNING: this action will reset your current game, type "yes" to confirm.'
-    );
-
-    if (sure === "yes") {
-      localStorage.clear();
-      window.location.reload();
-    }
-  }
 
   async function onSubmit() {
     if (await onSubmitSolution(solution)) {

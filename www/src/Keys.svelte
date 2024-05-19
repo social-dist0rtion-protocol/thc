@@ -1,7 +1,11 @@
 <script lang="ts">
   import { fuckFuckFuckFuckFuck } from "./stores/thc";
   import { fade } from "svelte/transition";
-  import { prepareSubmitKey } from "./lib";
+  import {
+    addressFromSolution,
+    addressToKeyIndex,
+    prepareSubmitKey,
+  } from "./lib";
   import type { Signer } from "ethers";
   import type { TreasureHuntCreator } from "../../eth/typechain";
 
@@ -9,6 +13,7 @@
   export let thc: TreasureHuntCreator;
 
   let key = "";
+  let wrongAnswer = false;
 
   const { submit, status, txHash, error, reset } = prepareSubmitKey(
     thc,
@@ -16,15 +21,22 @@
     ({ solution, txHash }) => {}
   );
 
-  async function onSubmit() {
-    if (await submit(key)) {
+  async function onSubmitKey() {
+    const address = await addressFromSolution(key);
+    const index = addressToKeyIndex(address);
+    if (index > -1) {
+      const r = await submit(key);
       key = "";
+      return r;
+    } else {
+      wrongAnswer = true;
+      return false;
     }
   }
 
   function onCloseModal() {
+    wrongAnswer = false;
     reset();
-    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 </script>
 
@@ -39,18 +51,24 @@
     Did you find a key? Submit it with this form to add it to your score in the
     leaderboard. More info in the <a href="#/about">FAQs</a>.
   </p>
-  <form on:submit|preventDefault={onSubmit}>
+  <form on:submit|preventDefault={() => onSubmitKey()}>
     <input placeholder="Key" bind:value={key} />
     <button disabled={key.length === 0} type="submit">Submit</button>
   </form>
 
+  {#if wrongAnswer}
+    <div transition:fade class="thc--chapter-state">
+      <div>
+        <h2>Wrong answer</h2>
+        <button on:click={() => onCloseModal()}>Try again</button>
+      </div>
+    </div>
+  {/if}
+
   {#if $status !== undefined}
     <div transition:fade class="thc--chapter-state">
       <div>
-        {#if $status === "WRONG"}
-          <h2>Wrong answer</h2>
-          <button on:click={reset}>Try again</button>
-        {:else if $status === "ERROR"}
+        {#if $status === "ERROR"}
           <p>
             Something bad happened, get in contact with us, we can help you.
           </p>
@@ -62,8 +80,9 @@
             <p>
               Keep this window open, wait, cross your fingers, don't enter any
               Faraday cage, don't drop your mobile phone in the toilet or in any
-              other liquid, make sure you have enough battery left, don't lock
-              your mobile phone.
+              other liquid, don't accept candies from strangers unless you are
+              in Görlitzer Park, make sure you have enough battery left, don't
+              lock your mobile phone.
             </p>
           {:else if $status === "SUCCESS"}
             <p>Your score has been updated.</p>
