@@ -10,6 +10,7 @@ game: backend frontend
 
 backend: chapters
 	echo "Deploying contracts."
+	@cd $(ETH_DIR); npx hardhat compile
 	@cd $(ETH_DIR); npx hardhat deploy --network $(ETH_NETWORK) --chapters ../$(CHAPTERS_FILE) --keys-path ../${KEYS_FILE}
 	echo "Backend deployed."
 

@@ -97,9 +97,7 @@ async function readKeys(dirIn: string) {
 async function calculateHashChapters(chapters: string[]) {
   let hash = "";
   for (const chapter of chapters) {
-    console.log("content\n", chapter);
     hash = keccak256(toUtf8Bytes(chapter + hash));
-    console.log("hash:", hash);
   }
   return hash;
 }
@@ -171,7 +169,7 @@ async function main(dirIn: string, dirOut: string) {
   // God forgive me this code is shit
   // God forgive me this code is shit
   // God forgive me this code is shit
-  const wwwPublicPath = path.join("../www/game-data", dirCid);
+  const wwwPublicPath = path.join("../www/public/game-data", dirCid);
   await mkdir(wwwPublicPath, {
     recursive: true,
   });
@@ -186,7 +184,7 @@ async function main(dirIn: string, dirOut: string) {
   // God forgive me this code is shit
   // God forgive me this code is shit
 
-  //return chapters;
+  return chapters;
 }
 
 main(DIR_IN, DIR_OUT)
