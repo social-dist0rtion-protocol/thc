@@ -5,14 +5,17 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "./IRenderer.sol";
+import "hardhat/console.sol";
 
-contract TreasureHuntCommendation is Ownable, AccessControl, ERC1155 {
-    constructor() ERC1155("") {}
-
+contract Treasure is Ownable, AccessControl, ERC1155 {
     bytes32 public constant TREASURE_HUNT_ROLE =
         keccak256("TREASURE_HUNT_ROLE");
 
     mapping(address => IRenderer) public renderers;
+
+    constructor() ERC1155("") {
+        _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
+    }
 
     function supportsInterface(
         bytes4 interfaceId
@@ -28,7 +31,12 @@ contract TreasureHuntCommendation is Ownable, AccessControl, ERC1155 {
         address player,
         uint256 badgeId
     ) public onlyRole(TREASURE_HUNT_ROLE) {
-        super._mint(player, (uint160(_msgSender()) << 96) | badgeId, 1, "");
+        super._mint(
+            player,
+            (uint256(uint160(_msgSender())) << 96) | badgeId,
+            1,
+            ""
+        );
     }
 
     function uri(uint256 tokenId) public view override returns (string memory) {

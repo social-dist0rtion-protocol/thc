@@ -2,6 +2,8 @@ import { ethers } from "hardhat";
 import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
 import {
+  Treasure,
+  Treasure__factory,
   TreasureHuntCreator,
   TreasureHuntCreator__factory,
 } from "../typechain";
@@ -20,6 +22,7 @@ const PAGE_SIZE = 32;
 
 describe("TreasureHuntCreator Pagination", () => {
   let thcFactory: TreasureHuntCreator__factory;
+  let treasure: Treasure;
   let accounts: SignerWithAddress[];
   let totalPlayers: number;
   let questsRootCid: Uint8Array;
@@ -31,6 +34,12 @@ describe("TreasureHuntCreator Pagination", () => {
       "TreasureHuntCreator",
       accounts[0]
     )) as any as TreasureHuntCreator__factory;
+
+    const treasureFactory = (await ethers.getContractFactory(
+      "Treasure",
+      accounts[0]
+    )) as Treasure__factory;
+    treasure = (await treasureFactory.deploy()) as Treasure;
 
     totalPlayers = accounts.length;
     questsRootCid = cidToBytes(
@@ -45,9 +54,8 @@ describe("TreasureHuntCreator Pagination", () => {
     const thc = await thcFactory.deploy(
       solutions,
       [],
-      "0x0000000000000000000000000000000000000000"
+      await treasure.getAddress()
     );
-
     return thc;
   }
 

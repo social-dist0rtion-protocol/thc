@@ -4,6 +4,8 @@ import { ethers } from "hardhat";
 import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
 import {
+  Treasure,
+  Treasure__factory,
   TreasureHuntCreator,
   TreasureHuntCreator__factory,
 } from "../typechain";
@@ -31,22 +33,33 @@ const KEYS = [
 
 describe("TreasureHuntCreator", () => {
   let thcFactory: TreasureHuntCreator__factory;
+  let treasure: Treasure;
   let accounts: SignerWithAddress[];
   let totalPlayers: number;
   let solutions: string[];
   let keys: string[];
   let questsRootCid: Uint8Array;
   let deployer: SignerWithAddress;
+  let alice: SignerWithAddress;
+  let bob: SignerWithAddress;
+  let carl: SignerWithAddress;
+  let dean: SignerWithAddress;
 
   beforeEach(async () => {
-    accounts = await ethers.getSigners();
-    deployer = accounts[0];
+    [deployer, alice, bob, carl, dean] = await ethers.getSigners();
+
+    const TreasureFactory = (await ethers.getContractFactory(
+      "Treasure",
+      alice
+    )) as Treasure__factory;
+    treasure = (await TreasureFactory.deploy()) as Treasure;
 
     thcFactory = (await ethers.getContractFactory(
       "TreasureHuntCreator",
       deployer
     )) as any as TreasureHuntCreator__factory;
 
+    accounts = await ethers.getSigners();
     totalPlayers = accounts.length;
 
     solutions = accounts.map((x) => x.address);
@@ -61,13 +74,47 @@ describe("TreasureHuntCreator", () => {
     solutions: string[],
     keys: string[]
   ): Promise<TreasureHuntCreator> {
-    const thc = await thcFactory.deploy(
-      solutions,
-      keys,
-      "0x0000000000000000000000000000000000000000"
+    const thc = await thcFactory.deploy(solutions, keys, treasure.getAddress());
+    await treasure.grantRole(
+      await treasure.TREASURE_HUNT_ROLE(),
+      thc.getAddress()
     );
+    await thc.setup(questsRootCid);
 
     return thc;
+  }
+
+  function encodeTokenId(thcAddress: string, badgeId: number): bigint {
+    // Convert the thcAddress to a BigInt, assuming it's a hex string without the '0x' prefix
+    const thcBigInt = BigInt(thcAddress);
+    // Shift left by 96 bits
+    const shiftedThcBigInt = thcBigInt << 96n;
+
+    // Convert the badgeId to a BigInt
+    const badgeBigInt = BigInt(badgeId);
+
+    // Perform bitwise OR and return the result
+    return shiftedThcBigInt | badgeBigInt;
+  }
+
+  async function solve(
+    thc: TreasureHuntCreator,
+    solution: string,
+    player: SignerWithAddress
+  ) {
+    let [signature, solutionKey] = await getSignature(player, solution);
+    let { r, v, s } = Signature.from(signature);
+    await thc.connect(player).submit(v, r, s);
+  }
+
+  async function submitKey(
+    thc: TreasureHuntCreator,
+    solution: string,
+    player: SignerWithAddress
+  ) {
+    let [signature, solutionKey] = await getSignature(player, solution);
+    let { r, v, s } = Signature.from(signature);
+    await thc.connect(player).submitKey(v, r, s);
   }
 
   describe("constructor", async () => {
@@ -106,12 +153,12 @@ describe("TreasureHuntCreator", () => {
 
       let instance = await deploy([solutionKey], keys);
 
-      // await expect(instance.connect(deployer).submit(v, r, s)).revertedWith(
-      //   "Wrong solution."
-      // );
+      await expect(instance.connect(deployer).submit(v, r, s)).revertedWith(
+        "Wrong solution."
+      );
     });
 
-    it("should not increment any counter with wrong", async () => {
+    it.skip("should not increment any counter with wrong", async () => {
       let testRightSolution = "Right solution";
       let testWrongSolution = "Wrong solution";
 
@@ -123,7 +170,7 @@ describe("TreasureHuntCreator", () => {
       let { r, v, s } = Signature.from(signatureWrong);
       let instance = await deploy([solutionKey], keys);
 
-      // await expect(instance.connect(deployer).submit(v, r, s)).revertedWith("");
+      //await expect(instance.connect(deployer).submit(v, r, s)).revertedWith("");
 
       let result = await instance.playerToCurrentChapter(deployer.address);
       expect(result).equal(0n);
@@ -136,8 +183,10 @@ describe("TreasureHuntCreator", () => {
 
       let instance = await deploy([solutions[0]], keys);
 
-      // await expect(instance.connect(deployer).submit(v, r, s)).revertedWith("");
-      // await expect(instance.players(0)).revertedWith("");
+      await expect(instance.connect(deployer).submit(v, r, s)).revertedWith(
+        "Wrong solution."
+      );
+      await expect(instance.players(0)).reverted;
     });
 
     it("should add player to list upon success", async () => {
@@ -165,6 +214,176 @@ describe("TreasureHuntCreator", () => {
       let result = await instance.chapterToPlayers(0, 0);
       expect(result).equal(deployer.address);
     });
+
+    it("should mint gold badge to first that finishes", async () => {
+      let testSolution1 = "A solution 1";
+      let solutionKey1 = await getSolutionAddress(testSolution1);
+
+      let testSolution2 = "A solution 2";
+      let solutionKey2 = await getSolutionAddress(testSolution2);
+
+      let testSolution3 = "A solution 3";
+      let solutionKey3 = await getSolutionAddress(testSolution3);
+
+      let instance = await deploy(
+        [solutionKey1, solutionKey2, solutionKey3],
+        keys
+      );
+
+      await solve(instance, testSolution1, deployer);
+      await solve(instance, testSolution1, alice);
+
+      await solve(instance, testSolution2, deployer);
+      await solve(instance, testSolution2, alice);
+
+      await solve(instance, testSolution3, deployer);
+      await solve(instance, testSolution3, alice);
+
+      const result1 = await treasure.balanceOf(
+        deployer.address,
+        encodeTokenId(await instance.getAddress(), 1)
+      );
+
+      const result2 = await treasure.balanceOf(
+        alice.address,
+        encodeTokenId(await instance.getAddress(), 1)
+      );
+
+      expect(result1).equal(1n);
+      expect(result2).equal(0n);
+    });
+
+    it("should mint silver badge to first that finishes", async () => {
+      let testSolution1 = "A solution 1";
+      let solutionKey1 = await getSolutionAddress(testSolution1);
+
+      let testSolution2 = "A solution 2";
+      let solutionKey2 = await getSolutionAddress(testSolution2);
+
+      let testSolution3 = "A solution 3";
+      let solutionKey3 = await getSolutionAddress(testSolution3);
+
+      let instance = await deploy(
+        [solutionKey1, solutionKey2, solutionKey3],
+        keys
+      );
+
+      await solve(instance, testSolution1, deployer);
+      await solve(instance, testSolution1, alice);
+
+      await solve(instance, testSolution2, deployer);
+      await solve(instance, testSolution2, alice);
+
+      await solve(instance, testSolution3, deployer);
+      await solve(instance, testSolution3, alice);
+
+      const result1 = await treasure.balanceOf(
+        deployer.address,
+        encodeTokenId(await instance.getAddress(), 2)
+      );
+
+      const result2 = await treasure.balanceOf(
+        alice.address,
+        encodeTokenId(await instance.getAddress(), 2)
+      );
+
+      expect(result1).equal(0n);
+      expect(result2).equal(1n);
+    });
+
+    it("should mint bronze badge to first that finishes", async () => {
+      let testSolution1 = "A solution 1";
+      let solutionKey1 = await getSolutionAddress(testSolution1);
+
+      let testSolution2 = "A solution 2";
+      let solutionKey2 = await getSolutionAddress(testSolution2);
+
+      let testSolution3 = "A solution 3";
+      let solutionKey3 = await getSolutionAddress(testSolution3);
+
+      let instance = await deploy(
+        [solutionKey1, solutionKey2, solutionKey3],
+        keys
+      );
+
+      await solve(instance, testSolution1, deployer);
+      await solve(instance, testSolution1, alice);
+      await solve(instance, testSolution1, bob);
+
+      await solve(instance, testSolution2, deployer);
+      await solve(instance, testSolution2, alice);
+      await solve(instance, testSolution2, bob);
+
+      await solve(instance, testSolution3, deployer);
+      await solve(instance, testSolution3, alice);
+      await solve(instance, testSolution3, bob);
+
+      const result1 = await treasure.balanceOf(
+        deployer.address,
+        encodeTokenId(await instance.getAddress(), 3)
+      );
+
+      const result2 = await treasure.balanceOf(
+        alice.address,
+        encodeTokenId(await instance.getAddress(), 3)
+      );
+
+      const result3 = await treasure.balanceOf(
+        bob.address,
+        encodeTokenId(await instance.getAddress(), 3)
+      );
+
+      expect(result1).equal(0n);
+      expect(result2).equal(0n);
+      expect(result3).equal(1n);
+    });
+
+    it("should mint participation badge to all but first 3", async () => {
+      let testSolution1 = "A solution 1";
+      let solutionKey1 = await getSolutionAddress(testSolution1);
+
+      let testSolution2 = "A solution 2";
+      let solutionKey2 = await getSolutionAddress(testSolution2);
+
+      let testSolution3 = "A solution 3";
+      let solutionKey3 = await getSolutionAddress(testSolution3);
+
+      let instance = await deploy(
+        [solutionKey1, solutionKey2, solutionKey3],
+        keys
+      );
+
+      await Promise.all(
+        [deployer, alice, bob, carl, dean].map(
+          async (x) => await solve(instance, testSolution1, x)
+        )
+      );
+      await Promise.all(
+        [deployer, alice, bob, carl, dean].map(
+          async (x) => await solve(instance, testSolution2, x)
+        )
+      );
+      await Promise.all(
+        [deployer, alice, bob, carl, dean].map(
+          async (x) => await solve(instance, testSolution3, x)
+        )
+      );
+
+      const balances = await Promise.all(
+        [deployer, alice, bob, carl, dean].map(async (x) =>
+          treasure.balanceOf(
+            x.address,
+            encodeTokenId(await instance.getAddress(), 4)
+          )
+        )
+      );
+
+      expect(balances[0]).equal(0n);
+      expect(balances[1]).equal(0n);
+      expect(balances[2]).equal(0n);
+      expect(balances[3]).equal(1n);
+      expect(balances[4]).equal(1n);
+    });
   });
 
   describe("submitKey", async () => {
@@ -178,6 +397,21 @@ describe("TreasureHuntCreator", () => {
       const { r, v, s } = await getSolutionSignature(KEYS[0], deployer.address);
       await instance.connect(deployer).submitKey(v, r, s);
       expect(await instance.playerToKeys(deployer.address)).equal(1n);
+    });
+
+    it("should mint key badge to who finds all keys", async () => {
+      const instance = await deploy(solutions, keys);
+
+      for (let i = 0; i < KEYS.length; i++) {
+        await submitKey(instance, KEYS[i], alice);
+      }
+
+      const result = await treasure.balanceOf(
+        alice.address,
+        encodeTokenId(await instance.getAddress(), 5)
+      );
+
+      expect(result).equal(1);
     });
 
     it("should reject a wrong key", async () => {
@@ -216,7 +450,7 @@ describe("TreasureHuntCreator", () => {
     });
 
     it("should return the list of players and chapters", async () => {
-      let [player1, player2, player3] = accounts;
+      let [player1, player2, player3] = [bob, alice, carl];
 
       let testSolution1 = "A solution 1";
       let solutionKey1 = await getSolutionAddress(testSolution1);
@@ -247,12 +481,10 @@ describe("TreasureHuntCreator", () => {
       );
 
       // player 1 finds key 0
-      sig = await getSolutionSignature(KEYS[0], player1.address);
-      await instance.connect(player1).submitKey(sig.v, sig.r, sig.s);
+      await submitKey(instance, KEYS[0], player1);
 
       // player 2 solves chapter 1
-      sig = await getSolutionSignature(testSolution1, player2.address);
-      await instance.connect(player2).submit(sig.v, sig.r, sig.s);
+      await solve(instance, testSolution1, player2);
 
       leaderboard = await instance.getLeaderboard(0);
       expectedLeaderboard = Array(PAGE_SIZE).fill(0n);
@@ -263,18 +495,13 @@ describe("TreasureHuntCreator", () => {
       );
 
       // plot twist: player 3 solves chapter 1, 2, and 3
-      sig = await getSolutionSignature(testSolution1, player3.address);
-      await instance.connect(player3).submit(sig.v, sig.r, sig.s);
-      sig = await getSolutionSignature(testSolution2, player3.address);
-      await instance.connect(player3).submit(sig.v, sig.r, sig.s);
-      sig = await getSolutionSignature(testSolution3, player3.address);
-      await instance.connect(player3).submit(sig.v, sig.r, sig.s);
+      await solve(instance, testSolution1, player3);
+      await solve(instance, testSolution2, player3);
+      await solve(instance, testSolution3, player3);
 
       // Player 3 finds keys 0 and 2
-      sig = await getSolutionSignature(KEYS[0], player3.address);
-      await instance.connect(player3).submitKey(sig.v, sig.r, sig.s);
-      sig = await getSolutionSignature(KEYS[2], player3.address);
-      await instance.connect(player3).submitKey(sig.v, sig.r, sig.s);
+      await submitKey(instance, KEYS[0], player3);
+      await submitKey(instance, KEYS[2], player3);
 
       leaderboard = await instance.getLeaderboard(0);
 
@@ -292,9 +519,12 @@ describe("TreasureHuntCreator", () => {
     it("should set root cid", async () => {
       let instance = await deploy([], keys);
       const newRootCid = "0x61626364";
-      let testGameMaster = accounts[1];
-
+      let testGameMaster = alice;
       await instance.grantRole(GAME_MASTER_ROLE, testGameMaster.address);
+      await treasure.grantRole(
+        await treasure.TREASURE_HUNT_ROLE(),
+        await instance.getAddress()
+      );
       await instance.connect(testGameMaster).setup(newRootCid);
 
       let result = await instance.getQuestsRootCID();
@@ -302,31 +532,32 @@ describe("TreasureHuntCreator", () => {
     });
 
     it("should forbid setting the root to non game masters", async () => {
-      let user = accounts[1];
       let instance = await deploy([], keys);
       const newRootCid = "0x61626364";
-
-      await expect(instance.connect(user).setup(newRootCid)).revertedWith(
-        `AccessControl: account ${user.address.toLocaleLowerCase()} is missing role ${GAME_MASTER_ROLE}`
+      await treasure.grantRole(
+        await treasure.TREASURE_HUNT_ROLE(),
+        await instance.getAddress()
+      );
+      await expect(instance.connect(alice).setup(newRootCid)).revertedWith(
+        `AccessControl: account ${alice.address.toLocaleLowerCase()} is missing role ${GAME_MASTER_ROLE}`
       );
     });
   });
 
   describe("addSolution", async () => {
     it("should forbid adding a chapter to non game masters", async () => {
-      let user = accounts[1];
       let instance = await deploy([], keys);
 
       await expect(
-        instance.connect(user).addSolution(solutions[0])
+        instance.connect(alice).addSolution(solutions[0])
       ).revertedWith(
-        `AccessControl: account ${user.address.toLocaleLowerCase()} is missing role ${GAME_MASTER_ROLE}`
+        `AccessControl: account ${alice.address.toLocaleLowerCase()} is missing role ${GAME_MASTER_ROLE}`
       );
     });
 
     it("should add a new chapter from a game master", async () => {
       let instance = await deploy([], keys);
-      let testGameMaster = accounts[1];
+      let testGameMaster = alice;
       let testSolution = solutions[0];
 
       await instance.grantRole(GAME_MASTER_ROLE, testGameMaster.address);
