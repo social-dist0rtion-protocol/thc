@@ -1,46 +1,43 @@
+import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
+import { Signature, Wallet, getBytes, keccak256, toUtf8Bytes } from "ethers";
 import { CID } from "multiformats/cid";
-import { BigNumber, utils, Wallet } from "ethers";
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 
 export function cidToBytes(cid: string) {
   return CID.parse(cid).bytes;
 }
 
 export async function getSolutionAddress(solution: string) {
-  let solutionBytes = utils.toUtf8Bytes(solution);
-  let solutionDigest = utils.keccak256(solutionBytes);
+  let solutionBytes = toUtf8Bytes(solution);
+  let solutionDigest = keccak256(solutionBytes);
   let wallet = new Wallet(solutionDigest);
   return wallet.address;
 }
 
 export async function getSolutionSignature(solution: string, address: string) {
-  let solutionBytes = utils.toUtf8Bytes(solution);
-  let solutionDigest = utils.keccak256(solutionBytes);
+  let solutionBytes = toUtf8Bytes(solution);
+  let solutionDigest = keccak256(solutionBytes);
   let wallet = new Wallet(solutionDigest);
-  let signature = await wallet.signMessage(utils.arrayify(address));
-  return utils.splitSignature(signature);
-}
-
-export async function getKeySignature(mnemonic: string, address: string) {
-  const wallet = Wallet.fromMnemonic(mnemonic);
-  const signature = await wallet.signMessage(utils.arrayify(address));
-  return utils.splitSignature(signature);
+  let signature = await wallet.signMessage(getBytes(address));
+  return Signature.from(signature);
 }
 
 export async function getSignature(
   signer: SignerWithAddress,
   solution: string
 ) {
-  let solutionBytes = utils.toUtf8Bytes(solution);
-  let solutionDigest = utils.keccak256(solutionBytes);
+  let solutionBytes = toUtf8Bytes(solution);
+  let solutionDigest = keccak256(solutionBytes);
   let wallet = new Wallet(solutionDigest);
-  let signature = await wallet.signMessage(utils.arrayify(signer.address));
+  let signature = await wallet.signMessage(getBytes(signer.address));
 
   return [signature, wallet.address];
 }
 
 export function merge(address: string, chapter: number) {
-  return BigNumber.from(address).shl(96).or(BigNumber.from(chapter));
+  const addressBigInt = BigInt(address);
+  const chapterBigInt = BigInt(chapter);
+
+  return (addressBigInt << 96n) | chapterBigInt;
 }
 
 export function leaderboardEntry(
@@ -48,12 +45,15 @@ export function leaderboardEntry(
   keys: number[],
   chapter: number
 ) {
-  const a = BigNumber.from(address).shl(96);
-  let k = BigNumber.from(0);
+  const addressBigInt = BigInt(address) << 96n;
+
+  let keysBigInt = 0n;
   for (let pos of keys) {
-    k = k.or(BigNumber.from(1).shl(pos));
+    keysBigInt |= 1n << BigInt(pos);
   }
-  k = k.shl(8);
-  const c = BigNumber.from(chapter);
-  return a.or(k).or(c);
+  keysBigInt <<= 8n;
+
+  const chapterBigInt = BigInt(chapter);
+
+  return addressBigInt | keysBigInt | chapterBigInt;
 }

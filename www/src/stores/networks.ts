@@ -1,4 +1,4 @@
-import type { ethers } from "ethers";
+import type { BrowserProvider } from "ethers";
 
 export const CHAIN_CONFIGS = {
   "0x89": {
@@ -21,16 +21,13 @@ function isKeyOfChainConfigs(
 }
 
 export async function addEthereumChain(
-  web3Provider: ethers.providers.Web3Provider,
+  web3Provider: BrowserProvider,
   chainId: string
 ) {
   if (isKeyOfChainConfigs(chainId)) {
     const chainConfig = CHAIN_CONFIGS[chainId];
 
-    await web3Provider.provider.request!({
-      method: "wallet_addEthereumChain",
-      params: [chainConfig],
-    });
+    await web3Provider.send("wallet_addEthereumChain", [chainConfig]);
   } else {
     throw "Cannot find network configuration";
   }

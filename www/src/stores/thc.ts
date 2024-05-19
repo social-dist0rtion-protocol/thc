@@ -1,4 +1,3 @@
-import { keccak256, toUtf8Bytes } from "ethers/lib/utils";
 import {
   derived,
   get,
@@ -16,6 +15,7 @@ import { marked } from "marked";
 import { parseLeaderboard } from "../lib";
 import { RecoverableError } from "./x/exceptions";
 import db from "./x/db";
+import { keccak256, toUtf8Bytes } from "ethers";
 
 export type Chapter = {
   solution: string | null;
@@ -69,7 +69,7 @@ export const totalChapters: Readable<null | number> = derived(
   ($thc, set) => {
     if ($thc) {
       retry(async () => {
-        set((await $thc.totalChapters()).toNumber());
+        set(Number(await $thc.totalChapters()));
       }, true);
     }
   }
@@ -80,7 +80,7 @@ export const totalKeys: Readable<null | number> = derived(
   ($thc, set: (v: number | null) => void) => {
     if ($thc) {
       retry(async () => {
-        set(await $thc.totalKeys());
+        set(Number(await $thc.totalKeys()));
       }, true);
     }
   },
@@ -92,7 +92,7 @@ export const currentChapter: Readable<null | number> = derived(
   ([$thc], set: (v: null | number) => void) => {
     if ($thc) {
       retry(async () => {
-        set((await $thc.currentChapter()).toNumber());
+        set(Number(await $thc.currentChapter()));
       }, true);
     } else {
       set(null);

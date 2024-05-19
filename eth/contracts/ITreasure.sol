@@ -12,4 +12,12 @@ interface ITreasure is IERC1155 {
     ) external view returns (bool);
 
     function TREASURE_HUNT_ROLE() external view returns (bytes32);
+
+    function supportsInterface(bytes4 interfaceId) external view returns (bool);
+
+    function updateRenderer(address thc, address renderer) external;
+
+    function mint(address player, uint256 badgeId) external;
+
+    function uri(uint256 tokenId) external view returns (string memory);
 }

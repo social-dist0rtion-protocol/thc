@@ -1,29 +1,26 @@
 import { ethers } from "hardhat";
 import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
-import { solidity } from "ethereum-waffle";
 import {
   Treasure,
   Treasure__factory,
   TreasureHuntCreator,
   TreasureHuntCreator__factory,
 } from "../typechain";
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { BigNumber, Wallet } from "ethers";
 import {
   cidToBytes,
   getSolutionAddress,
   getSolutionSignature,
   merge,
 } from "./utils";
+import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
 
-chai.use(solidity);
 chai.use(chaiAsPromised);
 const { expect } = chai;
 
 const PAGE_SIZE = 32;
 
-describe("TreasureHuntCreator", () => {
+describe("TreasureHuntCreator Pagination", () => {
   let thcFactory: TreasureHuntCreator__factory;
   let treasure: Treasure;
   let accounts: SignerWithAddress[];
@@ -36,7 +33,7 @@ describe("TreasureHuntCreator", () => {
     thcFactory = (await ethers.getContractFactory(
       "TreasureHuntCreator",
       accounts[0]
-    )) as TreasureHuntCreator__factory;
+    )) as any as TreasureHuntCreator__factory;
 
     const treasureFactory = (await ethers.getContractFactory(
       "Treasure",
@@ -54,9 +51,11 @@ describe("TreasureHuntCreator", () => {
     solutions: string[],
     questsRootCid: Uint8Array
   ): Promise<TreasureHuntCreator> {
-    const thc = await thcFactory.deploy(solutions, [], treasure.address);
-    await thc.deployed();
-
+    const thc = await thcFactory.deploy(
+      solutions,
+      [],
+      await treasure.getAddress()
+    );
     return thc;
   }
 
@@ -75,7 +74,7 @@ describe("TreasureHuntCreator", () => {
       questsRootCid
     );
 
-    let expectedLeaderboard = Array(PAGE_SIZE * 2).fill(BigNumber.from(0));
+    let expectedLeaderboard = Array(PAGE_SIZE * 2).fill(0);
 
     let leaderboard = await thc.getLeaderboard(0);
 

@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { formatEther } from "ethers/lib/utils";
+  import { formatEther } from "ethers";
   import QRCode from "qrcode";
   import { onMount } from "svelte";
 
-  import { signer, balance, mnemonic } from "./stores/burnerWallet";
+  import { signer, mnemonic } from "./stores/burnerWallet";
   import { thc, game } from "./stores/thc";
 
   let reveal = false;
@@ -13,8 +13,8 @@
   let restoreMnemonic: string;
   let restoreGame: null | string = null;
 
-  onMount(() => {
-    QRCode.toCanvas(canvas, `ethereum:${$signer!.address}`, {
+  onMount(async () => {
+    QRCode.toCanvas(canvas, `ethereum:${await $signer!.getAddress()}`, {
       width: 200,
     });
   });
@@ -75,12 +75,6 @@
 </p>
 
 <canvas bind:this={canvas} />
-
-<h2>Wallet balance</h2>
-
-<p>
-  {$balance ? formatEther($balance) + " Ether" : "loading…"}
-</p>
 
 <h2>Network</h2>
 

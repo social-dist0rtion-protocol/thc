@@ -1,10 +1,12 @@
-import { BigNumber, utils, Wallet, Wordlist, wordlists } from "ethers";
 import {
-  arrayify,
+  Mnemonic,
+  Signature,
+  Wallet,
+  getBytes,
   keccak256,
-  splitSignature,
   toUtf8Bytes,
-} from "ethers/lib/utils";
+  wordlists,
+} from "ethers";
 import type { TreasureHuntCreator } from "../../eth/typechain";
 
 export function shortAddress(a: string) {
@@ -21,19 +23,8 @@ export async function signatureFromSolution(address: string, solution: string) {
   const solutionWallet = new Wallet(hash);
 
   // Sign the raw bytes, not the hex string
-  const signature = await solutionWallet.signMessage(arrayify(address));
-  return splitSignature(signature);
-}
-
-export async function signatureFromKey(
-  address: string,
-  mnemonic: string,
-  wordlist?: Wordlist
-) {
-  const keyWallet = Wallet.fromMnemonic(mnemonic, undefined, wordlist);
-  // Sign the raw bytes, not the hex string
-  const signature = await keyWallet.signMessage(arrayify(address));
-  return splitSignature(signature);
+  const signature = await solutionWallet.signMessage(getBytes(address));
+  return Signature.from(signature);
 }
 
 // Hardcoded for now
@@ -86,7 +77,7 @@ export async function parseLeaderboard(
 export function getCorrespondingWordlist(mnemonic: string) {
   for (let locale in wordlists) {
     const wordlist = wordlists[locale];
-    if (utils.isValidMnemonic(mnemonic, wordlist)) {
+    if (Mnemonic.isValidMnemonic(mnemonic, wordlist)) {
       return wordlists[locale];
     }
   }

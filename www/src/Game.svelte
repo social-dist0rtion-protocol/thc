@@ -8,29 +8,56 @@
     totalChapters,
     fuckFuckFuckFuckFuck,
   } from "./stores/thc";
-  import { lowBalance, signer } from "./stores/burnerWallet";
+  import { signer } from "./stores/burnerWallet";
   import Chapter from "./components/Chapter.svelte";
   import { signatureFromSolution } from "./lib";
   import { fade } from "svelte/transition";
   import Update from "./components/Update.svelte";
+  import {
+    GelatoRelay,
+    type CallWithSyncFeeERC2771Request,
+  } from "@gelatonetwork/relay-sdk";
+  import { contractsAddresses } from "./stores/config";
 
   let state: "IDLE" | "CHECK" | "MINING" | "SUCCESS" | "WRONG" | "ERROR" =
     "IDLE";
   let error: string;
+  $: sign = $signer;
+  console.log("sending to", contractsAddresses["TreasureHuntCreator"]);
 
   // This function is called by the child component
   async function onSubmitSolution(solution: string) {
-    const address = $signer!.address;
+    const address = await $signer!.getAddress();
     const contract = $thc!;
     const chapterNumber = $currentChapter!;
     solution = solution.toLowerCase();
     state = "CHECK";
+    console.log("sending from", address);
+    console.log("sending to", contractsAddresses["TreasureHuntCreator"]);
+
     const { r, s, v } = await signatureFromSolution(address, solution);
+    console.log("sending ", v, r, s);
     // Store the solution, if it's wrong it's not a problem since it won't be
     // used
     $game[chapterNumber.toString()].solution = solution;
     try {
-      const tx = await contract.submit(v, r, s);
+      // const tx = await contract.submit(v, r, s);
+      const { data } = await contract.submit.populateTransaction(v, r, s);
+
+      const relay = new GelatoRelay();
+      const request: CallWithSyncFeeERC2771Request = {
+        chainId: BigInt(11155111),
+        target: contractsAddresses["TreasureHuntCreator"],
+        data: data!,
+        user: address,
+        feeToken: "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9",
+        isRelayContext: true,
+      };
+
+      const relayResponse = await relay.callWithSyncFeeERC2771(request, sign!);
+      console.log(relayResponse);
+
+      /*
       console.log(tx);
       state = "MINING";
       const receipt = await tx.wait();
@@ -39,6 +66,7 @@
       state = "SUCCESS";
       $lastTransactionMined = tx.hash;
       $game[chapterNumber.toString()].transactionHash = tx.hash;
+      */
       return true;
     } catch (e: any) {
       const msg = e.toString() as string;
@@ -87,8 +115,6 @@
     currentChapter={$currentChapter}
     currentQuestHtml={$currentQuestHtml}
     totalChapters={$totalChapters}
-    address={$signer.address}
-    lowBalance={$lowBalance}
     {onSubmitSolution}
   />
 
