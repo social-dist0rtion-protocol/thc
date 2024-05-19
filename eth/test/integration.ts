@@ -1,6 +1,6 @@
 // Hey, no need to include web3 since Truffle magically injects it
 // const web3 = require("web3");
-import { ethers } from "hardhat";
+import { ethers, upgrades } from "hardhat";
 import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
 import {
@@ -54,13 +54,16 @@ describe("TreasureHuntCreator", () => {
 
     const TreasureFactory = (await ethers.getContractFactory(
       "Treasure",
-      alice
+      deployer
     )) as Treasure__factory;
-    treasure = (await TreasureFactory.deploy()) as Treasure;
+    treasure = (await upgrades.deployProxy(
+      TreasureFactory
+    )) as unknown as Treasure;
+    await treasure.waitForDeployment();
 
     const RendererFactory = (await ethers.getContractFactory(
       "DisappearRenderer",
-      alice
+      deployer
     )) as DisappearRenderer__factory;
     renderer = (await RendererFactory.deploy()) as DisappearRenderer;
 

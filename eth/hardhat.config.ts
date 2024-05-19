@@ -2,15 +2,16 @@ import { config as dotEnvConfig } from "dotenv";
 dotEnvConfig();
 
 import "@nomicfoundation/hardhat-chai-matchers";
+import "@openzeppelin/hardhat-upgrades";
 import "@nomicfoundation/hardhat-ethers";
 import "@typechain/hardhat";
 import "hardhat-gas-reporter";
 import { HardhatUserConfig } from "hardhat/types";
 
 import "solidity-coverage";
-import "./tasks";
+//import "./tasks";
 
-//import("./tasks").catch((e) => console.log("Cannot load tasks", e.toString()));
+import("./tasks").catch((e) => console.log("Cannot load tasks", e.toString()));
 
 const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY!;
 const PRIVATE_KEY =

@@ -16,7 +16,9 @@ contract Treasure is
 
     mapping(address => IRenderer) public renderers;
 
-    constructor() ERC1155Upgradeable() {
+    function initialize() public initializer {
+        __Ownable_init();
+        __ERC1155_init("");
         _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
     }
 
