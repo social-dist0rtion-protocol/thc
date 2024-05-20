@@ -6,6 +6,7 @@ import "@openzeppelin/hardhat-upgrades";
 import "@nomicfoundation/hardhat-ethers";
 import "@typechain/hardhat";
 import "hardhat-gas-reporter";
+import "@nomicfoundation/hardhat-verify";
 import { HardhatUserConfig } from "hardhat/types";
 
 import "solidity-coverage";
@@ -52,13 +53,9 @@ const config: HardhatUserConfig = {
       accounts: [TEST_PRIVATE_KEY],
     },
   },
-  /*
   etherscan: {
-    // Your API key for Etherscan
-    // Obtain one at https://etherscan.io/
     apiKey: ETHERSCAN_API_KEY,
   },
-  */
   gasReporter: {
     enabled: !!process.env.GAS_REPORTER,
     currency: "USD",

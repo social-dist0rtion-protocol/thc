@@ -25,7 +25,7 @@ export const signer: Readable<Signer | undefined> = derived(
   [provider, mnemonic],
   ([$provider, $mnemonic], set) => {
     if ($provider && $mnemonic) {
-      const start = Date.now();
+      //const start = Date.now();
       try {
         const hdWallet = HDNodeWallet.fromMnemonic(
           Mnemonic.fromPhrase($mnemonic)
@@ -37,7 +37,7 @@ export const signer: Readable<Signer | undefined> = derived(
         //mnemonic.set(undefined);
         //window.location.reload();
       }
-      console.log(Date.now() - start);
+      //console.log(Date.now() - start);
     } else {
       set(undefined);
     }

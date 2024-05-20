@@ -23,7 +23,7 @@ task("deploy:treasure", "Push Treasure to network")
       // It is recommended to wait for 5 confirmations before issuing the verification request
       console.log("Verfication in progress...");
       await hre.run("verify", {
-        address: await contract.address,
+        address: await contract.getAddress(),
         constructorArgs: argsFile,
         contract: "contracts/Treasure.sol:Treasure",
       });
@@ -60,6 +60,7 @@ task("deploy:thc", "Push THC to network")
         keys,
         await treasure.getAddress()
       );
+
       await treasure.grantRole(
         await treasure.TREASURE_HUNT_ROLE(),
         await contract.getAddress()

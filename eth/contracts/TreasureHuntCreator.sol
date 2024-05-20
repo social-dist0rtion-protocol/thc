@@ -20,9 +20,11 @@ contract TreasureHuntCreator is
     bytes32 public constant GAME_MASTER_ROLE = keccak256("GAME_MASTER_ROLE");
 
     event ChapterCompleted(
-        uint256 indexed completedChapter,
-        address indexed player
+        address indexed player,
+        uint256 indexed completedChapter
     );
+
+    event KeyCompleted(address indexed player, uint256 indexed completedKey);
 
     uint256 constant PAGE_SIZE = 32;
 
@@ -99,7 +101,7 @@ contract TreasureHuntCreator is
         chapterToPlayers[playerChapter].push(_getMsgSender());
         _rewardMain(playerChapter, _getMsgSender());
 
-        emit ChapterCompleted(playerChapter, _getMsgSender());
+        emit ChapterCompleted(_getMsgSender(), playerChapter);
 
         if (_isGelatoRelayERC2771(msg.sender)) {
             _transferRelayFee();
@@ -112,6 +114,12 @@ contract TreasureHuntCreator is
         require(pos > 0, "Wrong key");
         playerToKeys[_getMsgSender()] |= uint80(1 << (pos - 1));
         _rewardKeys(playerToKeys[_getMsgSender()], _getMsgSender());
+
+        emit KeyCompleted(_getMsgSender(), pos - 1);
+
+        if (_isGelatoRelayERC2771(msg.sender)) {
+            _transferRelayFee();
+        }
     }
 
     function getAddressHash(address a) public pure returns (bytes32) {
@@ -153,20 +161,5 @@ contract TreasureHuntCreator is
                 (uint256(keys) << 8) |
                 uint256(uint8(playerToCurrentChapter[player]));
         }
-    }
-
-    // GELATO STUFF
-    function increment() external onlyGelatoRelayERC2771 {
-        _transferRelayFee();
-        contextCounter[_getMsgSender()]++;
-        emit IncrementCounter(_getMsgSender());
-    }
-
-    function incrementFeeCapped(
-        uint256 maxFee
-    ) external onlyGelatoRelayERC2771 {
-        _transferRelayFeeCapped(maxFee);
-        contextCounter[_getMsgSender()]++;
-        emit IncrementCounter(_getMsgSender());
     }
 }

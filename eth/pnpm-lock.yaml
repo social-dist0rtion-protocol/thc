@@ -37,6 +37,9 @@ devDependencies:
   '@nomicfoundation/hardhat-chai-matchers':
     specifier: ^2.0.6
     version: 2.0.6(@nomicfoundation/hardhat-ethers@3.0.6)(chai@4.4.1)(ethers@6.12.1)(hardhat@2.22.4)
+  '@nomicfoundation/hardhat-verify':
+    specifier: ^2.0.7
+    version: 2.0.7(hardhat@2.22.4)
   '@types/chai':
     specifier: ^4.3.16
     version: 4.3.16
@@ -744,7 +747,6 @@ packages:
       undici: 5.28.4
     transitivePeerDependencies:
       - supports-color
-    dev: false
 
   /@nomicfoundation/ignition-core@0.15.4:
     resolution: {integrity: sha512-i379lH+xOLFdaDv0KiNma550ZXCHc5ZkmKYhM44xyLMKBlvX6skUVFkgUjjN1gvprgOIxc17GVQXlR1R5FhGZA==}
@@ -1335,7 +1337,6 @@ packages:
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
       uri-js: 4.4.1
-    dev: false
 
   /amazon-cognito-identity-js@6.3.12:
     resolution: {integrity: sha512-s7NKDZgx336cp+oDeUtB2ZzT8jWJp/v2LWuYl+LQtMEODe22RF1IJ4nRiDATp+rp1pTffCZcm44Quw4jx2bqNg==}
@@ -1492,7 +1493,6 @@ packages:
   /astral-regex@2.0.0:
     resolution: {integrity: sha512-Z7tMw1ytTXt5jqMcOP+OQteU1VuNK9Y02uuJtKQ1Sv69jXQKKg5cibLwGJow8yzZP+eAc18EmLGPal0bp36rvQ==}
     engines: {node: '>=8'}
-    dev: false
 
   /async-limiter@1.0.1:
     resolution: {integrity: sha512-csOlWGAcRFJaI6m+F2WKdnMKr4HhdhFVBk0H/QbJFMCr+uO2kwohwXQPxw/9OCxp05r5ghVBFSyioixx3gfkNQ==}
@@ -1753,7 +1753,6 @@ packages:
     engines: {node: '>=12.19'}
     dependencies:
       nofilter: 3.1.0
-    dev: false
 
   /cbor@9.0.2:
     resolution: {integrity: sha512-JPypkxsB10s9QOWwa6zwPzqE1Md3vqpPc+cai4sAecuCsRyAtAl/pMyhPlMbT/xtPnm2dznJZYRLui57qiRhaQ==}
@@ -3690,7 +3689,6 @@ packages:
 
   /json-schema-traverse@1.0.0:
     resolution: {integrity: sha512-NM8/P9n3XjXhIZn1lLhkFaACTOURQXjWhV4BA/RnOv8xvgqtqpAX9IO4mRQxSx1Rlo4tqzeqb0sOlruaOy3dug==}
-    dev: false
 
   /json-schema@0.4.0:
     resolution: {integrity: sha512-es94M3nTIfsEPisRafak+HDLfHXnKBhV3vU5eqPcS3flIWqcxJWgXHXiey3YrpaNsanY5ei1VoYEbOzijuq9BA==}
@@ -3787,14 +3785,12 @@ packages:
 
   /lodash.clonedeep@4.5.0:
     resolution: {integrity: sha512-H5ZhCF25riFd9uB5UCkVKo61m3S/xZk1x4wA6yp/L3RFP6Z/eHH1ymQcGLo7J3GMPfm0V/7m1tryHuGVxpqEBQ==}
-    dev: false
 
   /lodash.isequal@4.5.0:
     resolution: {integrity: sha512-pDo3lu8Jhfjqls6GkMgpahsF9kCyayhgykjyLMNFTKWrpVdAQtYyB4muAMWozBB4ig/dtWAmsMxLEI8wuz+DYQ==}
 
   /lodash.truncate@4.4.2:
     resolution: {integrity: sha512-jttmRe7bRse52OsWIMDLaXxWqRAmtIUccAQ3garviCqJjafXOfNMO0yMfNpdD6zbGaTU0P5Nz7e7gAT6cKmJRw==}
-    dev: false
 
   /lodash@4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
@@ -4105,7 +4101,6 @@ packages:
   /nofilter@3.1.0:
     resolution: {integrity: sha512-l2NNj07e9afPnhAhvgVrCD/oy2Ai1yfLpuo3EpiO1jFTsB4sFz6oIfAfSZyQzVpkZQ9xS8ZS5g1jCBgq4Hwo0g==}
     engines: {node: '>=12.19'}
-    dev: false
 
   /nopt@3.0.6:
     resolution: {integrity: sha512-4GUt3kSEYmk4ITxzB/b9vaIDfUVWN/Ml1Fwl11IlnIG2iaJ9O6WXZ9SrYM9NLI8OCBieN2Y8SWC2oJV0RQ7qYg==}
@@ -4818,7 +4813,6 @@ packages:
       ansi-styles: 4.3.0
       astral-regex: 2.0.0
       is-fullwidth-code-point: 3.0.0
-    dev: false
 
   /solc@0.7.3(debug@4.3.4):
     resolution: {integrity: sha512-GAsWNAjGzIDg7VxzP6mPjdurby3IkGCjQcM8GFYZT6RyaoUZKmMU6Y7YwG+tFGhv7dwZ8rmR4iwFDrrD99JwqA==}
@@ -5089,7 +5083,6 @@ packages:
       slice-ansi: 4.0.0
       string-width: 4.2.3
       strip-ansi: 6.0.1
-    dev: false
 
   /tar@4.4.19:
     resolution: {integrity: sha512-a20gEsvHnWe0ygBY8JbxoM4w3SJdhc7ZAuxkLqh+nvNQN2IOt0B5lLgM490X5Hl8FF0dl0tOf2ewFYAlIFgzVA==}

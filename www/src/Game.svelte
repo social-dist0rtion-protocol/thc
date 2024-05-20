@@ -4,92 +4,61 @@
     currentChapter,
     currentQuestHtml,
     lastTransactionMined,
-    thc,
     totalChapters,
     fuckFuckFuckFuckFuck,
   } from "./stores/thc";
-  import { signer } from "./stores/burnerWallet";
   import Chapter from "./components/Chapter.svelte";
-  import { signatureFromSolution } from "./lib";
+  import {
+    addressFromSolution,
+    addressToChapterIndex,
+    prepareSubmitSolution,
+  } from "./lib";
   import { fade } from "svelte/transition";
   import Update from "./components/Update.svelte";
-  import {
-    GelatoRelay,
-    type CallWithSyncFeeERC2771Request,
-  } from "@gelatonetwork/relay-sdk";
-  import { contractsAddresses } from "./stores/config";
 
-  let state: "IDLE" | "CHECK" | "MINING" | "SUCCESS" | "WRONG" | "ERROR" =
-    "IDLE";
-  let error: string;
-  $: sign = $signer;
-  console.log("sending to", contractsAddresses["TreasureHuntCreator"]);
+  import type { Signer } from "ethers";
+  import type { TreasureHuntCreator } from "../../eth/typechain";
 
-  // This function is called by the child component
-  async function onSubmitSolution(solution: string) {
-    const address = await $signer!.getAddress();
-    const contract = $thc!;
-    const chapterNumber = $currentChapter!;
-    solution = solution.toLowerCase();
-    state = "CHECK";
-    console.log("sending from", address);
-    console.log("sending to", contractsAddresses["TreasureHuntCreator"]);
+  export let signer: Signer;
+  export let thc: TreasureHuntCreator;
+  let wrongAnswer: boolean;
 
-    const { r, s, v } = await signatureFromSolution(address, solution);
-    console.log("sending ", v, r, s);
-    // Store the solution, if it's wrong it's not a problem since it won't be
-    // used
-    $game[chapterNumber.toString()].solution = solution;
-    try {
-      // const tx = await contract.submit(v, r, s);
-      const { data } = await contract.submit.populateTransaction(v, r, s);
-
-      const relay = new GelatoRelay();
-      const request: CallWithSyncFeeERC2771Request = {
-        chainId: BigInt(11155111),
-        target: contractsAddresses["TreasureHuntCreator"],
-        data: data!,
-        user: address,
-        feeToken: "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9",
-        isRelayContext: true,
-      };
-
-      const relayResponse = await relay.callWithSyncFeeERC2771(request, sign!);
-      console.log(relayResponse);
-
-      /*
-      console.log(tx);
-      state = "MINING";
-      const receipt = await tx.wait();
-      console.log("Transaction Mined: " + receipt);
-      console.log(receipt);
-      state = "SUCCESS";
-      $lastTransactionMined = tx.hash;
-      $game[chapterNumber.toString()].transactionHash = tx.hash;
-      */
-      return true;
-    } catch (e: any) {
-      const msg = e.toString() as string;
-      if (msg.toLowerCase().includes("wrong solution")) {
-        state = "WRONG";
-      } else {
-        console.log("error submitting solution", e);
-        state = "ERROR";
-        error = e.toString();
-      }
-      return false;
+  const { submit, status, txHash, error, reset } = prepareSubmitSolution(
+    thc,
+    signer,
+    ({ solution, txHash }) => {
+      const chapter = $currentChapter!.toString();
+      $game[chapter].transactionHash = txHash;
+      $game[chapter].solution = solution;
+      $lastTransactionMined = txHash;
     }
-  }
+  );
 
-  function onCloseModal() {
-    state = "IDLE";
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  function onCloseModal(scrollToTop?: boolean) {
+    reset();
+    wrongAnswer = false;
+    if (scrollToTop) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   }
 
   function onQuestUpdatedConfirm() {
     if ($currentChapter !== null) {
       $game[$currentChapter.toString()].questHashLastSeen =
         $game[$currentChapter.toString()].questHash;
+    }
+  }
+
+  async function onSubmitSolution(solution: string) {
+    console.log("sol", solution, $currentChapter);
+    if ($currentChapter === null) return false;
+    const address = await addressFromSolution(solution);
+
+    if (addressToChapterIndex(address) === $currentChapter) {
+      return submit(solution);
+    } else {
+      wrongAnswer = true;
+      return false;
     }
   }
 
@@ -110,7 +79,7 @@
     discord and ask for help or go to <a href="#/settings">Settings</a> and restart
     the game.
   </p>
-{:else if $signer !== null && $thc !== null && $currentChapter !== null && $currentQuestHtml !== null && $totalChapters !== null}
+{:else if $currentChapter !== null && $currentQuestHtml !== null && $totalChapters !== null}
   <Chapter
     currentChapter={$currentChapter}
     currentQuestHtml={$currentQuestHtml}
@@ -118,33 +87,37 @@
     {onSubmitSolution}
   />
 
-  {#if state !== "IDLE"}
+  {#if wrongAnswer}
     <div transition:fade class="thc--chapter-state">
       <div>
-        {#if state === "CHECK"}
-          <h2>Checking</h2>
-          <p>Checking</p>
-        {:else if state === "WRONG"}
-          <h2>Wrong answer</h2>
-          <button on:click={() => (state = "IDLE")}>Try again</button>
-        {:else if state === "ERROR"}
+        <h2>Wrong answer</h2>
+        <button on:click={() => onCloseModal(false)}>Try again</button>
+      </div>
+    </div>
+  {/if}
+
+  {#if $status !== undefined}
+    <div transition:fade class="thc--chapter-state">
+      <div>
+        {#if $status === "ERROR"}
           <p>
-            Something bad happened, get in contact with us, we can help you.
+            Something bad happened 🤕 get in contact with us, we can help you.
           </p>
-          <pre>{error}</pre>
+          <pre>{$error}</pre>
         {:else}
           <h2>Correct answer</h2>
-          {#if state === "MINING"}
+          {#if $status === "PENDING"}
             <p>Please wait some seconds because blockchains are fast.</p>
             <p>
               Keep this window open, wait, cross your fingers, don't enter any
               Faraday cage, don't drop your mobile phone in the toilet or in any
-              other liquid, make sure you have enough battery left, don't lock
-              your mobile phone.
+              other liquid, don't accept candies from strangers unless you are
+              in Görlitzer Park, make sure you have enough battery left, don't
+              lock your mobile phone.
             </p>
-          {:else if state === "SUCCESS"}
+          {:else if $status === "SUCCESS"}
             <p>Your score has been updated.</p>
-            <button on:click={onCloseModal}>Go to next chapter</button>
+            <button on:click={() => onCloseModal()}>Go to next chapter</button>
           {/if}
         {/if}
       </div>

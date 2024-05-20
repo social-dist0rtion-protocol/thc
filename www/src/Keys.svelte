@@ -1,45 +1,42 @@
 <script lang="ts">
-  import { fuckFuckFuckFuckFuck, thc } from "./stores/thc";
-  import { signer } from "./stores/burnerWallet";
+  import { fuckFuckFuckFuckFuck } from "./stores/thc";
   import { fade } from "svelte/transition";
-  import { signatureFromSolution } from "./lib";
+  import {
+    addressFromSolution,
+    addressToKeyIndex,
+    prepareSubmitKey,
+  } from "./lib";
+  import type { Signer } from "ethers";
+  import type { TreasureHuntCreator } from "../../eth/typechain";
 
-  let state: "IDLE" | "CHECK" | "MINING" | "SUCCESS" | "WRONG" | "ERROR" =
-    "IDLE";
-  let error: string;
-  let key: string = "";
+  export let signer: Signer;
+  export let thc: TreasureHuntCreator;
+
+  let key = "";
+  let wrongAnswer = false;
+
+  const { submit, status, txHash, error, reset } = prepareSubmitKey(
+    thc,
+    signer,
+    ({ solution, txHash }) => {}
+  );
 
   async function onSubmitKey() {
-    const address = $signer!.address;
-    const contract = $thc!;
-    state = "CHECK";
-    const { r, s, v } = await signatureFromSolution(address, key);
-    try {
-      const tx = await contract.submitKey(v, r, s);
-      console.log(tx);
-      state = "MINING";
-      const receipt = await tx.wait();
-      console.log("Transaction Mined: " + receipt);
-      console.log(receipt);
-      state = "SUCCESS";
-      return true;
-    } catch (e: any) {
-      const msg = e.toString() as string;
-      if (msg.toLowerCase().includes("wrong")) {
-        state = "WRONG";
-      } else {
-        console.log("error submitting solution", e);
-        state = "ERROR";
-        error = e.toString();
-      }
+    const address = await addressFromSolution(key);
+    const index = addressToKeyIndex(address);
+    if (index > -1) {
+      const r = await submit(key);
+      key = "";
+      return r;
+    } else {
+      wrongAnswer = true;
       return false;
     }
   }
 
   function onCloseModal() {
-    key = "";
-    state = "IDLE";
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    wrongAnswer = false;
+    reset();
   }
 </script>
 
@@ -49,41 +46,45 @@
     discord and ask for help or go to <a href="#/settings">Settings</a> and restart
     the game.
   </p>
-{:else if $signer !== null && $thc !== null}
+{:else}
   <p>
     Did you find a key? Submit it with this form to add it to your score in the
     leaderboard. More info in the <a href="#/about">FAQs</a>.
   </p>
-  <form on:submit|preventDefault={onSubmitKey}>
+  <form on:submit|preventDefault={() => onSubmitKey()}>
     <input placeholder="Key" bind:value={key} />
     <button disabled={key.length === 0} type="submit">Submit</button>
   </form>
 
-  {#if state !== "IDLE"}
+  {#if wrongAnswer}
     <div transition:fade class="thc--chapter-state">
       <div>
-        {#if state === "CHECK"}
-          <h2>Checking</h2>
-          <p>Checking</p>
-        {:else if state === "WRONG"}
-          <h2>Wrong Key</h2>
-          <button on:click={() => (state = "IDLE")}>Try again</button>
-        {:else if state === "ERROR"}
+        <h2>Wrong answer</h2>
+        <button on:click={() => onCloseModal()}>Try again</button>
+      </div>
+    </div>
+  {/if}
+
+  {#if $status !== undefined}
+    <div transition:fade class="thc--chapter-state">
+      <div>
+        {#if $status === "ERROR"}
           <p>
             Something bad happened, get in contact with us, we can help you.
           </p>
-          <pre>{error}</pre>
+          <pre>{$error}</pre>
         {:else}
-          <h2>Correct Key</h2>
-          {#if state === "MINING"}
+          <h2>Correct Document</h2>
+          {#if $status === "PENDING"}
             <p>Please wait some seconds because blockchains are fast.</p>
             <p>
               Keep this window open, wait, cross your fingers, don't enter any
               Faraday cage, don't drop your mobile phone in the toilet or in any
-              other liquid, make sure you have enough battery left, don't lock
-              your mobile phone.
+              other liquid, don't accept candies from strangers unless you are
+              in Görlitzer Park, make sure you have enough battery left, don't
+              lock your mobile phone.
             </p>
-          {:else if state === "SUCCESS"}
+          {:else if $status === "SUCCESS"}
             <p>Your score has been updated.</p>
             <button on:click={onCloseModal}>Close</button>
           {/if}

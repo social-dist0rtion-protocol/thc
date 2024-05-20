@@ -61,7 +61,7 @@ export async function storeContractArgs(
 ) {
   await hre.ethers.getSigners();
   const argsFile = `./${configPath}/${contractName}.${hre.network.name}.args.json`;
-  await writeFile(argsFile, JSON.stringify(args[0]));
+  await writeFile(argsFile, JSON.stringify(args));
 
   console.log(`   Args stored for ${contractName} at ${argsFile}`);
 
@@ -157,6 +157,7 @@ export function loadKeys(path: string) {
     .trim()
     .split("\n")
     .map((x) => x.trim())
+    .map((x) => x.split(",")[0])
     .map((x) => {
       x = x.toLowerCase();
       // Generate the hash of the value

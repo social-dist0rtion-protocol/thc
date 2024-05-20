@@ -32,10 +32,7 @@
       <td />
       <td>Address</td>
       <td>Chapter</td>
-      <!--
-
-      <td>Keys</td>
-      -->
+      <td>Documents</td>
     </tr>
   </thead>
   <tbody>
@@ -68,17 +65,11 @@
           {/if}
         </td>
         <td>{chapter}</td>
-        <!--
         <td class="keys">
           {#each keys as key}
-            {#if key}
-              🔑
-            {:else}
-              ❔
-            {/if}
+            {key}
           {/each}
         </td>
-      -->
       </tr>
     {/each}
   </tbody>

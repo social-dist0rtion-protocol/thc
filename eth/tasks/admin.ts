@@ -44,8 +44,13 @@ task("root-set-from-chapters", "Set root CID from chapters file")
     }
 
     const { cid } = loadChapters(chapters);
-    const thcContract = await loadContract(hre, "TreasureHuntCreator");
-    console.log(`Setting root CID ${cid} for contract ${thcContract.address}`);
+    const thcContract = (await loadContract(
+      hre,
+      "TreasureHuntCreator"
+    )) as TreasureHuntCreator;
+    console.log(
+      `Setting root CID ${cid} for contract ${await thcContract.getAddress()}`
+    );
     const tx = await thcContract.setup(cid);
     console.log(`  Transaction submitted. Waiting for 3 confirmation....`);
     const receipt = await tx.wait(3);
