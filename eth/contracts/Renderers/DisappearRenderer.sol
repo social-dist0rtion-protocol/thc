@@ -28,6 +28,9 @@ contract DisappearRenderer is Ownable {
     string constant pulseForward1 =
         "'> <animate attributeName='opacity' values='0;1;1;0;1;1;0;0;0' dur='1.0s' repeatCount='indefinite' /> </circle>";
 
+    string constant eyeBags =
+        "<path d='M 250 170 c 7 7, 20 7, 30 0' stroke-linejoin='round' stroke-linecap='round' fill='transparent' stroke='black' stroke-width='2px' /> <path d='M 320 170 c 6 7, 25 7, 30 0' stroke-linejoin='round' stroke-linecap='round' fill='transparent' stroke='black' stroke-width='2px' />";
+
     bytes constant gold =
         abi.encodePacked(
             pulseBack0,
@@ -76,21 +79,39 @@ contract DisappearRenderer is Ownable {
     ];
     string[5] positions = ["1st", "2nd", "3rd", "Nth", "-"];
 
-    function svg(uint256 id) internal pure returns (bytes memory) {
+    uint256 constant OFFSET = 1 hours; // Berlin is UTC+1
+
+    function isDaytime() public view returns (bool) {
+        // Adjust the timestamp by the Berlin offset
+        uint berlinTime = block.timestamp + uint(int(OFFSET));
+
+        // Calculate the hour of the day in Berlin time
+        uint hour = (berlinTime / 3600) % 24;
+
+        // Define day as between 6:00 and 18:00
+        if (hour >= 6 && hour < 18) {
+            return true; // Daytime
+        } else {
+            return false; // Nighttime
+        }
+    }
+
+    function svg(uint256 id) internal view returns (bytes memory) {
+        string memory bags = isDaytime() ? "" : eyeBags;
         if (id == 1) {
-            return abi.encodePacked(template0, gold, template1);
+            return abi.encodePacked(template0, gold, bags, template1);
         }
         if (id == 2) {
-            return abi.encodePacked(template0, silver, template1);
+            return abi.encodePacked(template0, silver, bags, template1);
         }
         if (id == 3) {
-            return abi.encodePacked(template0, bronze, template1);
+            return abi.encodePacked(template0, bronze, bags, template1);
         }
         if (id == 4) {
-            return abi.encodePacked(template0, eyeRight, template1);
+            return abi.encodePacked(template0, eyeRight, bags, template1);
         }
         if (id == 5) {
-            return abi.encodePacked(template0, keys, template1);
+            return abi.encodePacked(template0, keys, bags, template1);
         }
 
         return "";
