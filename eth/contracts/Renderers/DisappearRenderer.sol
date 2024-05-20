@@ -89,7 +89,7 @@ contract DisappearRenderer is Ownable {
         uint hour = (berlinTime / 3600) % 24;
 
         // Define day as between 6:00 and 18:00
-        if (hour >= 6 && hour < 18) {
+        if (hour >= 6 && hour < 23) {
             return true; // Daytime
         } else {
             return false; // Nighttime
