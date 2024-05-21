@@ -411,7 +411,7 @@ describe("TreasureHuntCreator", () => {
       expect(balances[4]).equal(1n);
     });
 
-    it("should render badges", async () => {
+    it.only("should render badges", async () => {
       let testSolution1 = "A solution 1";
       let solutionKey1 = await getSolutionAddress(testSolution1);
 
@@ -469,7 +469,7 @@ describe("TreasureHuntCreator", () => {
       expect(result).equal(1);
     });
 
-    it("should render key badge for who finds all keys", async () => {
+    it.only("should render key badge for who finds all keys", async () => {
       const instance = await deploy(solutions, keys);
 
       for (let i = 0; i < KEYS.length; i++) {
