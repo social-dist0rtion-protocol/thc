@@ -4,6 +4,7 @@ import {
   JsonRpcProvider,
   Mnemonic,
   Wallet,
+  type Provider,
   type Signer,
 } from "ethers";
 import { derived, readable, writable, type Readable } from "svelte/store";
@@ -11,7 +12,7 @@ import { ethereumEndpoint } from "./config";
 import { writableLocalStorage } from "./x";
 import { retryWrap } from "./x/retry";
 import "./registerWordlists";
-import { modal } from "./web3Modal";
+//import { modal } from "./web3Modal";
 
 export const privateKey = writable<string | undefined>();
 
@@ -20,13 +21,17 @@ export const mnemonic = writableLocalStorage(
   () => Wallet.createRandom().mnemonic?.phrase
 );
 
-const useNativeWallet = writableLocalStorage("useNativeWallet", false);
+const useNativeWallet = writable(false);
 
-export const provider = readable(new JsonRpcProvider(ethereumEndpoint));
+export const provider = writable<Provider>(
+  new JsonRpcProvider(ethereumEndpoint)
+);
+
 export const signer: Readable<Signer | undefined> = derived(
   [provider, mnemonic, useNativeWallet],
   ([$provider, $mnemonic, $useNativeWallet], set) => {
     if ($useNativeWallet) {
+      /*
       const walletProvider = modal.getWalletProvider();
       if (!walletProvider) {
         console.log("No wallet provider");
@@ -34,6 +39,7 @@ export const signer: Readable<Signer | undefined> = derived(
       }
       const ethersProvider = new BrowserProvider(walletProvider);
       ethersProvider.getSigner().then(set);
+      */
     } else if ($provider && $mnemonic) {
       try {
         const hdWallet = HDNodeWallet.fromMnemonic(
@@ -52,20 +58,38 @@ export const signer: Readable<Signer | undefined> = derived(
   }
 );
 
+/*
 modal.subscribeProvider(
-  ({ provider, providerType, address, error, chainId, isConnected }) => {
-    useNativeWallet.set(isConnected);
+  ({
+    provider: newProvider,
+    providerType,
+    address,
+    error,
+    chainId,
+    isConnected,
+  }) => {
     console.log(
       "change",
-      provider,
+      newProvider,
       providerType,
       address,
       error,
       chainId,
       isConnected
     );
+    if (newProvider !== undefined) {
+      useNativeWallet.set(isConnected);
+      const walletProvider = modal.getWalletProvider();
+      if (!walletProvider) {
+        console.log("No wallet provider");
+        return;
+      }
+      const ethersProvider = new BrowserProvider(walletProvider);
+      provider.set(ethersProvider);
+    }
   }
 );
+*/
 
 /*
 export const address = derived(signer, ($signer) =>
@@ -94,5 +118,4 @@ export const balance: Readable<BigInt| null> = derived(
 export const lowBalance = derived(balance, ($balance) =>
   $balance ? $balance.lt(parseEther("0.01")) : false
 );
-
 */

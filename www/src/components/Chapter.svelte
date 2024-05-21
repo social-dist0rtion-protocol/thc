@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { modal } from "../stores/web3Modal";
   export let currentQuestHtml: string;
   export let currentChapter: number;
   export let totalChapters: number;
@@ -25,12 +24,6 @@
       The game uses a burner wallet and runs on the Optimism network. All
       transactions are sponsored by us using gelato.network. Check your address
       in the <a href="#/settings">settings</a> page.
-    </p>
-  </div>
-  <div class="thc--notification notice">
-    <p>
-      BTW if you prefer you can also connect your wallet to play
-      <button on:click={() => modal.open()}>Connect</button>
     </p>
   </div>
 {/if}

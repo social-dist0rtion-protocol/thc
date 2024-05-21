@@ -38,6 +38,8 @@ export const lastTransactionMined: Writable<null | string> =
 export const thc = derived(
   signer,
   ($signer) => {
+    console.log("update signer");
+    $signer?.getAddress().then(console.log);
     return $signer
       ? TreasureHuntCreator__factory.connect(
           contractsAddresses["TreasureHuntCreator"],
@@ -90,6 +92,7 @@ export const totalKeys: Readable<null | number> = derived(
 export const currentChapter: Readable<null | number> = derived(
   [thc, lastTransactionMined],
   ([$thc], set: (v: null | number) => void) => {
+    console.log("porco dio", $thc);
     if ($thc) {
       retry(async () => {
         set(Number(await $thc.currentChapter()));
@@ -143,6 +146,7 @@ export const currentQuest: Readable<string | null> = derived(
           console.log(e);
           throw RecoverableError;
         }
+        console.log("thc set", $currentChapter);
         if (solution !== null) {
           console.log("solution is", solution);
           const key = keccak256(toUtf8Bytes(solution));

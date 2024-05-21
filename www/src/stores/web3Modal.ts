@@ -1,3 +1,4 @@
+/*
 import { createWeb3Modal, defaultConfig } from "@web3modal/ethers";
 import { ethereumEndpoint } from "./config";
 import { BrowserProvider } from "ethers";
@@ -24,10 +25,10 @@ const metadata = {
 
 // 4. Create Ethers config
 const ethersConfig = defaultConfig({
-  /*Required*/
+  // Required
   metadata,
 
-  /*Optional*/
+  // Optional
   rpcUrl: ethereumEndpoint, // used for the Coinbase SDK
   defaultChainId: 11155111, // used for the Coinbase SDK
 });
@@ -50,3 +51,4 @@ export async function connect() {
   const ethersProvider = new BrowserProvider(walletProvider);
   const signer = await ethersProvider.getSigner();
 }
+*/
