@@ -11,5 +11,3 @@
 <main>
   <Router {routes} />
 </main>
-
-<footer />
