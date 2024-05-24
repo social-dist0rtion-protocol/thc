@@ -147,7 +147,7 @@ describe("TreasureHuntCreator", () => {
     const image = json["image"].substring(metaImage.length);
 
     mkdirSync("artifacts/tests/", { recursive: true });
-    writeFileSync(`artifacts/tests/${badgeName}.json`, json.toString());
+    writeFileSync(`artifacts/tests/${badgeName}.json`, JSON.stringify(json));
     writeFileSync(`artifacts/tests/${badgeName}.svg`, image);
   }
 
@@ -411,7 +411,7 @@ describe("TreasureHuntCreator", () => {
       expect(balances[4]).equal(1n);
     });
 
-    it("should render badges", async () => {
+    it.only("should render badges", async () => {
       let testSolution1 = "A solution 1";
       let solutionKey1 = await getSolutionAddress(testSolution1);
 
@@ -426,15 +426,18 @@ describe("TreasureHuntCreator", () => {
         keys
       );
 
-      for (const player of [deployer, alice, bob, carl, dean]) {
-        await solve(instance, testSolution1, player);
-        await solve(instance, testSolution2, player);
-        await solve(instance, testSolution3, player);
+      const players: SignerWithAddress[] = [deployer, alice, bob, carl, dean];
+      const solutions: string[] = [testSolution1, testSolution2, testSolution3];
+      for (let j = 0; j < solutions.length; j++) {
+        for (let i = 0; i < players.length; i++) {
+          await solve(instance, solutions[j], players[i]);
+        }
       }
 
       await unpackAndStore(instance, "gold", 1);
       await unpackAndStore(instance, "silver", 2);
       await unpackAndStore(instance, "bronze", 3);
+      await unpackAndStore(instance, "participation", 4);
     });
   });
 
@@ -466,14 +469,14 @@ describe("TreasureHuntCreator", () => {
       expect(result).equal(1);
     });
 
-    it("should render key badge for who finds all keys", async () => {
+    it.only("should render key badge for who finds all keys", async () => {
       const instance = await deploy(solutions, keys);
 
       for (let i = 0; i < KEYS.length; i++) {
         await submitKey(instance, KEYS[i], alice);
       }
 
-      await unpackAndStore(instance, "key", 4);
+      await unpackAndStore(instance, "key", 5);
     });
 
     it("should reject a wrong key", async () => {

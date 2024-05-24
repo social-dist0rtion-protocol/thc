@@ -10,48 +10,91 @@ contract DisappearRenderer is Ownable {
     constructor() {}
 
     string constant template0 =
-        "<svg width='100%' height='100%' viewBox='0 0 600 600' style='background: black'> <path stroke='red' d='M 120 220 C 120 -20, 470 -20 480 220 C 480 300, 450 440, 300 550 C 150 440, 120 300, 120 220' fill='transparent' /> <path stroke='red' d='M 120 220 C 120 -20, 470 -20 480 220 C 480 300, 450 440, 300 550 C 150 440, 120 300, 120 220' fill='transparent' transform='scale(0.95) translate(16, 3)' stroke-width='0.5' /> <path stroke='red' d='M 120 220 C 120 -20, 470 -20 480 220 C 480 300, 450 440, 300 550 C 150 440, 120 300, 120 220' fill='transparent' transform='scale(0.90) translate(33, 6)' stroke-width='0.5' /> <path stroke='red' d='M 120 220 C 120 -20, 470 -20 480 220 C 480 300, 450 440, 300 550 C 150 440, 120 300, 120 220' fill='transparent' transform='scale(0.85) translate(53, 9)' stroke-width='0.5' /> <path stroke='red' d='M 120 220 C 120 -20, 470 -20 480 220 C 480 300, 450 440, 300 550 C 150 440, 120 300, 120 220' fill='transparent' transform='scale(0.80) translate(75, 13)' stroke-width='0.5' /> <path stroke='red' d='M 120 220 C 120 -20, 470 -20 480 220 C 480 300, 450 440, 300 550 C 150 440, 120 300, 120 220' fill='transparent' transform='scale(0.75) translate(100, 17)' stroke-width='0.5' /> <path stroke='red' d='M 120 220 C 120 -20, 470 -20 480 220 C 480 300, 450 440, 300 550 C 150 440, 120 300, 120 220' fill='transparent' transform='scale(0.70) translate(128, 22)' stroke-width='0.5' /> <path stroke='red' d='M 120 220 C 120 -20, 470 -20 480 220 C 480 300, 450 440, 300 550 C 150 440, 120 300, 120 220' fill='transparent' transform='scale(0.65) translate(161, 27)' stroke-width='0.5' /> <path stroke='red' d='M 120 220 C 120 -20, 470 -20 480 220 C 480 300, 450 440, 300 550 C 150 440, 120 300, 120 220' fill='transparent' transform='scale(0.60) translate(200, 34)' stroke-width='0.5' /> <path stroke='red' d='M 120 220 C 120 -20, 470 -20 480 220 C 480 300, 450 440, 300 550 C 150 440, 120 300, 120 220' fill='transparent' transform='scale(0.55) translate(244, 42)' stroke-width='0.5' /> <path stroke='red' d='M 120 220 C 120 -20, 470 -20 480 220 C 480 300, 450 440, 300 550 C 150 440, 120 300, 120 220' fill='transparent' transform='scale(0.50) translate(300, 51)' stroke-width='0.5' /> <path stroke='red' d='M 120 220 C 120 -20, 470 -20 480 220 C 480 300, 450 440, 300 550 C 150 440, 120 300, 120 220' fill='transparent' transform='scale(0.45) translate(366, 63)' stroke-width='0.5' /> <path stroke='red' d='M 120 220 C 120 -20, 470 -20 480 220 C 480 300, 450 440, 300 550 C 150 440, 120 300, 120 220' fill='transparent' transform='scale(0.40) translate(451, 77)' stroke-width='0.5' /> <path stroke='red' d='M 120 220 C 120 -20, 470 -20 480 220 C 480 300, 450 440, 300 550 C 150 440, 120 300, 120 220' fill='transparent' transform='scale(0.35) translate(558, 96)' stroke-width='0.5' /> <path stroke='red' d='M 120 220 C 120 -20, 470 -20 480 220 C 480 300, 450 440, 300 550 C 150 440, 120 300, 120 220' fill='transparent' transform='scale(0.30) translate(700, 122)' stroke-width='0.5' /> <path stroke='red' d='M 120 220 C 120 -20, 470 -20 480 220 C 480 300, 450 440, 300 550 C 150 440, 120 300, 120 220' fill='transparent' transform='scale(0.25) translate(897, 158)' stroke-width='0.5' /> <path stroke='red' d='M 120 220 C 120 -20, 470 -20 480 220 C 480 300, 450 440, 300 550 C 150 440, 120 300, 120 220' fill='transparent' transform='scale(0.20) translate(1200, 212)' stroke-width='0.5' /> <path stroke='red' d='M 120 220 C 120 -20, 470 -20 480 220 C 480 300, 450 440, 300 550 C 150 440, 120 300, 120 220' fill='transparent' transform='scale(0.15) translate(1700, 300)' stroke-width='0.5' /> <path stroke='red' d='M 120 220 C 120 -20, 470 -20 480 220 C 480 300, 450 440, 300 550 C 150 440, 120 300, 120 220' fill='transparent' transform='scale(0.10) translate(2701, 490)' stroke-width='0.5' /> <path stroke='red' d='M 120 220 C 120 -20, 470 -20 480 220 C 480 300, 450 440, 300 550 C 150 440, 120 300, 120 220' fill='transparent' transform='scale(0.05) translate(5701, 1040)' stroke-width='0.5' /> <g opacity='1' id='smiley'> <circle cx='300' cy='180' r='100' fill='red' /> <circle cx='265' cy='155' r='15' fill='black' /> <circle cx='335' cy='155' r='15' fill='black' />";
+        "<svg width='600' height='600' style='background: black'>";
     string constant template1 =
-        "<path stroke='black' d='M 250 210 C 275 240, 325 240, 350 210' stroke-width='13' stroke-linecap='round' fill='transparent' /> </g> </svg>";
+        "<g> <circle cx='300' cy='180' r='100' fill='red' /> <circle cx='265' cy='155' r='15' fill='black' /> <circle cx='335' cy='155' r='15' fill='black' /> <path stroke='black' d='M 250 210 C 275 240, 325 240, 350 210' stroke-width='13' stroke-linecap='round' fill='transparent' />";
+    string constant template2 = "</g></svg>";
+    string constant drop0 =
+        "<path stroke='red' d='M 120 220 C 120 -20, 470 -20 480 220 C 480 300, 450 440, 300 550 C 150 440, 120 300, 120 220' fill='transparent' transform='";
+    string constant drop1 = "'> <animate attributeName='stroke' values='red;";
+    string constant drop2 = ";red;' dur='2s' begin='";
+    string constant drop3 = "s' repeatCount='indefinite' /> </path>";
 
-    string constant patch =
-        "<path stroke='#000000' d='M 258 90 L 335 155 L 396 155' stroke-linecap='round' fill='transparent' stroke-width='3px' />";
-    bytes constant gold =
-        abi.encodePacked(
-            patch,
-            "<circle cx='335' cy='155' r='19' fill='#ffdf27' stroke='#000000' stroke-width='3px' />"
-        );
-    bytes constant silver =
-        abi.encodePacked(
-            patch,
-            "<circle cx='335' cy='155' r='19' fill='#b8b8b8' stroke='#000000' stroke-width='3px' />"
-        );
-    bytes constant bronze =
-        abi.encodePacked(
-            patch,
-            "<circle cx='335' cy='155' r='19' fill='#af6007' stroke='#000000' stroke-width='3px' />"
-        );
-    bytes constant keys =
-        "<path stroke='#000000' d='M 203 150 L 265 155 L 335 155 L 397 150' stroke-linecap='round' fill='transparent' stroke-width='3px' /> <circle cx='265' cy='155' r='19' fill='#ffffff' stroke='black' stroke-width='3px' /> <circle cx='335' cy='155' r='19' fill='#ffffff' stroke='black' stroke-width='3px' />";
+    string[] transforms = [
+        "",
+        "scale(0.95) translate(16, 3)",
+        "scale(0.90) translate(33, 6)",
+        "scale(0.85) translate(53, 9)",
+        "scale(0.80) translate(75, 13)",
+        "scale(0.75) translate(100, 17)",
+        "scale(0.70) translate(128, 22)",
+        "scale(0.65) translate(161, 27)",
+        "scale(0.60) translate(200, 34)",
+        "scale(0.55) translate(244, 42)",
+        "scale(0.50) translate(300, 51)",
+        "scale(0.45) translate(366, 63)",
+        "scale(0.40) translate(451, 77)",
+        "scale(0.35) translate(558, 96)",
+        "scale(0.30) translate(700, 122)",
+        "scale(0.25) translate(897, 158)",
+        "scale(0.20) translate(1200, 212)",
+        "scale(0.15) translate(1700, 300)",
+        "scale(0.10) translate(2701, 490)",
+        "scale(0.05) translate(5701, 1040)"
+    ];
+    string constant stroboEyes =
+        "<circle cx='265' cy='155' r='19' fill='#ffffff'> <animate attributeName='opacity' values='0;0;0;0;1;0;1;0;0' dur='0.8s' repeatCount='indefinite' /> </circle> <circle cx='265' cy='155' r='13' fill='#ffffff'> <animate attributeName='opacity' values='0;0;1;0;0;0;1;0;0' dur='0.3s' repeatCount='indefinite' /> </circle> <circle cx='335' cy='155' r='19' fill='#ffffff'> <animate attributeName='opacity' values='0;0;0;0;1;0;1;0;0' dur='0.2s' repeatCount='indefinite' /> </circle>";
+    string constant eyeBags =
+        "<path d='M 250 170 c 7 7, 20 7, 30 0' stroke-linejoin='round' stroke-linecap='round' fill='transparent' stroke='black' stroke-width='2px' /> <path d='M 320 170 c 6 7, 25 7, 30 0' stroke-linejoin='round' stroke-linecap='round' fill='transparent' stroke='black' stroke-width='2px' />";
 
-    string[4] names = ["Gold", "Silver", "Bronze", "Investigator"];
-    string[4] positions = ["1st", "2nd", "3rd", "Nth"];
+    string[5] names = ["Gold", "Silver", "Bronze", "Finisher", "Investigator"];
+    string[5] positions = ["1st", "2nd", "3rd", "Nth", "-"];
+    string[5] colors = ["yellow", "silver", "525F48", "red", "red"];
 
-    function svg(uint256 id) internal pure returns (bytes memory) {
-        if (id == 1) {
-            return abi.encodePacked(template0, gold, template1);
-        }
-        if (id == 2) {
-            return abi.encodePacked(template0, silver, template1);
-        }
-        if (id == 3) {
-            return abi.encodePacked(template0, bronze, template1);
-        }
-        if (id == 4) {
-            return abi.encodePacked(template0, keys, template1);
-        }
+    uint256 constant OFFSET = 1 hours; // Berlin is UTC+1
 
-        return "";
+    function isDaytime() public view returns (bool) {
+        uint berlinTime = block.timestamp + uint(int(OFFSET));
+        uint hour = (berlinTime / 3600) % 24;
+        if (hour >= 6 && hour < 23) {
+            return true; // Daytime
+        } else {
+            return false; // Nighttime
+        }
+    }
+
+    function _renderDrop(
+        uint256 badgeId
+    ) internal view returns (bytes memory rendering) {
+        uint256 length = transforms.length;
+        for (uint256 i = 0; i < length; i++) {
+            rendering = abi.encodePacked(
+                rendering,
+                drop0,
+                transforms[i],
+                drop1,
+                colors[badgeId - 1],
+                drop2,
+                i > 9 ? "1." : "0.",
+                Strings.toString(i % 10),
+                drop3
+            );
+        }
+    }
+
+    function svg(uint256 id) internal view returns (bytes memory) {
+        string memory bags = isDaytime() ? "" : eyeBags;
+        string memory strobo = id == 5 ? stroboEyes : "";
+
+        return
+            abi.encodePacked(
+                template0,
+                _renderDrop(id),
+                template1,
+                strobo,
+                bags,
+                template2
+            );
     }
 
     function render(uint256 id) external view returns (string memory) {
