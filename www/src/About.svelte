@@ -1,20 +1,17 @@
 <h1>FAQ</h1>
 
-<h3>I'm stuck, can I get a hint?</h3>
-<ul>
-  <li>
-    Join our <a href="https://discord.gg/MFrZwPAJ">Discord server</a>. (sorry we
-    were too lazy to set up one in matrix).
-  </li>
-  <li>
-    Visit us at our assembly <a
-      href="https://37c3.c3nav.de/l/sdp/@0,135.59,153.08,5"
-      >Social Dist0rtion Protocol</a
-    >
-  </li>
-  <li>Or write us on twitter, we will do our best to be responsive.</li>
-</ul>
-
+<section class="thc--chapter">
+  <h3>I'm stuck, can I get a hint?</h3>
+  <ul>
+    <li>
+      We made this game for people to haffun, if you need a bit of help to get
+      going with your THC (Treasure Hunt Challenge) join our <a
+        href="https://matrix.to/#/#eb04-thc:dod.ngo">Matrix channel</a
+      >, or visit us at, we are in the third floor (check the map!).
+    </li>
+    <li>Or write us on twitter, we will do our best to be responsive.</li>
+  </ul>
+</section>
 <!--
 <h3>What are keys and where do I get them?</h3>
 <p>
@@ -24,15 +21,29 @@
   address.
 </p>
 -->
-<h3>I want to speak to the manager</h3>
-<p>
-  <strong>37c3 thc</strong> is a treasure hunt challenge (THC for short) created
-  by
-  <a href="https://www.dist0rtion.com">Social Dist0rtion Protocol</a>. We do
-  this for the clout so don't forget to follow on tweeeeetererer:
-  <a href="https://twitter.com/dist0rtionproto">@dist0rtionporoto</a>
-</p>
 
+<section class="thc--chapter">
+  <h3>What are the "documents"</h3>
+  <p>
+    The <strong>documents</strong> are optional side quests.
+    <strong>All documents start with the hashtag symbol <code>#</code></strong>.
+    They may require specific technical skills. Don't expect them to be easy.
+    Actually, we really hope all of them will be solved at one point, we put so
+    much sweat 😓 on them (figuratively). You don't need to do them, but you
+    earn extra points if you complete them.
+  </p>
+</section>
+
+<section class="thc--chapter">
+  <h3>I want to speak to the manager</h3>
+  <p>
+    <strong>disappear</strong> is a Treasure Hunt Challenge (THC for short)
+    created by
+    <a href="https://www.dist0rtion.com">Social Dist0rtion Protocol</a>. We do
+    this for the clout so don't forget to follow on tweeeeetererer:
+    <a href="https://twitter.com/dist0rtionproto">@dist0rtionporoto</a>
+  </p>
+</section>
 <!--
 <h3>Why should I register an ENS name?</h3>
 <p>
@@ -57,15 +68,17 @@
   only support `http` and `https` schemes).
 </p>
 -->
-<h3>Show me the code</h3>
-<p>
-  The Holy Code of Treasure Hunt Creator (or THCTHC for short) is published on <a
-    href="https://github.com/social-dist0rtion-protocol/thc">GitHub</a
-  >.
-</p>
+<section class="thc--chapter">
+  <h3>Show me the code</h3>
+  <p>
+    The Holy Code of Treasure Hunt Creator (or THCTHC for short) is published on <a
+      href="https://github.com/social-dist0rtion-protocol/thc">GitHub</a
+    >.
+  </p>
+</section>
 
 <style>
-  h3 {
-    margin-top: 3rem;
+  section {
+    margin-bottom: 2rem;
   }
 </style>
