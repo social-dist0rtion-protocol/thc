@@ -1,6 +1,7 @@
 build
 prod.sh
 www/src/metadata.json
+.DS_Store
 
 # Logs
 logs
