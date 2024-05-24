@@ -4,6 +4,16 @@ Times are dark, like the clouds covering the sky. The only escape route to this 
 
 ![](./doge.jpeg)
 
-<div class="sidequest">
-This is a sidequest
-</div>
+<details>
+  <summary>Side Quest: antani</summary>
+  Something small enough to escape casual notice.
+</details>
+
+<details>
+  <summary>Side Quest: Something</summary>
+
+**Something small enough to escape casual notice.**
+
+![](./ok.gif)
+
+</details>
