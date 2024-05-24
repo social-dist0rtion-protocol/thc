@@ -138,6 +138,9 @@ function _prepareSubmitSolutionOrKey(
     };
 
     const relayResponse = await relay.callWithSyncFeeERC2771(request, signer);
+    localStorage.setItem("gelatoTaskId", relayResponse.taskId);
+    localStorage.setItem("gelatoSolution", solution);
+    localStorage.removeItem("gelatoTxHash");
 
     while (true) {
       console.log("Polling task", relayResponse.taskId);
@@ -156,14 +159,21 @@ function _prepareSubmitSolutionOrKey(
           ["ExecSuccess"].includes(taskState) &&
           taskStatus.transactionHash
         ) {
+          localStorage.setItem("gelatoTxHash", taskStatus.transactionHash);
           txHash.set(taskStatus.transactionHash);
           status.set("SUCCESS");
           error.set(undefined);
+          localStorage.removeItem("gelatoTaskId");
+          localStorage.removeItem("gelatoTxHash");
+          localStorage.removeItem("gelatoSolution");
           return { txHash: taskStatus.transactionHash, solution };
         } else if (["ExecReverted", "Cancelled"].includes(taskState)) {
           txHash.set(undefined);
           status.set("ERROR");
           error.set(taskStatus.lastCheckMessage);
+          localStorage.removeItem("gelatoTaskId");
+          localStorage.removeItem("gelatoTxHash");
+          localStorage.removeItem("gelatoSolution");
           return {};
         }
       }
@@ -280,4 +290,31 @@ export function addressToKeyIndex(address: string) {
     }
   }
   return -1;
+}
+
+export async function pollGelatoTaskId(taskId: string) {
+  const relay = new GelatoRelay();
+  while (true) {
+    console.log("Polling task", taskId);
+    const taskStatus = await relay.getTaskStatus(taskId);
+    console.log(taskStatus);
+    if (taskStatus) {
+      const { taskState } = taskStatus;
+      if (
+        ["CheckPending", "ExecPending", "WaitingForConfirmation"].includes(
+          taskState
+        )
+      ) {
+        console.log(`taskId ${taskId}: ${taskState}`);
+      } else if (
+        ["ExecSuccess"].includes(taskState) &&
+        taskStatus.transactionHash
+      ) {
+        return taskStatus.transactionHash;
+      } else if (["ExecReverted", "Cancelled"].includes(taskState)) {
+        return null;
+      }
+    }
+    await sleep(1000);
+  }
 }

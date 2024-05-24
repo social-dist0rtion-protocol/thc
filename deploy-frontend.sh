@@ -4,19 +4,16 @@ cd www
 npx vite build --mode optimism-disappear
 
 # Define the base directory and the target directory
-TARGET_DIR=../disappear.dist0rtion.com
+TARGET_DIR=/Users/albi/repos/social-dist0rtion-protocol/disappear.dist0rtion.com
 
 # Define the CNAME file path
-CNAME_FILE=$TARGET_DIR/CNAME
+CNAME_FILE=/Users/albi/repos/social-dist0rtion-protocol/disappear.dist0rtion.com/CNAME
+echo $CNAME_FILE
 
 # Check if the CNAME file exists, if not, exit with an error
-if [ ! -f "$CNAME_FILE" ]; then
-    echo "CNAME file does not exist. Exiting."
-    exit 1
-fi
-
 # Read the CNAME file content
 CNAME_CONTENT=$(cat "$CNAME_FILE")
+echo $CNAME_CONTENT
 
 # Remove all files in the target directory
 rm -rf "$TARGET_DIR/*"

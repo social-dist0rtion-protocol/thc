@@ -111,6 +111,7 @@ export const currentQuest: Readable<string | null> = derived(
       const $game = get(game);
 
       if (!(currentChapterString in $game)) {
+        console.log("store game", $currentChapter);
         $game[currentChapterString] = {
           solution: null,
           questHash: null,
@@ -118,6 +119,7 @@ export const currentQuest: Readable<string | null> = derived(
           transactionHash: null,
         };
         game.set($game);
+        console.log("state", $game);
       }
 
       console.log("Load new quest", $currentChapter, $game);
@@ -125,7 +127,8 @@ export const currentQuest: Readable<string | null> = derived(
       let solution: string | null = null;
       try {
         if ($currentChapter > 0) {
-          solution = $game[($currentChapter - 1).toString()].solution;
+          solution = localStorage.getItem(`solution:${$currentChapter - 1}`);
+          //solution = $game[($currentChapter - 1).toString()].solution;
         }
       } catch (e) {
         console.error("current quest error", e);

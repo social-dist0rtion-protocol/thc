@@ -11,6 +11,7 @@
   import {
     addressFromSolution,
     addressToChapterIndex,
+    pollGelatoTaskId,
     prepareSubmitSolution,
   } from "./lib";
   import { fade } from "svelte/transition";
@@ -23,14 +24,16 @@
   export let thc: TreasureHuntCreator;
   let wrongAnswer: boolean;
 
-  const { submit, status, txHash, error, reset } = prepareSubmitSolution(
+  const { submit, status, error, reset } = prepareSubmitSolution(
     thc,
     signer,
     ({ solution, txHash }) => {
       const chapter = $currentChapter!.toString();
+      console.log("store game", chapter, solution, txHash);
       $game[chapter].transactionHash = txHash;
       $game[chapter].solution = solution;
       $lastTransactionMined = txHash;
+      console.log("state", $game);
     }
   );
 
@@ -57,7 +60,11 @@
     console.log(addressToChapterIndex(address));
 
     if (addressToChapterIndex(address) === $currentChapter) {
-      return submit(solution);
+      localStorage.setItem(`solution:${$currentChapter}`, solution);
+      localStorage.setItem(`solution:${$currentChapter}:status`, "SUBMITTED");
+      const result = await submit(solution);
+      localStorage.setItem(`solution:${$currentChapter}:status`, "CONFIRMED");
+      return result;
     } else {
       wrongAnswer = true;
       return false;
@@ -65,6 +72,31 @@
   }
 
   let currentQuestUpdated = false;
+
+  const gelatoTaskId = localStorage.getItem("gelatoTaskId");
+  const gelatoTxHash = localStorage.getItem("gelatoTxHash");
+
+  if (gelatoTaskId !== null && gelatoTxHash === null) {
+    status.set("PENDING");
+    pollGelatoTaskId(gelatoTaskId).then((txHash) => {
+      if (txHash === null) {
+        // resubmit
+        status.set("ERROR");
+      } else {
+        const solution = localStorage.getItem("gelatoSolution");
+        const chapter = $currentChapter!.toString();
+        console.log("store game", chapter, solution, txHash);
+        $game[chapter].transactionHash = txHash;
+        $game[chapter].solution = solution;
+        $lastTransactionMined = txHash;
+        console.log("state", $game);
+        status.set("SUCCESS");
+      }
+      localStorage.removeItem("gelatoTaskId");
+      localStorage.removeItem("gelatoTxHash");
+      localStorage.removeItem("gelatoSolution");
+    });
+  }
 
   $: {
     currentQuestUpdated =
