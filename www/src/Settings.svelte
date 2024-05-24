@@ -139,6 +139,10 @@
 
 <button on:click={onReset}>Reset game</button>
 
+<h2>Hash</h2>
+
+<pre>7c943f65</pre>
+
 <style>
   .scroll {
     overflow-x: auto;
