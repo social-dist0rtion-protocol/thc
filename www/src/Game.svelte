@@ -53,6 +53,8 @@
     console.log("sol", solution, $currentChapter);
     if ($currentChapter === null) return false;
     const address = await addressFromSolution(solution);
+    console.log("address", address);
+    console.log(addressToChapterIndex(address));
 
     if (addressToChapterIndex(address) === $currentChapter) {
       return submit(solution);

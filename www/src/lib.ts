@@ -133,7 +133,7 @@ function _prepareSubmitSolutionOrKey(
       target: contractsAddresses["TreasureHuntCreator"],
       data: data!,
       user: address,
-      feeToken: "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9",
+      feeToken: "0x4200000000000000000000000000000000000006",
       isRelayContext: true,
     };
 

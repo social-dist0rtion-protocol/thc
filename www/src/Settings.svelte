@@ -82,14 +82,14 @@
 
 <h2>Network</h2>
 
-<p>Sepolia</p>
+<p>Optimism</p>
 
 <h2>Smart Contract</h2>
 
 <p class="scroll">
   {#if $thc}
     {#await $thc.getAddress() then addr}
-      <a href="https://sepolia.etherscan.io/address/{addr}">{addr}</a>
+      <a href="https://optimistic.etherscan.io/address/{addr}">{addr}</a>
     {/await}
   {/if}
 </p>
