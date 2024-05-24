@@ -143,11 +143,12 @@
 
 <h2>Ver</h2>
 
-<pre>2</pre>
+<pre>3</pre>
 
-<h2>State</h2>
-
-<pre style="font-size: 0.6rem">{dump}</pre>
+<details>
+  <summary>Debug</summary>
+  <pre style="font-size: 0.6rem">{dump}</pre>
+</details>
 
 <style>
   .scroll {

@@ -62,6 +62,7 @@
   }
 
   async function onSubmitSolution(solution: string) {
+    solution = solution.toLowerCase();
     console.log("sol", solution, $currentChapter);
     if ($currentChapter === null) return false;
     const address = await addressFromSolution(solution);
