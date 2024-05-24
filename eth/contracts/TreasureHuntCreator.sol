@@ -16,6 +16,7 @@ contract TreasureHuntCreator is
     using Address for address payable;
     mapping(address => uint256) public contextCounter;
     event IncrementCounter(address msgSender);
+    event PrizeMinted(address from, uint256 badgeId);
 
     bytes32 public constant GAME_MASTER_ROLE = keccak256("GAME_MASTER_ROLE");
 
@@ -135,12 +136,14 @@ contract TreasureHuntCreator is
                 ? 4
                 : peopleInThisChapter;
             prize.mint(player, position);
+            emit PrizeMinted(player, position);
         }
     }
 
     function _rewardKeys(uint256 keys, address player) internal {
         if (keys == 2 ** totalKeys - 1) {
             prize.mint(player, 5);
+            emit PrizeMinted(player, 5);
         }
     }
 

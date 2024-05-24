@@ -21,6 +21,19 @@ export async function getSolutionSignature(solution: string, address: string) {
   return Signature.from(signature);
 }
 
+export function encodeTokenId(thcAddress: string, badgeId: number): bigint {
+  // Convert the thcAddress to a BigInt, assuming it's a hex string without the '0x' prefix
+  const thcBigInt = BigInt(thcAddress);
+  // Shift left by 96 bits
+  const shiftedThcBigInt = thcBigInt << 96n;
+
+  // Convert the badgeId to a BigInt
+  const badgeBigInt = BigInt(badgeId);
+
+  // Perform bitwise OR and return the result
+  return shiftedThcBigInt | badgeBigInt;
+}
+
 export async function getSignature(
   signer: SignerWithAddress,
   solution: string

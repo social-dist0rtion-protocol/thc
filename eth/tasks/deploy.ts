@@ -1,4 +1,5 @@
 import { task } from "hardhat/config";
+import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
 import { TreasureHuntCreator } from "../typechain";
 
 import {
@@ -8,7 +9,8 @@ import {
   loadContract,
   loadKeys,
 } from "./utils";
-import { toUtf8Bytes } from "ethers";
+import { readFileSync } from "fs";
+import { encodeTokenId } from "../test/utils";
 
 task("deploy:treasure", "Push Treasure to network")
   .addFlag("verify", "Verify")
@@ -80,6 +82,98 @@ task("deploy:thc", "Push THC to network")
       }
     }
   );
+
+task("solve", "Solve")
+  .addParam("passwords", "The file with all passwords")
+  .addParam("keys", "The file with all keys")
+  .setAction(
+    async ({ passwords, keys }: { passwords: string; keys: string }, hre) => {
+      const treasure = await loadContract(hre, "Treasure");
+      const thc = await loadContract(hre, "TreasureHuntCreator");
+
+      const passwordList = readFileSync(passwords, "utf-8").split("\n");
+      const keysList = readFileSync(keys, "utf-8")
+        .split("\n")
+        .map((x) => x.split(",")[0]);
+      const [deployer] = await hre.ethers.getSigners();
+
+      async function getSignature(signer: SignerWithAddress, solution: string) {
+        let solutionBytes = hre.ethers.toUtf8Bytes(solution);
+        let solutionDigest = hre.ethers.keccak256(solutionBytes);
+        let wallet = new hre.ethers.Wallet(solutionDigest);
+        let signature = await wallet.signMessage(
+          hre.ethers.getBytes(signer.address)
+        );
+
+        return [signature, wallet.address];
+      }
+
+      for (let i = 4; i < passwordList.length; i++) {
+        let password = passwordList[i];
+        console.log(password);
+        let [signature, solutionKey] = await getSignature(deployer, password);
+        let { r, v, s } = hre.ethers.Signature.from(signature);
+        const tx = await thc.connect(deployer).submit(v, r, s);
+        await tx.wait(1);
+      }
+
+      for (let i = 0; i < keysList.length; i++) {
+        let password = keysList[i];
+        console.log(password);
+        let [signature, solutionKey] = await getSignature(deployer, password);
+        let { r, v, s } = hre.ethers.Signature.from(signature);
+        const tx = await thc.connect(deployer).submitKey(v, r, s);
+        await tx.wait(1);
+      }
+
+      console.log(
+        await treasure.balanceOf(
+          deployer.address,
+          encodeTokenId(await thc.getAddress(), 1)
+        )
+      );
+      console.log(
+        await treasure.balanceOf(
+          deployer.address,
+          encodeTokenId(await thc.getAddress(), 5)
+        )
+      );
+      console.log(
+        await treasure.balanceOf(
+          deployer.address,
+          encodeTokenId(await thc.getAddress(), 2)
+        )
+      );
+    }
+  );
+
+task("verify:tokens", "Verify Tokens").setAction(
+  async ({ passwords, keys }: { passwords: string; keys: string }, hre) => {
+    const treasure = await loadContract(hre, "Treasure");
+    const thc = await loadContract(hre, "TreasureHuntCreator");
+
+    const [deployer] = await hre.ethers.getSigners();
+
+    console.log(
+      await treasure.balanceOf(
+        deployer.address,
+        encodeTokenId(await thc.getAddress(), 1)
+      )
+    );
+    console.log(
+      await treasure.balanceOf(
+        deployer.address,
+        encodeTokenId(await thc.getAddress(), 5)
+      )
+    );
+    console.log(
+      await treasure.balanceOf(
+        deployer.address,
+        encodeTokenId(await thc.getAddress(), 2)
+      )
+    );
+  }
+);
 
 task("setup:disappear", "Push Disappear to network")
   .addFlag("verify", "Verify")

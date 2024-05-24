@@ -10,7 +10,7 @@ contract DisappearRenderer is Ownable {
     constructor() {}
 
     string constant template0 =
-        "<svg width='600' height='600' style='background: black'>";
+        "<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600' style='background: black'>";
     string constant template1 =
         "<g> <circle cx='300' cy='180' r='100' fill='red' /> <circle cx='265' cy='155' r='15' fill='black' /> <circle cx='335' cy='155' r='15' fill='black' /> <path stroke='black' d='M 250 210 C 275 240, 325 240, 350 210' stroke-width='13' stroke-linecap='round' fill='transparent' />";
     string constant template2 = "</g></svg>";
