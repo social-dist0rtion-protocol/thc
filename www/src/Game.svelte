@@ -32,8 +32,14 @@
       console.log("store game", chapter, solution, txHash);
       $game[chapter].transactionHash = txHash;
       $game[chapter].solution = solution;
-      $lastTransactionMined = txHash;
       console.log("state", $game);
+      const currentChapterLocalStorage =
+        localStorage.getItem("currentChapter") || "0";
+      localStorage.setItem(
+        "currentChapter",
+        (parseInt(currentChapterLocalStorage) + 1).toString()
+      );
+      $lastTransactionMined = txHash;
     }
   );
 
@@ -88,9 +94,15 @@
         console.log("store game", chapter, solution, txHash);
         $game[chapter].transactionHash = txHash;
         $game[chapter].solution = solution;
-        $lastTransactionMined = txHash;
         console.log("state", $game);
         status.set("SUCCESS");
+        const currentChapterLocalStorage =
+          localStorage.getItem("currentChapter") || "0";
+        localStorage.setItem(
+          "currentChapter",
+          (parseInt(currentChapterLocalStorage) + 1).toString()
+        );
+        $lastTransactionMined = txHash;
       }
       localStorage.removeItem("gelatoTaskId");
       localStorage.removeItem("gelatoTxHash");

@@ -91,9 +91,12 @@ export const currentChapter: Readable<null | number> = derived(
   [thc, lastTransactionMined],
   ([$thc], set: (v: null | number) => void) => {
     if ($thc) {
+      set(parseInt(localStorage.getItem("currentChapter") || "0"));
+      /*
       retry(async () => {
         set(Number(await $thc.currentChapter()));
       }, true);
+      */
     } else {
       set(null);
     }
