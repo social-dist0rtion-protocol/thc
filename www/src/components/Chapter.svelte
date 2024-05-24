@@ -22,8 +22,9 @@
     </p>
     <p>
       <strong>
-        The game uses a burner wallet and runs on the Sepolia test network,
-        check your address in the <a href="#/settings">settings</a> page.
+        The game uses a burner wallet and runs on the Optimism network, check
+        your address in the <a href="#/settings">settings</a> page. We sponsor the
+        transactions via gelato.network.
       </strong>
     </p>
   </div>

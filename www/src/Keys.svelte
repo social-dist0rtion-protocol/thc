@@ -24,6 +24,7 @@
   async function onSubmitKey() {
     const address = await addressFromSolution(key);
     const index = addressToKeyIndex(address);
+    console.log("Key is", address, index);
     if (index > -1) {
       const r = await submit(key);
       key = "";
