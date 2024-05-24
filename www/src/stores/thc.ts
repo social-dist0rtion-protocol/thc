@@ -229,6 +229,8 @@ export function ensAddressesRefresh() {
 export const ensAddresses: Readable<ENSAddresses | null> = derived(
   [provider, leaderboard, ensAddressesRefreshTs],
   ([$provider, $leaderboard], set) => {
+    set({});
+    return;
     if ($provider && $leaderboard) {
       const update = retryWrap(async () => {
         console.log("Task: update ens addresses");

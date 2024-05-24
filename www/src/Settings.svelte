@@ -143,7 +143,7 @@
 
 <h2>Ver</h2>
 
-<pre>5</pre>
+<pre>6</pre>
 
 <details>
   <summary>Debug</summary>
