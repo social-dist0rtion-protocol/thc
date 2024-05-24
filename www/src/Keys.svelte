@@ -49,8 +49,8 @@
 {:else}
   <section class="thc--chapter">
     <p>
-      Did you find a key? Submit it with this form to add it to your score in
-      the leaderboard. More info in the <a href="#/about">FAQs</a>.
+      Did you find a document? Submit it with this form to add it to your score
+      in the leaderboard. More info in the <a href="#/about">FAQs</a>.
     </p>
     <form on:submit|preventDefault={() => onSubmitKey()}>
       <input placeholder="Key" bind:value={key} />
