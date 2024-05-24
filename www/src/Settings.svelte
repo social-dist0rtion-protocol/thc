@@ -13,6 +13,8 @@
   let restoreMnemonic: string;
   let restoreGame: null | string = null;
 
+  let dump = localStorage.getItem("dump") || "";
+
   onMount(async () => {
     QRCode.toCanvas(canvas, `ethereum:${await $signer!.getAddress()}`, {
       width: 200,
@@ -139,9 +141,13 @@
 
 <button on:click={onReset}>Reset game</button>
 
-<h2>Hash</h2>
+<h2>Ver</h2>
 
-<pre>7c943f65</pre>
+<pre>2</pre>
+
+<h2>State</h2>
+
+<pre style="font-size: 0.6rem">{dump}</pre>
 
 <style>
   .scroll {

@@ -13,6 +13,7 @@
     addressToChapterIndex,
     pollGelatoTaskId,
     prepareSubmitSolution,
+    updateDump,
   } from "./lib";
   import { fade } from "svelte/transition";
   import Update from "./components/Update.svelte";
@@ -28,6 +29,7 @@
     thc,
     signer,
     ({ solution, txHash }) => {
+      updateDump("before hook");
       const chapter = $currentChapter!.toString();
       console.log("store game", chapter, solution, txHash);
       $game[chapter].transactionHash = txHash;
@@ -39,6 +41,7 @@
         "currentChapter",
         (parseInt(currentChapterLocalStorage) + 1).toString()
       );
+      updateDump("after hook");
       $lastTransactionMined = txHash;
     }
   );
@@ -66,10 +69,12 @@
     console.log(addressToChapterIndex(address));
 
     if (addressToChapterIndex(address) === $currentChapter) {
+      updateDump("before submit");
       localStorage.setItem(`solution:${$currentChapter}`, solution);
       localStorage.setItem(`solution:${$currentChapter}:status`, "SUBMITTED");
       const result = await submit(solution);
       localStorage.setItem(`solution:${$currentChapter}:status`, "CONFIRMED");
+      updateDump("after submit");
       return result;
     } else {
       wrongAnswer = true;
@@ -149,7 +154,7 @@
           <p>
             Something bad happened 🤕 get in contact with us, we can help you.
           </p>
-          <pre>{$error}</pre>
+          <p>{$error}</p>
         {:else}
           <h2>Correct answer</h2>
           {#if $status === "PENDING"}

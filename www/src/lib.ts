@@ -13,6 +13,7 @@ import { writable } from "svelte/store";
 import {
   GelatoRelay,
   type CallWithSyncFeeERC2771Request,
+  type TransactionStatusResponse,
 } from "@gelatonetwork/relay-sdk";
 import { contractsAddresses, ethereumChainId } from "./stores/config";
 import metadata from "./metadata.json";
@@ -142,9 +143,23 @@ function _prepareSubmitSolutionOrKey(
     localStorage.setItem("gelatoSolution", solution);
     localStorage.removeItem("gelatoTxHash");
 
+    let attemptsLeft = 3;
+
+    await sleep(1000);
     while (true) {
-      console.log("Polling task", relayResponse.taskId);
-      const taskStatus = await relay.getTaskStatus(relayResponse.taskId);
+      console.log(`[${attemptsLeft}] Polling task`, relayResponse.taskId);
+      let taskStatus: TransactionStatusResponse | undefined;
+      try {
+        taskStatus = await relay.getTaskStatus(relayResponse.taskId);
+      } catch (e) {
+        if (attemptsLeft === 0) {
+          throw e;
+        }
+        attemptsLeft--;
+        await sleep(1000);
+        continue;
+      }
+
       console.log(taskStatus);
       if (taskStatus) {
         const { taskState } = taskStatus;
@@ -317,4 +332,26 @@ export async function pollGelatoTaskId(taskId: string) {
     }
     await sleep(1000);
   }
+}
+
+export function updateDump(tag: string) {
+  // Create an object to hold all localStorage items
+  const localStorageData: { [key: string]: any } = {};
+  // Iterate through all keys in localStorage
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && key !== "dump") {
+      localStorageData[key] = localStorage.getItem(key);
+    }
+  }
+
+  // Convert the localStorage data object to a JSON string
+  const localStorageJson = JSON.stringify(localStorageData, null, 2);
+
+  const oldDump = localStorage.getItem("dump") || "";
+
+  localStorage.setItem(
+    "dump",
+    tag + "\n" + localStorageJson + "\n\n" + oldDump
+  );
 }
