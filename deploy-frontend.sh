@@ -4,8 +4,7 @@ cd www
 npx vite build --mode optimism-disappear
 
 # Define the base directory and the target directory
-BASE_DIR=~/repos/social-dist0rtion-protocol
-TARGET_DIR=$BASE_DIR/disappear.dist0rtion.com
+TARGET_DIR=../disappear.dist0rtion.com
 
 # Define the CNAME file path
 CNAME_FILE=$TARGET_DIR/CNAME

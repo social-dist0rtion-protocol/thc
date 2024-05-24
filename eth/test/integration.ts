@@ -99,19 +99,6 @@ describe("TreasureHuntCreator", () => {
     return thc;
   }
 
-  function encodeTokenId(thcAddress: string, badgeId: number): bigint {
-    // Convert the thcAddress to a BigInt, assuming it's a hex string without the '0x' prefix
-    const thcBigInt = BigInt(thcAddress);
-    // Shift left by 96 bits
-    const shiftedThcBigInt = thcBigInt << 96n;
-
-    // Convert the badgeId to a BigInt
-    const badgeBigInt = BigInt(badgeId);
-
-    // Perform bitwise OR and return the result
-    return shiftedThcBigInt | badgeBigInt;
-  }
-
   async function solve(
     thc: TreasureHuntCreator,
     solution: string,
@@ -469,7 +456,7 @@ describe("TreasureHuntCreator", () => {
       expect(result).equal(1);
     });
 
-    it.only("should render key badge for who finds all keys", async () => {
+    it("should render key badge for who finds all keys", async () => {
       const instance = await deploy(solutions, keys);
 
       for (let i = 0; i < KEYS.length; i++) {
