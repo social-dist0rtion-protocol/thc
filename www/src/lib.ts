@@ -14,7 +14,7 @@ import {
   GelatoRelay,
   type CallWithSyncFeeERC2771Request,
 } from "@gelatonetwork/relay-sdk";
-import { contractsAddresses } from "./stores/config";
+import { contractsAddresses, ethereumChainId } from "./stores/config";
 import metadata from "./metadata.json";
 
 export async function sleep(ms: number) {
@@ -129,7 +129,7 @@ function _prepareSubmitSolutionOrKey(
 
     const relay = new GelatoRelay();
     const request: CallWithSyncFeeERC2771Request = {
-      chainId: BigInt(11155111),
+      chainId: BigInt(ethereumChainId),
       target: contractsAddresses["TreasureHuntCreator"],
       data: data!,
       user: address,
