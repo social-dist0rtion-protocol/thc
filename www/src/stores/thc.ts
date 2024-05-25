@@ -24,6 +24,14 @@ export type Chapter = {
   transactionHash: string | null;
 };
 
+const WINNER_WINNER_CHICKEN_DINNER = `
+Hello winner!
+
+You should have received an NFT at your address in the *Optimism* network. If not, come to our HQ.
+
+Check the [collection](https://opensea.io/assets/optimism/0x8aa64EF9FD4B9Bfa8A0ef3a2C745a10763461351) on OpenSea!
+`;
+
 const thcAddressLower = contractsAddresses["TreasureHuntCreator"].toLowerCase();
 
 // Chapter should be a number, but we store it as JSON so it's easier to cast it
@@ -107,9 +115,11 @@ export const currentChapter: Readable<null | number> = derived(
 export const fuckFuckFuckFuckFuck = writable(false);
 
 export const currentQuest: Readable<string | null> = derived(
-  [questsRootCID, currentChapter],
-  ([$questsRootCID, $currentChapter], set) => {
-    if ($questsRootCID && $currentChapter !== null) {
+  [questsRootCID, currentChapter, totalChapters],
+  ([$questsRootCID, $currentChapter, $totalChapters], set) => {
+    if ($currentChapter === $totalChapters) {
+      set(WINNER_WINNER_CHICKEN_DINNER);
+    } else if ($questsRootCID && $currentChapter !== null) {
       const currentChapterString = $currentChapter.toString();
       const $game = get(game);
 
