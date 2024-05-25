@@ -11,6 +11,10 @@
       solution = "";
     }
   }
+
+  async function onSubmitFinalChapter() {
+    await onSubmitSolution("");
+  }
 </script>
 
 {#if currentChapter === 0}
@@ -39,6 +43,10 @@
     <form on:submit|preventDefault={onSubmit}>
       <input placeholder="solution to the puzzle" bind:value={solution} />
       <button disabled={solution.length === 0} type="submit">Submit</button>
+    </form>
+  {:else}
+    <form on:submit|preventDefault={onSubmitFinalChapter}>
+      <button type="submit">Claim your NFT prize</button>
     </form>
   {/if}
 </article>
