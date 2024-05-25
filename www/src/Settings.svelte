@@ -141,9 +141,9 @@
 
 <button on:click={onReset}>Reset game</button>
 
-<h2>Ver</h2>
+<h2>Version</h2>
 
-<pre>8</pre>
+<pre>9</pre>
 
 <details>
   <summary>Debug</summary>
