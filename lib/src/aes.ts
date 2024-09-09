@@ -25,7 +25,7 @@ export async function importKey(key: string) {
   );
 }
 
-export async function encrypt(data: Uint8Array, key: CryptoKey) {
+export async function encryptRaw(data: Uint8Array, key: CryptoKey) {
   const iv = crypto.getRandomValues(new Uint8Array(12)); // 12-byte IV for AES-GCM
 
   const encrypted = await crypto.subtle.encrypt(
@@ -45,7 +45,7 @@ export async function encrypt(data: Uint8Array, key: CryptoKey) {
   return combined;
 }
 
-export async function decrypt(combined: Uint8Array, key: CryptoKey) {
+export async function decryptRaw(combined: Uint8Array, key: CryptoKey) {
   const iv = combined.slice(0, 12); // Extract the IV (first 12 bytes)
   const encrypted = combined.slice(12); // Extract the encrypted data
 
@@ -61,15 +61,17 @@ export async function decrypt(combined: Uint8Array, key: CryptoKey) {
   return new Uint8Array(decrypted);
 }
 
-export async function encryptText(data: string, key: CryptoKey) {
+export async function encrypt(data: string, key: string) {
+  const rawKey = await importKey(key);
   const encodedData = new TextEncoder().encode(data);
-  const encrypted = await encrypt(encodedData, key);
+  const encrypted = await encryptRaw(encodedData, rawKey);
   return uint8ArrayToBase64(encrypted);
 }
 
-export async function decryptText(encryptedText: string, key: CryptoKey) {
+export async function decrypt(encryptedText: string, key: string) {
+  const rawKey = await importKey(key);
   const encryptedData = base64ToUint8Array(encryptedText);
-  const decrypted = await decrypt(encryptedData, key);
+  const decrypted = await decryptRaw(encryptedData, rawKey);
   return new TextDecoder().decode(decrypted);
 }
 
