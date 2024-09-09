@@ -1,3 +1,4 @@
+import { keccak256, toHex } from "viem";
 import { crypto } from "./cryptoUtils";
 
 export async function generateKey() {
@@ -5,6 +6,19 @@ export async function generateKey() {
     {
       name: "AES-GCM",
       length: 256,
+    },
+    true,
+    ["encrypt", "decrypt"]
+  );
+}
+
+export async function importKey(key: string) {
+  const rawKey = keccak256(toHex(key), "bytes");
+  return await crypto.subtle.importKey(
+    "raw",
+    rawKey,
+    {
+      name: "AES-GCM",
     },
     true,
     ["encrypt", "decrypt"]

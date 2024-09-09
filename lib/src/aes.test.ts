@@ -1,8 +1,22 @@
-import { generateKey, encrypt, decrypt, encryptText, decryptText } from "./aes";
+import {
+  generateKey,
+  encrypt,
+  decrypt,
+  encryptText,
+  decryptText,
+  importKey,
+} from "./aes";
 
 describe("generateKey", () => {
   test("returns a symmetric encryption key", async () => {
     const key = await generateKey();
+    expect(key.type).toEqual("secret");
+  });
+});
+
+describe("importKey", () => {
+  test("returns a symmetric encryption key", async () => {
+    const key = await importKey("ciaone");
     expect(key.type).toEqual("secret");
   });
 });
