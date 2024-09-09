@@ -1,13 +1,13 @@
 import { Button } from "@chakra-ui/react";
 import { ConnectKitButton } from "connectkit";
 
-function ConnectButton() {
+function ConnectButton({ label }: { label: string }) {
   return (
     <ConnectKitButton.Custom>
-      {({ isConnected, show, truncatedAddress, ensName }) => {
+      {({ show }) => {
         return (
           <Button onClick={show} variant="primary">
-            {isConnected ? (ensName ?? truncatedAddress) : "connect"}
+            {label}
           </Button>
         );
       }}

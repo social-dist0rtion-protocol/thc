@@ -1,4 +1,4 @@
-import { VStack } from "@chakra-ui/react";
+import { Center, VStack } from "@chakra-ui/react";
 import HeaderMenu from "./HeaderMenu";
 import { ReactNode } from "react";
 
@@ -8,10 +8,12 @@ type Props = {
 
 function App({ children }: Props) {
   return (
-    <VStack width="90%">
-      <HeaderMenu />
-      {children}
-    </VStack>
+    <Center>
+      <VStack width="90%">
+        <HeaderMenu />
+        {children}
+      </VStack>
+    </Center>
   );
 }
 
