@@ -113,7 +113,11 @@ async function processChapter(dirIn: string, dirOut: string, solution: string) {
   };
 }
 
-export async function main(dirIn: string, dirOut: string) {
+export async function main(
+  dirIn: string,
+  dirOut: string,
+  metadataPath: string
+) {
   const tmpDirOut = await fs.mkdtemp(path.join(os.tmpdir(), "thc-"));
   const questsDir = path.join(tmpDirOut, "quests");
   const content = await readdir(dirIn, { withFileTypes: true });
@@ -164,9 +168,6 @@ export async function main(dirIn: string, dirOut: string) {
     chapters[i].questHash = `${dirCid}/${i}`;
   }
 
-  // God forgive me this code is shit
-  // God forgive me this code is shit
-  // God forgive me this code is shit
   const wwwPublicPath = path.join(dirOut, dirCid);
   await mkdir(wwwPublicPath, {
     recursive: true,
@@ -175,12 +176,9 @@ export async function main(dirIn: string, dirOut: string) {
     await writeFile(path.join(wwwPublicPath, i.toString()), quests[i]);
   }
   await writeFile(
-    path.join(dirOut, "metadata.json"),
+    metadataPath,
     JSON.stringify({ keys, chapters: chapters.map((c) => c.solutionAddress) })
   );
-  // God forgive me this code is shit
-  // God forgive me this code is shit
-  // God forgive me this code is shit
 
   return chapters;
 }
