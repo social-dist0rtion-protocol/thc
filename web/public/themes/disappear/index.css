@@ -1,0 +1,162 @@
+@font-face {
+  font-family: "Bundes";
+  font-weight: 400;
+  src: url(./fonts/BundesSans-Regular.ttf);
+}
+@font-face {
+  font-family: "Dot";
+  font-weight: 400;
+  src: url(./fonts/Dot.ttf);
+}
+@font-face {
+  font-family: "Maison Neues";
+  font-weight: 400;
+  src: url(./fonts/Maison-Neue-Mono.ttf);
+}
+@font-face {
+  font-family: OCR;
+  font-weight: 400;
+  src: url(./fonts/OCR-AStd-Regular.ttf);
+}
+@font-face {
+  font-family: Roboto;
+  font-weight: 400;
+  src: url(./fonts/Roboto-Regular.ttf);
+}
+@font-face {
+  font-family: Roboto;
+  font-weight: 400;
+  font-style: italic;
+  src: url(./fonts/Roboto-Italic.ttf);
+}
+@font-face {
+  font-family: Roboto;
+  font-weight: 700;
+  src: url(./fonts/Roboto-Bold.ttf);
+}
+@font-face {
+  font-family: Roboto;
+  font-weight: 700;
+  font-style: italic;
+  src: url(./fonts/Roboto-BoldItalic.ttf);
+}
+
+:root {
+  --root-size: 16px;
+  --font-display: "OCR";
+}
+
+html {
+  background-color: rgb(255, 255, 255);
+  color: rgb(21, 21, 21);
+  font-family: Bundes, sans-serif;
+  background: url(./images/bg.png);
+  background-size: contain;
+  background-position: center;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.thc--header a {
+  color: rgb(0, 0, 0);
+  text-transform: uppercase;
+}
+
+.thc--header a {
+  font-size: 0.8rem;
+  text-decoration: none;
+  border-radius: 1rem;
+  background-color: rgb(230, 91, 84, 0.666);
+  padding: 0 0.5rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+button,
+.thc--header a {
+  font-family: var(--font-display);
+}
+
+button {
+  color: white;
+  background-color: rgb(230, 91, 84, 0.666);
+  border: 0;
+  transition: all 0.5s;
+}
+
+button:hover {
+  background-color: rgb(230, 91, 84, 1);
+}
+
+button:disabled {
+  color: rgb(148, 148, 148);
+  background-color: #7a7a7a;
+  cursor: not-allowed;
+}
+
+main {
+  margin: 0 auto;
+  max-width: 40rem;
+}
+
+#app {
+  /*
+  padding-bottom: 100px;
+  */
+}
+
+footer {
+  position: fixed;
+  content: " ";
+  background-size: auto 100px;
+  background-position: bottom;
+  background-repeat: repeat-x;
+  background-attachment: fixed;
+  bottom: 0;
+  height: 100px;
+  width: 100%;
+  opacity: 0.5;
+}
+
+.thc--header a {
+  padding: 0.5rem;
+}
+
+.thc--chapter {
+  padding: 1rem 0.5rem;
+  background-color: rgba(255, 255, 255, 0.666);
+  color: rgb(0, 0, 0);
+}
+
+.thc--chapter-text {
+  font-size: 1.2rem;
+  margin: 2rem 0;
+}
+
+.thc--chapter-state {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.thc--chapter details {
+  display: block;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  margin-top: 1rem;
+  border-radius: 5px;
+  padding: 0.5rem 0.2rem;
+  font-size: 0.9rem;
+  background-color: rgba(255, 195, 195, 0.5);
+}
+
+.thc--chapter summary {
+  padding: 0.5rem 0.2rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+}

@@ -1,0 +1,104 @@
+@font-face {
+  font-family: DS-Digital;
+  font-weight: 400;
+  src: url(./fonts/DS-Digital/DS-Digi.ttf);
+}
+@font-face {
+  font-family: DS-Digital;
+  font-weight: 700;
+  src: url(./fonts/DS-Digital/DS-Digib.ttf);
+}
+@font-face {
+  font-family: DS-Digital;
+  font-weight: 400;
+  font-style: italic;
+  src: url(./fonts/DS-Digital/DS-Digii.ttf);
+}
+@font-face {
+  font-family: DS-Digital;
+  font-weight: 700;
+  font-style: italic;
+  src: url(./fonts/DS-Digital/DS-Digibi.ttf);
+}
+@font-face {
+  font-family: W95FA;
+  font-weight: 400;
+  src: url(./fonts/W95FA/w95fa.woff2);
+}
+
+:root {
+  --root-size: 16px;
+}
+
+html {
+  color: white;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.thc--header a {
+  color: #ffd200;
+  text-shadow: 0 0 0.5rem #ffd200;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+button,
+.thc--header a {
+  font-family: "DS-Digital";
+}
+
+button {
+  color: black;
+  background-color: #ffd000b0;
+  border: 0;
+  transition: all 0.5s;
+}
+
+button:hover {
+  background-color: #ffd000;
+}
+
+button:disabled {
+  color: white;
+  background-color: #ffd00023;
+  cursor: not-allowed;
+}
+
+main {
+  margin: 4rem auto 0 auto;
+  max-width: 40rem;
+}
+
+#app {
+  background: url(./images/grain-opacity-compressed.png),
+    linear-gradient(5deg, #3a2f18 -10%, rgba(14, 12, 6, 0) 25%),
+    radial-gradient(
+      farthest-corner at top left,
+      rgba(14, 14, 14) 0%,
+      rgba(125, 125, 125, 0.6) 150%
+    );
+}
+
+.thc--chapter {
+  padding: 2rem;
+  background-color: rgba(0, 0, 0, 0.666);
+  color: white;
+}
+
+.thc--chapter-text {
+  font-size: 1.2rem;
+  margin: 2rem 0;
+}
+
+.thc--chapter-state{ 
+  background-color: rgba(0, 0, 0, 0.888);
+}
