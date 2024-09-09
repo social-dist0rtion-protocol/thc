@@ -1,1 +1,1 @@
-export { decryptText, encryptText, generateKey } from "../../lib/src/aes";
+export { decrypt } from "../../lib/src/aes";

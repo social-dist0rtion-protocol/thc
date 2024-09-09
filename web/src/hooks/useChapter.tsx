@@ -4,7 +4,7 @@ import {
   CURRENT_CHAPTER_INDEX_KEY,
   CURRENT_CHAPTER_PASSWORD_KEY,
 } from "./keys";
-import { decryptText } from "../lib";
+import { decrypt } from "../lib";
 
 function prefixedPasswordKey(key: string) {
   return `${import.meta.env.VITE_ALCHEMY_APP_PREFIX}/${key}`;
@@ -47,8 +47,8 @@ export function useChapter() {
       .then((response) => response.text())
       .then((data) => {
         if (chapterPassword !== "") {
-          decryptText(data, chapterPassword as unknown as CryptoKey).then(
-            (text) => setCurrentChapterContent(text)
+          decrypt(data, chapterPassword).then((text) =>
+            setCurrentChapterContent(text)
           );
         } else {
           setCurrentChapterContent(data);
