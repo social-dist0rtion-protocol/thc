@@ -1,0 +1,30 @@
+{
+  "name": "thc-cli",
+  "version": "0.0.1",
+  "description": "",
+  "main": "./dist/cli/src/cli.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/cli/src/cli.js",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "bin": {
+    "thc": "./dist/cli/src/cli.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/node": "^22.5.4",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.2"
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "viem": "^2.21.3"
+  }
+}
