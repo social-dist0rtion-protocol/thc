@@ -1,9 +1,10 @@
-INPUT_DIR ?= ../disappear/disappear/chapters
-OUTPUT_DIR ?= try/build
-ETH_DIR ?= eth
-ETH_NETWORK ?= optimism
-CHAPTERS_FILE ?= gen/chapters.json
-KEYS_FILE ?= ../disappear/disappear/keys.csv
+# Review and change these variables for each game
+INPUT_DIR ?= ../disappear/disappear/chapters 	# Comment about this variable
+OUTPUT_DIR ?= try/build				# Comment about this variable 
+ETH_DIR ?= eth					# Comment about this variable 
+ETH_NETWORK ?= optimism				# Comment about this variable 
+CHAPTERS_FILE ?= gen/chapters.json		# Comment about this variable 
+KEYS_FILE ?= ../disappear/disappear/keys.csv	# Comment about this variable 
 
 game: backend frontend
 	echo "Game fully built and deployed."
