@@ -28,7 +28,9 @@ program
       METADATA_PATH,
       ROOT_HASH_PATH
     );
-  })
+  });
+
+program
   .command("set-root-hash")
   .description("Update root hash")
   .action(async () => {
