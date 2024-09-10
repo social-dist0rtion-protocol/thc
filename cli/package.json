@@ -1,5 +1,5 @@
 {
-  "name": "thc-cli",
+  "name": "@dist0rtion/thc",
   "version": "0.0.1",
   "description": "",
   "main": "./dist/cli/src/cli.js",
@@ -8,7 +8,8 @@
     "start": "node dist/cli/src/cli.js",
     "copy-thc-artifacts": "cp ../eth/artifacts/contracts/TreasureHuntCreator.sol/TreasureHuntCreator.json src",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "prepublishOnly": "npm run copy-thc-artifacts && npm run build"
   },
   "bin": {
     "thc": "./dist/cli/src/cli.js"
