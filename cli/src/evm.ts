@@ -44,7 +44,7 @@ export function getPublicClient(chainId: number, endpoint: string) {
   //
   return createPublicClient({
     chain: mainnet,
-    transport: http(),
+    transport: http(endpoint),
   });
 }
 

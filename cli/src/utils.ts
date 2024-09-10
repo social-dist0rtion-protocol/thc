@@ -4,7 +4,7 @@ import os from "os";
 import path from "path";
 import { keccak256, toHex } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { encrypt } from "./lib";
+import { encrypt, Metadata } from "./lib";
 
 async function inlineImagesInMarkdown(filePath: string): Promise<string> {
   try {
@@ -174,13 +174,17 @@ export async function main(
   await mkdir(chaptersRootHashPath, {
     recursive: true,
   });
+
   for (let i = 0; i < quests.length; i++) {
     await writeFile(path.join(chaptersRootHashPath, i.toString()), quests[i]);
   }
-  await writeFile(
-    metadataPath,
-    JSON.stringify({ keys, chapters: chapters.map((c) => c.solutionAddress) })
-  );
+
+  const metadata: Metadata = {
+    keys,
+    chapters: chapters.map((c) => c.solutionAddress),
+  };
+
+  await writeFile(metadataPath, JSON.stringify(metadata));
 
   return chapters;
 }
