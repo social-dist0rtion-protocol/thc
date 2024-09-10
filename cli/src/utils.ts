@@ -3,7 +3,6 @@ import { promises as fs } from "fs";
 import os from "os";
 import path from "path";
 import { keccak256, toHex } from "viem";
-import { privateKeyToAccount } from "viem/accounts";
 import { addressFromSolution, encrypt, Metadata } from "./lib";
 
 async function inlineImagesInMarkdown(filePath: string): Promise<string> {

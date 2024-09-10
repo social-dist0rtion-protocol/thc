@@ -2,7 +2,7 @@
 
 import dotenv from "dotenv";
 import { Command } from "commander";
-import { mkdir, readFile } from "fs/promises";
+import { copyFile, cp, mkdir, readFile } from "fs/promises";
 import { main } from "./utils";
 import { getWallet, getPublicClient, setRootHash } from "./evm";
 import { Config, isHexString } from "./types";
@@ -23,7 +23,7 @@ program
   .description(packageJson.description)
   .version(packageJson.version);
 
-const CONFIG_PATH = "config.json";
+const CONFIG_PATH = "thc.json";
 
 program
   .command("build <basePath>")
@@ -94,6 +94,55 @@ program
 
     const receipt = await client.waitForTransactionReceipt({ hash: txHash });
     console.log("Tx included in block", receipt.blockNumber.toString());
+  });
+
+program
+  .command("provide-dapp <basePath> <dappPath>")
+  .description("Copy game artifacts to the dapp")
+  .action(async (basePath: string, dappPath: string) => {
+    dotenv.config({ path: path.join(basePath, ".env") });
+    const endpoint = process.env.ETHEREUM_ENDPOINT;
+    const { chainId, thcAddress } = JSON.parse(
+      await readFile(path.join(basePath, CONFIG_PATH), "utf8")
+    ) as Config;
+
+    const rootHash = await readRootHash(basePath);
+
+    if (!endpoint) {
+      console.error("Cannot find 'endpoint' in env");
+      process.exit(1);
+    }
+
+    if (!chainId) {
+      console.error("Cannot find 'chainId' in config");
+      process.exit(1);
+    }
+
+    if (!isHexString(thcAddress)) {
+      console.error("Cannot find 'thcAddress' in config");
+      process.exit(1);
+    }
+
+    if (!isHexString(rootHash)) {
+      console.error("Cannot find 'thcAddress' in config");
+      process.exit(1);
+    }
+
+    // Copy config.json to the dapp. The file contains info about the game.
+    await cp(path.join(basePath, CONFIG_PATH), path.join(dappPath, "thc.json"));
+
+    // Copy metadata.json to the dapp. It contains all solution addresses
+    await cp(
+      getMetadataPath(basePath),
+      path.join(dappPath, "src", "metadata.json")
+    );
+
+    // Copy the encrypted chapters to the dapp
+    await cp(
+      getChaptersPath(basePath),
+      path.join(dappPath, "public", "game-data"),
+      { recursive: true }
+    );
   });
 
 program.parse(process.argv);
