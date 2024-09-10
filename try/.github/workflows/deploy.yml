@@ -1,4 +1,4 @@
-name: Deploy React App to Public Repo
+name: Deploy game
 
 on:
   push:
@@ -11,21 +11,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
-          run_install: false
-
-      - name: Install Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: "pnpm"
-
-      - name: Install THC (as in Treasure Hunt CLI)
-        run: pnpm install -g @dist0rtion/thc
-
       - name: Checkout game
         uses: actions/checkout@v4
         with:
@@ -38,11 +23,27 @@ jobs:
           ref: dev
           path: thc
 
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 9
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+          cache-dependency-path: "thc"
+
+      - name: Install THC (as in Treasure Hunt CLI)
+        run: pnpm install -g @dist0rtion/thc
+
       - name: Build game
-        run: thc build game
+        run: ETHEREUM_ENDPOINT=${{ secrets.ETHEREUM_ENDPOINT }} thc build game
 
       - name: Provide dapp
-        run: thc provide-dapp game thc/web
+        run: ETHEREUM_ENDPOINT=${{ secrets.ETHEREUM_ENDPOINT }} thc provide-dapp game thc/web
 
       - name: Install THC (as in Treasure Hunt Code) lib deps
         working-directory: thc/lib
@@ -65,11 +66,14 @@ jobs:
 
       - name: Deploy to Target Repo
         run: |
-          git clone git@github.com:${{ secrets.TARGET_REPO }}.git public
-          cp -R dist/* public/
-          cd public
+          git clone git@github.com:${{ secrets.TARGET_REPO }}.git target
+          cp -R thc/web/dist/* target/
+          cd target
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add .
           git commit -m "Bump"
           git push origin main
+
+      - name: Update root hash
+        run: ETHEREUM_ENDPOINT=${{ secrets.ETHEREUM_ENDPOINT }} PRIVATE_KEY=${{ secrets.PRIVATE_KEY }} thc set-root-hash game
