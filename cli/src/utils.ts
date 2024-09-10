@@ -115,8 +115,9 @@ async function processChapter(dirIn: string, dirOut: string, solution: string) {
 
 export async function main(
   dirIn: string,
-  dirOut: string,
-  metadataPath: string
+  chaptersPath: string,
+  metadataPath: string,
+  rootHashPath: string
 ) {
   const tmpDirOut = await fs.mkdtemp(path.join(os.tmpdir(), "thc-"));
   const questsDir = path.join(tmpDirOut, "quests");
@@ -162,18 +163,19 @@ export async function main(
   }
 
   // add all encrypted quests at once
-  const dirCid = await calculateHashChapters(plaintextChapters);
+  const rootHash = await calculateHashChapters(plaintextChapters);
+  await writeFile(rootHashPath, rootHash);
 
   for (let i = 0; i < v.length; i++) {
-    chapters[i].questHash = `${dirCid}/${i}`;
+    chapters[i].questHash = `${rootHash}/${i}`;
   }
 
-  const wwwPublicPath = path.join(dirOut, dirCid);
-  await mkdir(wwwPublicPath, {
+  const chaptersRootHashPath = path.join(chaptersPath, rootHash);
+  await mkdir(chaptersRootHashPath, {
     recursive: true,
   });
   for (let i = 0; i < quests.length; i++) {
-    await writeFile(path.join(wwwPublicPath, i.toString()), quests[i]);
+    await writeFile(path.join(chaptersRootHashPath, i.toString()), quests[i]);
   }
   await writeFile(
     metadataPath,
