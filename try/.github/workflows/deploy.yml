@@ -1,0 +1,75 @@
+name: Deploy React App to Public Repo
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: "Build"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+
+      - name: Install THC (as in Treasure Hunt CLI)
+        run: pnpm install -g @dist0rtion/thc
+
+      - name: Checkout game
+        uses: actions/checkout@v4
+        with:
+          path: game
+
+      - name: Checkout THC (as in Treasure Hunt Code)
+        uses: actions/checkout@v4
+        with:
+          repository: social-dist0rtion-protocol/thc
+          ref: dev
+          path: thc
+
+      - name: Build game
+        run: thc build game
+
+      - name: Provide dapp
+        run: thc provide-dapp game thc/web
+
+      - name: Install THC (as in Treasure Hunt Code) lib deps
+        working-directory: thc/lib
+        run: pnpm install
+
+      - name: Install THC (as in Treasure Hunt Code) web deps
+        working-directory: thc/web
+        run: pnpm install
+
+      - name: Build
+        working-directory: thc/web
+        run: pnpm build
+
+      - name: Load SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOYER_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+      - name: Deploy to Target Repo
+        run: |
+          git clone git@github.com:${{ secrets.TARGET_REPO }}.git public
+          cp -R dist/* public/
+          cd public
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add .
+          git commit -m "Bump"
+          git push origin main
