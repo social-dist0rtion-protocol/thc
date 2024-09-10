@@ -6,6 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/cli/src/cli.js",
+    "copy-thc-artifacts": "cp ../eth/artifacts/contracts/TreasureHuntCreator.sol/TreasureHuntCreator.json src",
     "test": "jest",
     "test:watch": "jest --watch"
   },
@@ -25,6 +26,7 @@
   },
   "dependencies": {
     "commander": "^12.1.0",
+    "dotenv": "^16.4.5",
     "viem": "^2.21.3"
   }
 }
