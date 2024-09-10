@@ -4,7 +4,7 @@ import os from "os";
 import path from "path";
 import { keccak256, toHex } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { encrypt, Metadata } from "./lib";
+import { addressFromSolution, encrypt, Metadata } from "./lib";
 
 async function inlineImagesInMarkdown(filePath: string): Promise<string> {
   try {
@@ -54,9 +54,8 @@ async function chapter(dirIn: string, dirOut: string, prevSolution: string) {
 
   await mkdir(dirOut, { recursive: true });
 
-  const solutionBuffer = await readFileAndTrim(solutionFileIn);
-  const solutionHash = keccak256(toHex(solutionBuffer));
-  const address = privateKeyToAccount(solutionHash).address;
+  const solution = await readFile(solutionFileIn, "utf8");
+  const address = addressFromSolution(solution);
   await writeFile(addressFileOut, address);
 
   if (prevSolution.length) {
@@ -83,8 +82,7 @@ async function readKeys(dirIn: string) {
 
   const addresses = lines.map((line) => {
     const [key, emoji] = line.split(",");
-    const solutionHash = keccak256(toHex(key));
-    const address = privateKeyToAccount(solutionHash).address;
+    const address = addressFromSolution(key);
     return { address, emoji };
   });
 

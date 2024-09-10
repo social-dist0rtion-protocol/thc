@@ -7,3 +7,4 @@ export {
   readMetadata,
   readRootHash,
 } from "../../lib/src/fsUtils";
+export { addressFromSolution } from "../../lib/src/thc";
