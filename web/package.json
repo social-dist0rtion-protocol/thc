@@ -22,6 +22,7 @@
     "burner-connector": "^0.0.8",
     "connectkit": "^1.8.2",
     "ethereum-ens-name": "^0.0.3",
+    "ethers": "6.7.0",
     "framer-motion": "^11.3.28",
     "hardhat": "^2.22.8",
     "react": "^18.3.1",

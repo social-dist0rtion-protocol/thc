@@ -11,6 +11,8 @@ import {
 } from "../generated";
 import { encodeFunctionData } from "viem";
 import { useEffect, useState } from "react";
+import { CHAIN_ID, GELATO_FEE_TOKEN } from "../env";
+import { useInterval } from "./useInterval";
 
 type Status = "pending" | "success" | "error";
 
@@ -18,11 +20,10 @@ const TOTAL_ATTEMPTS = 3;
 
 export function useSubmitSolution(
   solution: string,
-  address: `0x${string}`,
-  chainId: 10 | 1337,
+  address: `0x${string}` | undefined,
   signer: SignerOrProvider
 ) {
-  const [status, setStatus] = useState<Status>("pending");
+  const [status, setStatus] = useState<Status>();
   const [error, setError] = useState<string>();
   const [data, setData] = useState<any>();
   const [taskStatus, setTaskStatus] = useState<
@@ -30,6 +31,9 @@ export function useSubmitSolution(
   >();
   const [taskId, setTaskId] = useState<string>();
   const [attemptsLeft, setAttemptsLeft] = useState(TOTAL_ATTEMPTS);
+
+  const [polling, setPolling] = useState(false);
+  const { rounds } = useInterval(polling, 1000);
 
   async function handleTaskStateChange() {
     const taskState = taskStatus?.taskState as string;
@@ -52,13 +56,17 @@ export function useSubmitSolution(
   }
 
   async function relay() {
+    if (!address) {
+      throw "missing account";
+    }
+
     const { r, s, v } = await signatureFromSolution(address, solution);
     const encodedCall = encodeFunctionData({
       args: [v, r, s],
       abi: treasureHuntCreatorAbi,
       functionName: "submit",
     });
-    const response = await relayRequest(chainId, encodedCall, address, signer);
+    const response = await relayRequest(encodedCall, address, signer);
     setTaskId(response.taskId);
   }
 
@@ -69,27 +77,38 @@ export function useSubmitSolution(
       let taskStatus: TransactionStatusResponse | undefined;
       setAttemptsLeft(attemptsLeft - 1);
       taskStatus = await relay.getTaskStatus(taskId);
+      console.log(taskStatus?.lastCheckMessage);
       setTaskStatus(taskStatus);
       handleTaskStateChange();
     }
   }
 
   useEffect(() => {
-    if (solution !== "") {
+    if (solution !== "" && address) {
       relay();
     }
   }, [solution, address]);
 
   useEffect(() => {
-    if (attemptsLeft >= 0 && status === "pending") {
-      const intervalId = setInterval(() => {
-        console.log(taskStatus?.lastCheckMessage);
-        poll();
-      }, 1000);
-
-      return () => clearInterval(intervalId as unknown as number);
+    if (rounds === 0) {
+      return;
     }
-  }, [taskId, status]);
+
+    if (rounds > TOTAL_ATTEMPTS || status !== "pending") {
+      setPolling(false);
+    } else if (rounds > TOTAL_ATTEMPTS || status !== "pending") {
+      setPolling(false);
+      setError("gelato is stuck");
+    } else if (rounds <= TOTAL_ATTEMPTS && status === "pending") {
+      poll();
+    }
+  }, [rounds]);
+
+  useEffect(() => {
+    if (taskId) {
+      setPolling(true);
+    }
+  }, [taskId]);
 
   return {
     status,
@@ -99,18 +118,20 @@ export function useSubmitSolution(
 }
 
 async function relayRequest(
-  chainId: 10 | 1337,
   data: string,
   address: string,
   signer: SignerOrProvider
 ) {
   const relay = new GelatoRelay();
   const request: CallWithSyncFeeERC2771Request = {
-    chainId: BigInt(chainId),
-    target: treasureHuntCreatorAddress[chainId],
+    chainId: BigInt(CHAIN_ID),
+    target:
+      treasureHuntCreatorAddress[
+        CHAIN_ID as keyof typeof treasureHuntCreatorAddress
+      ],
     data: data,
     user: address,
-    feeToken: "0x4200000000000000000000000000000000000006", // make it chain dependent
+    feeToken: GELATO_FEE_TOKEN, // make it chain dependent
     isRelayContext: true,
   };
 
@@ -121,7 +142,6 @@ async function relayRequest(
 export async function submitKey(
   key: string,
   address: `0x${string}`,
-  chainId: 10 | 1337,
   signer: SignerOrProvider
 ) {
   const { r, s, v } = await signatureFromSolution(address, key);
@@ -131,5 +151,5 @@ export async function submitKey(
     functionName: "submit",
   });
 
-  relayRequest(chainId, data, address, signer);
+  relayRequest(data, address, signer);
 }

@@ -1,22 +1,18 @@
 import { useEffect, useState } from "react";
 import { MNEMONIC_KEY } from "./keys";
-import {
-  english,
-  generateMnemonic,
-  HDAccount,
-  mnemonicToAccount,
-} from "viem/accounts";
+import { english, generateMnemonic } from "viem/accounts";
 import useLocalStorage from "use-local-storage";
 import { useToast } from "@chakra-ui/react";
+import { HDNodeWallet, Wallet } from "ethers";
 
 export function useBurnerWallet() {
   const toast = useToast();
   const [mnemonic, setMnemonic] = useLocalStorage(MNEMONIC_KEY, "");
-  const [burnerWallet, setBurnerWallet] = useState<HDAccount>();
+  const [burnerWallet, setBurnerWallet] = useState<HDNodeWallet>();
 
   function validateAndSetMnemonic(newMnemonic: string) {
     try {
-      mnemonicToAccount(newMnemonic);
+      Wallet.fromPhrase(newMnemonic);
       setMnemonic(newMnemonic);
     } catch (e: any) {
       toast({
@@ -34,7 +30,7 @@ export function useBurnerWallet() {
     if (mnemonic === "") {
       validateAndSetMnemonic(generateMnemonic(english));
     } else {
-      setBurnerWallet(mnemonicToAccount(mnemonic));
+      setBurnerWallet(Wallet.fromPhrase(mnemonic));
     }
   }, [mnemonic]);
 

@@ -2,18 +2,8 @@ import { Button, Heading, Input, useToast, VStack } from "@chakra-ui/react";
 import { useChapter } from "./hooks/useChapter";
 import Markdown from "react-markdown";
 import { useEffect, useState } from "react";
-import {
-  useAccount,
-  useChainId,
-  useWaitForTransactionReceipt,
-  useWriteContract,
-} from "wagmi";
-import {
-  treasureHuntCreatorAbi as abi,
-  treasureHuntCreatorAddress as contractAddress,
-} from "./generated";
-import { signatureFromSolution } from "./hooks/utils";
 import { useSubmitSolution } from "./hooks/gelato";
+import { useAccount } from "./hooks/useAccount";
 
 function Home() {
   const {
@@ -24,34 +14,19 @@ function Home() {
   } = useChapter();
   const toast = useToast();
   const account = useAccount();
+  const [inputField, setInputField] = useState("");
   const [password, setPassword] = useState("");
-  const { status, data, error } = useSubmitSolution(
-    password,
-    account.address,
-    chainId
-  );
-  const handlePasswordChange = (event: any) => setPassword(event.target.value);
+  const {
+    status: gelatoStatus,
+    data: gelatoData,
+    error: gelatoError,
+  } = useSubmitSolution(password, account!.address as `0x${string}`, account!);
 
-  const { data: hash, writeContract, status, error } = useWriteContract();
-  const chainId = useChainId();
-
-  const { isLoading: isConfirming, isSuccess: isConfirmed } =
-    useWaitForTransactionReceipt({
-      hash,
-    });
-
-  async function submit(password: string) {
-    const { r, s, v } = await signatureFromSolution(account.address!, password);
-    writeContract({
-      abi,
-      address: contractAddress[chainId],
-      functionName: "submit",
-      args: [v, r, s],
-    });
-  }
+  const handlePasswordChange = (event: any) =>
+    setInputField(event.target.value);
 
   useEffect(() => {
-    if (isConfirmed) {
+    if (gelatoStatus === "success") {
       setCurrentChapterIndex((currentChapterIndex + 1).toString());
       setChapterPassword(password);
 
@@ -63,30 +38,44 @@ function Home() {
         isClosable: true,
       });
     }
-  }, [isConfirmed]);
-
-  useEffect(() => {
-    if (status === "error") {
+    if (gelatoStatus === "error") {
       toast({
         title: "Error",
-        description: "Wrong solution",
+        description: `An error occurred: ${gelatoError}`,
         status: "error",
         duration: 9000,
         isClosable: true,
       });
     }
-  }, [status]);
+  }, [gelatoStatus]);
+
+  function submitPassword() {
+    if (!account) {
+      toast({
+        title: "Error",
+        description: "Account not available",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    } else {
+      setPassword(inputField);
+    }
+  }
 
   return (
     <VStack className="content-pane" align="flex-start">
       <Heading>Home</Heading>
       <Markdown>{currentChapterContent}</Markdown>
       <Input
-        value={password}
+        value={inputField}
         onChange={handlePasswordChange}
         placeholder="password"
       />
-      <Button isDisabled={isConfirming} onClick={() => submit(password)}>
+      <Button
+        isDisabled={gelatoStatus === "pending"}
+        onClick={() => submitPassword()}
+      >
         Submit
       </Button>
     </VStack>

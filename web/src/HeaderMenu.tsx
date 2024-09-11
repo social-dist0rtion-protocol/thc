@@ -1,5 +1,5 @@
 import { Button, Link, Wrap, WrapItem } from "@chakra-ui/react";
-import { HELP_URL, MAP_URL } from "./vars";
+import { HELP_URL, MAP_URL } from "./env";
 
 function HeaderMenu() {
   return (
