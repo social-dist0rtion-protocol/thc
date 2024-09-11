@@ -1,6 +1,5 @@
-import { useSendTransaction, useAccount as useWagmiAccount } from "wagmi";
+import { useAccount as useWagmiAccount } from "wagmi";
 import { useBurnerWallet } from "./useBurnerWallet";
-import { HDAccount } from "viem";
 
 export function useAccount() {
   const { burnerWallet } = useBurnerWallet();
