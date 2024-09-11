@@ -1,26 +1,43 @@
 import { Button, Link, Wrap, WrapItem } from "@chakra-ui/react";
+import { HELP_URL, MAP_URL } from "./vars";
 
 function HeaderMenu() {
   return (
-    <Wrap>
+    <Wrap justify="center">
       <WrapItem>
-        <Button>
-          <Link href="/"> Home</Link>
-        </Button>
+        <Link href="/">
+          <Button>Home</Button>
+        </Link>
       </WrapItem>
       <WrapItem>
-        <Button>
-          <Link href="/#settings">Settings</Link>
-        </Button>
+        <Link href="/#sides">
+          <Button>Side Quests</Button>
+        </Link>
       </WrapItem>
       <WrapItem>
-        <Button>Menu 3</Button>
+        <Link href={MAP_URL}>
+          <Button>Map</Button>
+        </Link>
       </WrapItem>
       <WrapItem>
-        <Button>Menu 4</Button>
+        <Link href={HELP_URL}>
+          <Button>Help</Button>
+        </Link>
       </WrapItem>
       <WrapItem>
-        <Button>Menu 5</Button>
+        <Link href="/#leaderboard">
+          <Button>Leaderboard</Button>
+        </Link>
+      </WrapItem>
+      <WrapItem>
+        <Link href="/#settings">
+          <Button>Settings</Button>
+        </Link>
+      </WrapItem>
+      <WrapItem>
+        <Link href="/#faq">
+          <Button>FAQ</Button>
+        </Link>
       </WrapItem>
     </Wrap>
   );

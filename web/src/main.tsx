@@ -6,20 +6,55 @@ import { WagmiProvider } from "wagmi";
 
 import App from "./App.tsx";
 import { config } from "./wagmi.ts";
-import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import {
+  ChakraProvider,
+  defineStyleConfig,
+  extendTheme,
+} from "@chakra-ui/react";
 import "./index.css";
 import { ConnectKitProvider } from "connectkit";
 import { createHashRouter, RouterProvider } from "react-router-dom";
-import Home from "./Home.jsx";
+import Home from "./Home.tsx";
+import Leaderboard from "./Leaderboard.tsx";
 import Settings from "./Settings.tsx";
+import FAQ from "./FAQ.tsx";
+import SideQuests from "./SideQuests.tsx";
+
+const Button = defineStyleConfig({
+  // The styles all button have in common
+  baseStyle: {
+    textTransform: "uppercase",
+  },
+});
+
+const Heading = defineStyleConfig({
+  // The styles all button have in common
+  baseStyle: {
+    textTransform: "uppercase",
+  },
+  variants: {
+    h1: (props) => ({
+      fontSize: "2em",
+    }),
+    h2: (props) => ({
+      fontSize: "1.5em",
+      marginBottom: "10px",
+    }),
+  },
+  defaultProps: {
+    variant: "h1",
+  },
+});
 
 const theme = extendTheme({
   styles: {
     global: {
-      html: {
-        background: "black",
-      },
+      html: {},
     },
+  },
+  components: {
+    Button,
+    Heading,
   },
 });
 
@@ -33,32 +68,20 @@ const router = createHashRouter([
     element: <Home />,
   },
   {
-    path: "/chapter/:number",
-    element: <Home />,
-  },
-  {
-    path: "/sidequest/:number",
-    element: <Home />,
-  },
-  {
     path: "/leaderboard",
-    element: <Home />,
+    element: <Leaderboard />,
   },
   {
     path: "/settings",
     element: <Settings />,
   },
   {
-    path: "/map",
-    element: <Home />,
+    path: "/sides",
+    element: <SideQuests />,
   },
   {
-    path: "/help",
-    element: <Home />,
-  },
-  {
-    path: "/about",
-    element: <Home />,
+    path: "/faq",
+    element: <FAQ />,
   },
 ]);
 

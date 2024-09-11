@@ -46,10 +46,12 @@ export function useChapter() {
     fetch(`game-data/${rootCID}/${currentChapterIndex}`)
       .then((response) => response.text())
       .then((data) => {
+        console.log(data);
         if (chapterPassword !== "") {
-          decrypt(data, chapterPassword).then((text) =>
-            setCurrentChapterContent(text)
-          );
+          decrypt(data, chapterPassword).then((text: string) => {
+            console.log(text);
+            setCurrentChapterContent(text);
+          });
         } else {
           setCurrentChapterContent(data);
         }

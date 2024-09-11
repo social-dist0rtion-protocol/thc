@@ -2178,7 +2178,7 @@ export const treasureAbi = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const treasureHuntCreatorAbi = [
@@ -2587,16 +2587,16 @@ export const treasureHuntCreatorAbi = [
 ] as const
 
 /**
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const treasureHuntCreatorAddress = {
-  10: '0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C',
+  10: '0xa602e08C4Ef757Ed98C15527E417249bAc98CB20',
   1337: '0x0Bfe50C37E70cc6a8a47c16B5Fe5bcAbDF99aB71',
 } as const
 
 /**
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const treasureHuntCreatorConfig = {
@@ -5031,7 +5031,7 @@ export const useWatchTreasureUriEvent =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useReadTreasureHuntCreator = /*#__PURE__*/ createUseReadContract({
@@ -5042,7 +5042,7 @@ export const useReadTreasureHuntCreator = /*#__PURE__*/ createUseReadContract({
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"DEFAULT_ADMIN_ROLE"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useReadTreasureHuntCreatorDefaultAdminRole =
@@ -5055,7 +5055,7 @@ export const useReadTreasureHuntCreatorDefaultAdminRole =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"GAME_MASTER_ROLE"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useReadTreasureHuntCreatorGameMasterRole =
@@ -5068,7 +5068,7 @@ export const useReadTreasureHuntCreatorGameMasterRole =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"chapterToPlayers"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useReadTreasureHuntCreatorChapterToPlayers =
@@ -5081,7 +5081,7 @@ export const useReadTreasureHuntCreatorChapterToPlayers =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"contextCounter"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useReadTreasureHuntCreatorContextCounter =
@@ -5094,7 +5094,7 @@ export const useReadTreasureHuntCreatorContextCounter =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"currentChapter"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useReadTreasureHuntCreatorCurrentChapter =
@@ -5107,7 +5107,7 @@ export const useReadTreasureHuntCreatorCurrentChapter =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"gameMasters"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useReadTreasureHuntCreatorGameMasters =
@@ -5120,7 +5120,7 @@ export const useReadTreasureHuntCreatorGameMasters =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"getAddressHash"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useReadTreasureHuntCreatorGetAddressHash =
@@ -5133,7 +5133,7 @@ export const useReadTreasureHuntCreatorGetAddressHash =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"getLeaderboard"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useReadTreasureHuntCreatorGetLeaderboard =
@@ -5146,7 +5146,7 @@ export const useReadTreasureHuntCreatorGetLeaderboard =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"getQuestsRootCID"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useReadTreasureHuntCreatorGetQuestsRootCid =
@@ -5159,7 +5159,7 @@ export const useReadTreasureHuntCreatorGetQuestsRootCid =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"getRoleAdmin"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useReadTreasureHuntCreatorGetRoleAdmin =
@@ -5172,7 +5172,7 @@ export const useReadTreasureHuntCreatorGetRoleAdmin =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"hasRole"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useReadTreasureHuntCreatorHasRole =
@@ -5185,7 +5185,7 @@ export const useReadTreasureHuntCreatorHasRole =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"keyToPos"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useReadTreasureHuntCreatorKeyToPos =
@@ -5198,7 +5198,7 @@ export const useReadTreasureHuntCreatorKeyToPos =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"owner"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useReadTreasureHuntCreatorOwner =
@@ -5211,7 +5211,7 @@ export const useReadTreasureHuntCreatorOwner =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"playerToCurrentChapter"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useReadTreasureHuntCreatorPlayerToCurrentChapter =
@@ -5224,7 +5224,7 @@ export const useReadTreasureHuntCreatorPlayerToCurrentChapter =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"playerToKeys"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useReadTreasureHuntCreatorPlayerToKeys =
@@ -5237,7 +5237,7 @@ export const useReadTreasureHuntCreatorPlayerToKeys =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"players"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useReadTreasureHuntCreatorPlayers =
@@ -5250,7 +5250,7 @@ export const useReadTreasureHuntCreatorPlayers =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"prize"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useReadTreasureHuntCreatorPrize =
@@ -5263,7 +5263,7 @@ export const useReadTreasureHuntCreatorPrize =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"questsRootCid"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useReadTreasureHuntCreatorQuestsRootCid =
@@ -5276,7 +5276,7 @@ export const useReadTreasureHuntCreatorQuestsRootCid =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"solutions"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useReadTreasureHuntCreatorSolutions =
@@ -5289,7 +5289,7 @@ export const useReadTreasureHuntCreatorSolutions =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"supportsInterface"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useReadTreasureHuntCreatorSupportsInterface =
@@ -5302,7 +5302,7 @@ export const useReadTreasureHuntCreatorSupportsInterface =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"totalChapters"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useReadTreasureHuntCreatorTotalChapters =
@@ -5315,7 +5315,7 @@ export const useReadTreasureHuntCreatorTotalChapters =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"totalKeys"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useReadTreasureHuntCreatorTotalKeys =
@@ -5328,7 +5328,7 @@ export const useReadTreasureHuntCreatorTotalKeys =
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useWriteTreasureHuntCreator = /*#__PURE__*/ createUseWriteContract(
@@ -5338,7 +5338,7 @@ export const useWriteTreasureHuntCreator = /*#__PURE__*/ createUseWriteContract(
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"addSolution"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useWriteTreasureHuntCreatorAddSolution =
@@ -5351,7 +5351,7 @@ export const useWriteTreasureHuntCreatorAddSolution =
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"grantRole"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useWriteTreasureHuntCreatorGrantRole =
@@ -5364,7 +5364,7 @@ export const useWriteTreasureHuntCreatorGrantRole =
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"renounceOwnership"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useWriteTreasureHuntCreatorRenounceOwnership =
@@ -5377,7 +5377,7 @@ export const useWriteTreasureHuntCreatorRenounceOwnership =
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"renounceRole"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useWriteTreasureHuntCreatorRenounceRole =
@@ -5390,7 +5390,7 @@ export const useWriteTreasureHuntCreatorRenounceRole =
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"revokeRole"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useWriteTreasureHuntCreatorRevokeRole =
@@ -5403,7 +5403,7 @@ export const useWriteTreasureHuntCreatorRevokeRole =
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"setup"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useWriteTreasureHuntCreatorSetup =
@@ -5416,7 +5416,7 @@ export const useWriteTreasureHuntCreatorSetup =
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"submit"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useWriteTreasureHuntCreatorSubmit =
@@ -5429,7 +5429,7 @@ export const useWriteTreasureHuntCreatorSubmit =
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"submitKey"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useWriteTreasureHuntCreatorSubmitKey =
@@ -5442,7 +5442,7 @@ export const useWriteTreasureHuntCreatorSubmitKey =
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"transferOwnership"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useWriteTreasureHuntCreatorTransferOwnership =
@@ -5455,7 +5455,7 @@ export const useWriteTreasureHuntCreatorTransferOwnership =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useSimulateTreasureHuntCreator =
@@ -5467,7 +5467,7 @@ export const useSimulateTreasureHuntCreator =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"addSolution"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useSimulateTreasureHuntCreatorAddSolution =
@@ -5480,7 +5480,7 @@ export const useSimulateTreasureHuntCreatorAddSolution =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"grantRole"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useSimulateTreasureHuntCreatorGrantRole =
@@ -5493,7 +5493,7 @@ export const useSimulateTreasureHuntCreatorGrantRole =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"renounceOwnership"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useSimulateTreasureHuntCreatorRenounceOwnership =
@@ -5506,7 +5506,7 @@ export const useSimulateTreasureHuntCreatorRenounceOwnership =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"renounceRole"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useSimulateTreasureHuntCreatorRenounceRole =
@@ -5519,7 +5519,7 @@ export const useSimulateTreasureHuntCreatorRenounceRole =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"revokeRole"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useSimulateTreasureHuntCreatorRevokeRole =
@@ -5532,7 +5532,7 @@ export const useSimulateTreasureHuntCreatorRevokeRole =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"setup"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useSimulateTreasureHuntCreatorSetup =
@@ -5545,7 +5545,7 @@ export const useSimulateTreasureHuntCreatorSetup =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"submit"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useSimulateTreasureHuntCreatorSubmit =
@@ -5558,7 +5558,7 @@ export const useSimulateTreasureHuntCreatorSubmit =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"submitKey"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useSimulateTreasureHuntCreatorSubmitKey =
@@ -5571,7 +5571,7 @@ export const useSimulateTreasureHuntCreatorSubmitKey =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"transferOwnership"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useSimulateTreasureHuntCreatorTransferOwnership =
@@ -5584,7 +5584,7 @@ export const useSimulateTreasureHuntCreatorTransferOwnership =
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link treasureHuntCreatorAbi}__
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useWatchTreasureHuntCreatorEvent =
@@ -5596,7 +5596,7 @@ export const useWatchTreasureHuntCreatorEvent =
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `eventName` set to `"ChapterCompleted"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useWatchTreasureHuntCreatorChapterCompletedEvent =
@@ -5609,7 +5609,7 @@ export const useWatchTreasureHuntCreatorChapterCompletedEvent =
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `eventName` set to `"IncrementCounter"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useWatchTreasureHuntCreatorIncrementCounterEvent =
@@ -5622,7 +5622,7 @@ export const useWatchTreasureHuntCreatorIncrementCounterEvent =
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `eventName` set to `"KeyCompleted"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useWatchTreasureHuntCreatorKeyCompletedEvent =
@@ -5635,7 +5635,7 @@ export const useWatchTreasureHuntCreatorKeyCompletedEvent =
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `eventName` set to `"OwnershipTransferred"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useWatchTreasureHuntCreatorOwnershipTransferredEvent =
@@ -5648,7 +5648,7 @@ export const useWatchTreasureHuntCreatorOwnershipTransferredEvent =
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `eventName` set to `"PrizeMinted"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useWatchTreasureHuntCreatorPrizeMintedEvent =
@@ -5661,7 +5661,7 @@ export const useWatchTreasureHuntCreatorPrizeMintedEvent =
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `eventName` set to `"RoleAdminChanged"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useWatchTreasureHuntCreatorRoleAdminChangedEvent =
@@ -5674,7 +5674,7 @@ export const useWatchTreasureHuntCreatorRoleAdminChangedEvent =
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `eventName` set to `"RoleGranted"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useWatchTreasureHuntCreatorRoleGrantedEvent =
@@ -5687,7 +5687,7 @@ export const useWatchTreasureHuntCreatorRoleGrantedEvent =
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `eventName` set to `"RoleRevoked"`
  *
- * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x0E39a26238858C8CA1FaE2e358f620336Fc7F03C)
+ * - [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0xa602e08C4Ef757Ed98C15527E417249bAc98CB20)
  * -
  */
 export const useWatchTreasureHuntCreatorRoleRevokedEvent =

@@ -1,4 +1,12 @@
-import { Button, Heading, Input, useToast, VStack } from "@chakra-ui/react";
+import {
+  Button,
+  Heading,
+  Input,
+  Link,
+  Text,
+  useToast,
+  VStack,
+} from "@chakra-ui/react";
 import { useChapter } from "./hooks/useChapter";
 import Markdown from "react-markdown";
 import { useEffect, useState } from "react";
@@ -13,23 +21,11 @@ import {
   treasureHuntCreatorAddress as contractAddress,
 } from "./generated";
 import { signatureFromSolution } from "./hooks/utils";
-import { useSubmitSolution } from "./hooks/gelato";
 
-function Home() {
-  const {
-    currentChapterIndex,
-    setCurrentChapterIndex,
-    setChapterPassword,
-    currentChapterContent,
-  } = useChapter();
+function SideQuests() {
   const toast = useToast();
   const account = useAccount();
   const [password, setPassword] = useState("");
-  const { status, data, error } = useSubmitSolution(
-    password,
-    account.address,
-    chainId
-  );
   const handlePasswordChange = (event: any) => setPassword(event.target.value);
 
   const { data: hash, writeContract, status, error } = useWriteContract();
@@ -40,24 +36,21 @@ function Home() {
       hash,
     });
 
-  async function submit(password: string) {
+  async function submitKey(password: string) {
     const { r, s, v } = await signatureFromSolution(account.address!, password);
     writeContract({
       abi,
       address: contractAddress[chainId],
-      functionName: "submit",
+      functionName: "submitKey",
       args: [v, r, s],
     });
   }
 
   useEffect(() => {
     if (isConfirmed) {
-      setCurrentChapterIndex((currentChapterIndex + 1).toString());
-      setChapterPassword(password);
-
       toast({
         title: "Success!",
-        description: "Next chapter",
+        description: "You found a key!",
         status: "success",
         duration: 9000,
         isClosable: true,
@@ -69,7 +62,7 @@ function Home() {
     if (status === "error") {
       toast({
         title: "Error",
-        description: "Wrong solution",
+        description: "Wrong key",
         status: "error",
         duration: 9000,
         isClosable: true,
@@ -79,18 +72,22 @@ function Home() {
 
   return (
     <VStack className="content-pane" align="flex-start">
-      <Heading>Home</Heading>
-      <Markdown>{currentChapterContent}</Markdown>
+      <Heading>Side Quests</Heading>
+      <Text>
+        Did you find a side quest? Submit the password with this form to add it
+        to your score in the leaderboard. More info in the{" "}
+        <Link href="/#faq">FAQs</Link>.
+      </Text>
       <Input
         value={password}
         onChange={handlePasswordChange}
         placeholder="password"
       />
-      <Button isDisabled={isConfirming} onClick={() => submit(password)}>
+      <Button isDisabled={isConfirming} onClick={() => submitKey(password)}>
         Submit
       </Button>
     </VStack>
   );
 }
 
-export default Home;
+export default SideQuests;
