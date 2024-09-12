@@ -15,7 +15,7 @@ function Settings() {
   };
 
   return (
-    <VStack>
+    <VStack alignItems="flex-start">
       <Heading as="h1" size="xxl">
         Settings
       </Heading>

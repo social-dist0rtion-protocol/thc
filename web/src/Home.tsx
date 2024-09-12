@@ -1,11 +1,12 @@
 import { Button, Heading, Input, useToast, VStack } from "@chakra-ui/react";
 import { useChapter } from "./hooks/useChapter";
 import Markdown from "react-markdown";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSubmitSolution } from "./hooks/gelato";
 import { useAccount } from "./hooks/useAccount";
 import { addressFromSolution } from "./lib";
 import metadata from "./metadata.json";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 function Home() {
   const {
@@ -15,27 +16,17 @@ function Home() {
   } = useChapter();
   const toast = useToast();
   const account = useAccount();
-  const [inputField, setInputField] = useState("");
-  const [password, setPassword] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [password, setPassword] = useLocalStorage("password", "");
+  const [currentChapter, setCurrentChapter] = useState<number | undefined>();
   const { status: gelatoStatus, error: gelatoError } = useSubmitSolution(
     password,
     account?.address as `0x${string}`,
-    account
+    account,
+    currentChapter
   );
 
-  const handlePasswordChange = (event: any) =>
-    setInputField(event.target.value);
-
   useEffect(() => {
-    if (gelatoStatus === "success") {
-      toast({
-        title: "Success!",
-        description: "Next chapter",
-        status: "success",
-        duration: 9000,
-        isClosable: true,
-      });
-    }
     if (gelatoStatus === "error") {
       toast({
         title: "Error",
@@ -44,8 +35,31 @@ function Home() {
         duration: 9000,
         isClosable: true,
       });
+      setPassword("");
     }
   }, [gelatoStatus]);
+
+  useEffect(() => {
+    if (
+      currentSmartContractChapterIndex !== undefined &&
+      currentSmartContractChapterIndex !== currentChapter
+    ) {
+      if (password !== "" && currentChapter != undefined) {
+        toast({
+          title: "Success!",
+          description: `Transaction finalized. You advanced to chapter ${currentSmartContractChapterIndex}`,
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+        });
+        setPassword("");
+        if (inputRef.current) {
+          inputRef.current.value = "";
+        }
+      }
+      setCurrentChapter(currentSmartContractChapterIndex);
+    }
+  }, [currentSmartContractChapterIndex]);
 
   function submitPassword() {
     if (!account) {
@@ -57,33 +71,43 @@ function Home() {
         isClosable: true,
       });
     } else if (
-      addressFromSolution(inputField) !==
-      metadata.chapters[currentSmartContractChapterIndex]
+      currentSmartContractChapterIndex !== undefined &&
+      inputRef.current !== null
     ) {
-      toast({
-        title: "Error",
-        description: "Wrong solution",
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-      });
-    } else {
-      console.log(inputField);
-      setChapterPassword(currentSmartContractChapterIndex, inputField);
-      setPassword(inputField);
-      setInputField("");
+      const inputPassword = inputRef.current.value;
+      if (
+        addressFromSolution(inputPassword) !==
+        metadata.chapters[currentSmartContractChapterIndex]
+      ) {
+        toast({
+          title: "Error",
+          description: "Wrong solution",
+          status: "error",
+          duration: 9000,
+          isClosable: true,
+        });
+      } else {
+        toast({
+          title: "Correct!",
+          description:
+            "Correct solution. Waiting for the transaction to be finalized...",
+          status: "info",
+          duration: 9000,
+          isClosable: true,
+        });
+
+        setChapterPassword(currentSmartContractChapterIndex, inputPassword);
+        setPassword(inputPassword);
+      }
     }
   }
 
   return (
     <VStack className="content-pane" align="flex-start">
       <Heading>Home</Heading>
+      <Heading variant="h2">Chapter {currentSmartContractChapterIndex}</Heading>
       <Markdown>{currentChapterContent}</Markdown>
-      <Input
-        value={inputField}
-        onChange={handlePasswordChange}
-        placeholder="password"
-      />
+      <Input ref={inputRef} placeholder="password" />
       <Button
         isDisabled={gelatoStatus === "pending"}
         onClick={() => submitPassword()}

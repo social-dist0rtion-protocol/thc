@@ -33,7 +33,7 @@ function useRootCID() {
 }
 
 function useCurrentSmartContractChapterIndex(address?: string) {
-  const [chapter, setChapter] = useState(0);
+  const [chapter, setChapter] = useState<number>();
 
   const result = useReadContract({
     abi: treasureHuntCreatorAbi,
@@ -54,7 +54,7 @@ function useCurrentSmartContractChapterIndex(address?: string) {
   // fix: use only sporadically, not at every mount and check when it changes
 
   useEffect(() => {
-    if (result.data) {
+    if (result.data !== undefined) {
       setChapter(Number(result.data as bigint));
       console.log(result.data);
     }
@@ -72,14 +72,6 @@ function useCurrentChapterIndex() {
     currentChapterIndex: parseInt(currentChapter),
     setCurrentChapterIndex,
   };
-}
-
-function useChapterPassword(chapterIndex: number) {
-  const [chapterPassword, setChapterPassword] = useLocalStorage(
-    prefixedPasswordKey(`${CURRENT_CHAPTER_PASSWORD_KEY}/${chapterIndex}`),
-    ""
-  );
-  return { chapterPassword, setChapterPassword };
 }
 
 function setChapterPassword(chapterIndex: number, password: string) {
@@ -102,34 +94,31 @@ export function useChapter() {
   const [currentChapterContent, setCurrentChapterContent] =
     useState<string>("");
   const rootCID = useRootCID();
-  //const { currentChapterIndex, setCurrentChapterIndex } =
-  //  useCurrentChapterIndex();
   const currentSmartContractChapterIndex = useCurrentSmartContractChapterIndex(
     account?.address
   );
 
+  async function updateChapterContent(chapter: number) {
+    const response = await fetch(`game-data/${rootCID}/${chapter}`);
+    const data = await response.text();
+    console.log(currentSmartContractChapterIndex);
+    if (chapter > 0) {
+      const chapterPassword = getChapterPassword(chapter - 1);
+      const text = await decrypt(data, chapterPassword);
+      setCurrentChapterContent(text);
+    } else {
+      setCurrentChapterContent(data);
+    }
+  }
+
   useEffect(() => {
-    if (rootCID === undefined) {
+    if (
+      rootCID === undefined ||
+      currentSmartContractChapterIndex === undefined
+    ) {
       return;
     }
-
-    fetch(`game-data/${rootCID}/${currentSmartContractChapterIndex}`)
-      .then((response) => {
-        return response.text();
-      })
-      .then((data) => {
-        if (currentSmartContractChapterIndex > 0) {
-          const chapterPassword = getChapterPassword(
-            currentSmartContractChapterIndex - 1
-          );
-          decrypt(data, chapterPassword).then((text: string) => {
-            console.log(text);
-            setCurrentChapterContent(text);
-          });
-        } else {
-          setCurrentChapterContent(data);
-        }
-      });
+    updateChapterContent(currentSmartContractChapterIndex);
   }, [rootCID, currentSmartContractChapterIndex]);
 
   return {

@@ -13,6 +13,7 @@ import { encodeFunctionData } from "viem";
 import { useEffect, useState } from "react";
 import { CHAIN_ID, GELATO_FEE_TOKEN } from "../env";
 import { useInterval } from "./useInterval";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 type Status = "pending" | "success" | "error";
 
@@ -21,21 +22,25 @@ const TOTAL_ATTEMPTS = 10;
 export function useSubmitSolution(
   solution: string,
   address: `0x${string}` | undefined,
-  signer: SignerOrProvider | undefined
+  signer: SignerOrProvider | undefined,
+  chapterIndex: number | undefined
 ) {
-  const [status, setStatus] = useState<Status>();
   const [error, setError] = useState<string>();
   const [data, setData] = useState<any>();
-  const [taskStatus, setTaskStatus] = useState<
+  const [taskStatus, setTaskStatus] = useLocalStorage<
     TransactionStatusResponse | undefined
-  >();
-  const [taskId, setTaskId] = useState<string>();
-  const [attemptsLeft, setAttemptsLeft] = useState(TOTAL_ATTEMPTS);
-
+  >(
+    (chapterIndex !== undefined
+      ? chapterIndex.toString()
+      : "unknown"
+    ).toString()
+  );
+  const [taskId, setTaskId] = useState<string | undefined>();
+  const [status, setStatus] = useState<Status>();
   const [polling, setPolling] = useState(false);
   const { rounds } = useInterval(polling, 4000);
 
-  async function handleTaskStateChange() {
+  function handleTaskStateChange() {
     const taskState = taskStatus?.taskState as string;
     if (
       ["CheckPending", "ExecPending", "WaitingForConfirmation"].includes(
@@ -47,11 +52,9 @@ export function useSubmitSolution(
       ["ExecSuccess"].includes(taskState as string) &&
       taskStatus?.transactionHash
     ) {
-      setStatus("success");
-      setData(taskStatus.transactionHash);
+      finalize("success", { data: taskStatus?.transactionHash });
     } else if (["ExecReverted", "Cancelled"].includes(taskState)) {
-      setStatus("error");
-      setError(taskStatus?.lastCheckMessage);
+      finalize("error", { error: taskStatus?.lastCheckMessage });
     }
   }
 
@@ -62,7 +65,6 @@ export function useSubmitSolution(
     }
 
     const { r, s, v } = await signatureFromSolution(solution, address);
-    console.log(`Solution ${solution}, address ${address}`);
     const encodedCall = encodeFunctionData({
       args: [v, r, s],
       abi: treasureHuntCreatorAbi,
@@ -71,16 +73,14 @@ export function useSubmitSolution(
 
     setStatus("pending");
     const response = await relayRequest(encodedCall, address, signer);
-    console.log(response);
     await fetchTaskStatus(response.taskId);
-    setTaskId(response.taskId);
+    console.log(`set ${chapterIndex} to taskId ${response.taskId}`);
   }
 
   async function poll() {
-    if (taskId && polling) {
+    if (taskStatus) {
       console.log("poll");
-      setAttemptsLeft(attemptsLeft - 1);
-      await fetchTaskStatus(taskId);
+      await fetchTaskStatus(taskStatus.taskId);
       handleTaskStateChange();
     }
   }
@@ -92,7 +92,6 @@ export function useSubmitSolution(
     while (retries > 0) {
       try {
         taskStatus = await relay.getTaskStatus(taskId);
-        console.log(taskStatus);
         setTaskStatus(taskStatus);
         return;
       } catch (e: any) {
@@ -102,45 +101,64 @@ export function useSubmitSolution(
     }
 
     if (retries === 0) {
-      setStatus("error");
-      setError("error fetching status");
+      finalize("error", { error: "error fetchin status" });
+    }
+  }
+
+  function finalize(
+    status: Status | undefined,
+    info?: { data?: string; error?: string }
+  ) {
+    setStatus(status);
+    setError(info?.error);
+    setData(info?.data);
+    setPolling(false);
+    if (status == "error") {
+      setTaskStatus(undefined);
     }
   }
 
   useEffect(() => {
-    if (solution !== "" && address && signer) {
-      console.log("relay");
-      console.log(solution);
+    if (
+      solution !== "" &&
+      address &&
+      signer &&
+      !taskStatus &&
+      chapterIndex !== undefined
+    ) {
       relay();
     }
   }, [solution, address]);
 
   useEffect(() => {
-    console.log(rounds);
-    if (rounds === 0) {
-      return;
-    }
-    console.log(status);
-    if (status !== "pending") {
-      setPolling(false);
-      console.log("error, other errors");
-    } else if (rounds > TOTAL_ATTEMPTS) {
-      console.log("error, gelato stuck");
-      setPolling(false);
-      setStatus("error");
-      setError("gelato is stuck");
+    if (taskStatus) {
+      setTaskId(taskStatus.taskId);
     } else {
-      console.log("polling");
-      poll();
+      setTaskId(undefined);
     }
-  }, [rounds]);
+  }, [taskStatus]);
 
   useEffect(() => {
-    if (taskId) {
-      handleTaskStateChange();
+    if (!taskId) {
+      setStatus(undefined);
+      setPolling(false);
+    } else {
+      poll();
       setPolling(true);
     }
   }, [taskId]);
+
+  useEffect(() => {
+    if (rounds === 0) {
+      return;
+    }
+
+    if (rounds > TOTAL_ATTEMPTS) {
+      finalize("error", { error: "too many failed attempt with gelato" });
+    } else {
+      poll();
+    }
+  }, [rounds]);
 
   return {
     status,
