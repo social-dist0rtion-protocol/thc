@@ -12,11 +12,13 @@ import {
 } from "@chakra-ui/react";
 import { ENSName } from "ethereum-ens-name";
 import { useEffect, useState } from "react";
-import { useChainId, useReadContract } from "wagmi";
+import { useReadContract } from "wagmi";
 import {
   treasureHuntCreatorAbi as abi,
   treasureHuntCreatorAddress as contractAddress,
 } from "./generated";
+import metadata from "./metadata.json";
+import { CHAIN_ID } from "./env";
 
 type LeaderBoardEntry = {
   address: `0x${string}`;
@@ -26,13 +28,12 @@ type LeaderBoardEntry = {
 
 function Leaderboard() {
   const [page, setPage] = useState(BigInt(0));
-  const chainId = useChainId();
   const [pages, setPages] = useState<LeaderBoardEntry[][]>([]);
-  const emojies = ["🎨", "🏃‍♀️", "🕹️", "🙃", "🍆", "📇", "⚒️", "🎞️"];
+  const keys = metadata.keys;
 
   const { status, data } = useReadContract({
     abi,
-    address: contractAddress[chainId as keyof typeof contractAddress],
+    address: contractAddress[CHAIN_ID as keyof typeof contractAddress],
     functionName: "getLeaderboard",
     args: [page],
   });
@@ -42,15 +43,17 @@ function Leaderboard() {
   }
 
   useEffect(() => {
+    console.log(data);
+    console.log(status);
     if (data) {
       const bitmaps = data as unknown as bigint[];
       const pageContent: LeaderBoardEntry[] = [];
       for (let i = 0; i < bitmaps.length; i++) {
         const bitmap = bitmaps[i];
         const chapter = Number(bitmap & b(8));
-        const keys = ((bitmap >> BigInt(8)) & b(80))
+        const keysString = ((bitmap >> BigInt(8)) & b(80))
           .toString(2)
-          .padEnd(emojies.length, "0")
+          .padEnd(keys.length, "0")
           .split("")
           .map((k) => Number(k) === 1);
         const addressInt = bitmap >> BigInt(96);
@@ -62,7 +65,7 @@ function Leaderboard() {
         const address = ("0x" +
           addressInt.toString(16).padStart(40, "0")) as `0x${string}`;
 
-        pageContent.push({ chapter, keys, address });
+        pageContent.push({ chapter, keys: keysString, address });
       }
 
       if (pageContent.length > 0) {
@@ -89,7 +92,7 @@ function Leaderboard() {
   }
 
   return (
-    <VStack className="content-pane" align="flex-start">
+    <VStack alignItems="flex-start">
       <Heading>Leaderboard</Heading>
       <TableContainer>
         <Table variant="simple">
@@ -112,7 +115,9 @@ function Leaderboard() {
                   </Td>
                   <Td isNumeric>{entry.chapter}</Td>
                   <Td>
-                    {entry.keys.map((k, i) => (k ? emojies[i] : "?")).join(",")}
+                    {entry.keys
+                      .map((k, i) => (k ? keys[i].emoji : "?"))
+                      .join(",")}
                   </Td>
                 </Tr>
               );

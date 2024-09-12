@@ -79,7 +79,6 @@ export function useSubmitSolution(
 
   async function poll() {
     if (taskStatus) {
-      console.log("poll");
       await fetchTaskStatus(taskStatus.taskId);
       handleTaskStateChange();
     }

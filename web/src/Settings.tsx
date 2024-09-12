@@ -1,13 +1,10 @@
 import { Button, Heading, Text, Textarea, VStack } from "@chakra-ui/react";
 import { useBurnerWallet } from "./hooks/useBurnerWallet";
 import { useState } from "react";
-import ConnectButton from "./ConnectButton";
-import { useAccount } from "wagmi";
 function Settings() {
-  const { burnerWallet: wallet, setMnemonic } = useBurnerWallet();
-  const account = useAccount();
+  const { burnerWallet: wallet, mnemonic, setMnemonic } = useBurnerWallet();
 
-  let [temporaryMnemonic, setTemporaryMnemonic] = useState("");
+  let [temporaryMnemonic, setTemporaryMnemonic] = useState(mnemonic || "");
 
   let handleInputChange = (e: any) => {
     let inputValue = e.target.value;
@@ -22,16 +19,15 @@ function Settings() {
       <Heading as="h2" size="xl">
         Wallet Address
       </Heading>
-      <Text>
-        You are connected with the{" "}
-        {account.isConnected ? "injected wallet" : "burner wallet"}
-      </Text>
-      <Text>{account.isConnected ? account.address : wallet?.address}</Text>
-      {account.isConnected ? (
+      <Text>You are connected with the burner wallet</Text>
+      <Text>{wallet?.address}</Text>
+      {/*
+      account.isConnected ? (
         <ConnectButton label="use burner wallet" />
       ) : (
         <ConnectButton label="connect injected wallet" />
-      )}
+      )
+      */}
       <Heading as="h2" size="xl">
         Change Seedphrase
       </Heading>

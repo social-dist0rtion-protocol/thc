@@ -79,3 +79,11 @@ task("current-chapter", "Check player current chapter")
     const chapter = await thcContract.playerToCurrentChapter(address);
     console.log(`Player ${address} is at chapter ${chapter}`);
   });
+
+task("leaderboard", "Check leaderboard")
+  .addPositionalParam("page", "Page")
+  .setAction(async ({ page }: { page: number }, hre) => {
+    const thcContract = await loadContract(hre, "TreasureHuntCreator");
+    const leaderboard = await thcContract.getLeaderboard(page);
+    console.log(leaderboard);
+  });
