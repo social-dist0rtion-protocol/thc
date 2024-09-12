@@ -14,11 +14,11 @@ import {
 import "./index.css";
 import { ConnectKitProvider } from "connectkit";
 import { createHashRouter, RouterProvider } from "react-router-dom";
-import Home from "./Home.tsx";
 import Leaderboard from "./Leaderboard.tsx";
 import Settings from "./Settings.tsx";
 import FAQ from "./FAQ.tsx";
-import SideQuests from "./SideQuests.tsx";
+import SideQuest from "./SideQuest.tsx";
+import Quest from "./Quest.tsx";
 
 const Button = defineStyleConfig({
   // The styles all button have in common
@@ -65,7 +65,7 @@ const queryClient = new QueryClient();
 const router = createHashRouter([
   {
     path: "/",
-    element: <Home />,
+    element: <Quest />,
   },
   {
     path: "/leaderboard",
@@ -77,7 +77,7 @@ const router = createHashRouter([
   },
   {
     path: "/sides",
-    element: <SideQuests />,
+    element: <SideQuest />,
   },
   {
     path: "/faq",

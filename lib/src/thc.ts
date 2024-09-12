@@ -1,4 +1,4 @@
-import { Hex, hexToBytes, keccak256, parseSignature, toHex } from "viem";
+import { Hex, keccak256, parseSignature, toHex } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { stringToUint8Array } from "./utils";
 

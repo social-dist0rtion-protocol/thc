@@ -1,19 +1,18 @@
-import { Button, Heading, Input, useToast, VStack } from "@chakra-ui/react";
-import { useChapter } from "./hooks/useChapter";
-import Markdown from "react-markdown";
-import { useEffect, useRef, useState } from "react";
+import { Button, Input, useToast, VStack } from "@chakra-ui/react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { useSubmitSolution } from "./hooks/gelato";
 import { useAccount } from "./hooks/useAccount";
-import { addressFromSolution } from "./lib";
-import metadata from "./metadata.json";
 import { useLocalStorage } from "@uidotdev/usehooks";
 
-function Home() {
-  const {
-    currentSmartContractChapterIndex,
-    setChapterPassword,
-    currentChapterContent,
-  } = useChapter();
+type PuzzleProps = {
+  index: number | undefined;
+  setPasswordAtIndex: (index: number, password: string) => void;
+  solutionMatcher: (solution: string) => boolean;
+  submitFunctionName: "submit" | "submitKey";
+  children: ReactNode;
+};
+
+function Puzzle(props: PuzzleProps) {
   const toast = useToast();
   const account = useAccount();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -23,7 +22,8 @@ function Home() {
     password,
     account?.address as `0x${string}`,
     account,
-    currentChapter
+    currentChapter,
+    props.submitFunctionName
   );
 
   useEffect(() => {
@@ -40,14 +40,11 @@ function Home() {
   }, [gelatoStatus]);
 
   useEffect(() => {
-    if (
-      currentSmartContractChapterIndex !== undefined &&
-      currentSmartContractChapterIndex !== currentChapter
-    ) {
+    if (props.index !== undefined && props.index !== currentChapter) {
       if (password !== "" && currentChapter != undefined) {
         toast({
           title: "Success!",
-          description: `Transaction finalized. You advanced to chapter ${currentSmartContractChapterIndex}`,
+          description: `Transaction finalized. Congrats!`,
           status: "success",
           duration: 9000,
           isClosable: true,
@@ -57,9 +54,9 @@ function Home() {
           inputRef.current.value = "";
         }
       }
-      setCurrentChapter(currentSmartContractChapterIndex);
+      setCurrentChapter(props.index);
     }
-  }, [currentSmartContractChapterIndex]);
+  }, [props.index]);
 
   function submitPassword() {
     if (!account) {
@@ -70,15 +67,9 @@ function Home() {
         duration: 9000,
         isClosable: true,
       });
-    } else if (
-      currentSmartContractChapterIndex !== undefined &&
-      inputRef.current !== null
-    ) {
+    } else if (props.index !== undefined && inputRef.current !== null) {
       const inputPassword = inputRef.current.value;
-      if (
-        addressFromSolution(inputPassword) !==
-        metadata.chapters[currentSmartContractChapterIndex]
-      ) {
+      if (!props.solutionMatcher(inputPassword)) {
         toast({
           title: "Error",
           description: "Wrong solution",
@@ -96,7 +87,7 @@ function Home() {
           isClosable: true,
         });
 
-        setChapterPassword(currentSmartContractChapterIndex, inputPassword);
+        props.setPasswordAtIndex(props.index, inputPassword);
         setPassword(inputPassword);
       }
     }
@@ -104,9 +95,7 @@ function Home() {
 
   return (
     <VStack className="content-pane" align="flex-start">
-      <Heading>Home</Heading>
-      <Heading variant="h2">Chapter {currentSmartContractChapterIndex}</Heading>
-      <Markdown>{currentChapterContent}</Markdown>
+      {props.children}
       <Input ref={inputRef} placeholder="password" />
       <Button
         isDisabled={gelatoStatus === "pending"}
@@ -118,4 +107,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Puzzle;

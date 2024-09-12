@@ -11,7 +11,7 @@ import {
 } from "../generated";
 import { encodeFunctionData } from "viem";
 import { useEffect, useState } from "react";
-import { CHAIN_ID, GELATO_FEE_TOKEN } from "../env";
+import { APP_NAME, CHAIN_ID, GELATO_FEE_TOKEN } from "../env";
 import { useInterval } from "./useInterval";
 import { useLocalStorage } from "@uidotdev/usehooks";
 
@@ -23,17 +23,18 @@ export function useSubmitSolution(
   solution: string,
   address: `0x${string}` | undefined,
   signer: SignerOrProvider | undefined,
-  chapterIndex: number | undefined
+  index: number | undefined,
+  submitFunctionName: "submit" | "submitKey"
 ) {
   const [error, setError] = useState<string>();
   const [data, setData] = useState<any>();
   const [taskStatus, setTaskStatus] = useLocalStorage<
     TransactionStatusResponse | undefined
   >(
-    (chapterIndex !== undefined
-      ? chapterIndex.toString()
+    `${APP_NAME}/taskStatus/${submitFunctionName}/${(index !== undefined
+      ? index.toString()
       : "unknown"
-    ).toString()
+    ).toString()}`
   );
   const [taskId, setTaskId] = useState<string | undefined>();
   const [status, setStatus] = useState<Status>();
@@ -59,7 +60,7 @@ export function useSubmitSolution(
   }
 
   async function relay() {
-    console.log("relay");
+    console.log(`relay ${solution}`);
     if (!address || !signer) {
       throw "missing account";
     }
@@ -68,13 +69,13 @@ export function useSubmitSolution(
     const encodedCall = encodeFunctionData({
       args: [v, r, s],
       abi: treasureHuntCreatorAbi,
-      functionName: "submit",
+      functionName: submitFunctionName,
     });
 
     setStatus("pending");
     const response = await relayRequest(encodedCall, address, signer);
     await fetchTaskStatus(response.taskId);
-    console.log(`set ${chapterIndex} to taskId ${response.taskId}`);
+    console.log(`set ${index} to taskId ${response.taskId}`);
   }
 
   async function poll() {
@@ -100,7 +101,7 @@ export function useSubmitSolution(
     }
 
     if (retries === 0) {
-      finalize("error", { error: "error fetchin status" });
+      finalize("error", { error: "error fetching status" });
     }
   }
 
@@ -123,11 +124,11 @@ export function useSubmitSolution(
       address &&
       signer &&
       !taskStatus &&
-      chapterIndex !== undefined
+      index !== undefined
     ) {
       relay();
     }
-  }, [solution, address]);
+  }, [solution]);
 
   useEffect(() => {
     if (taskStatus) {

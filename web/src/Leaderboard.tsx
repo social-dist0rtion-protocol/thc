@@ -19,6 +19,7 @@ import {
 } from "./generated";
 import metadata from "./metadata.json";
 import { CHAIN_ID } from "./env";
+import { b } from "./lib";
 
 type LeaderBoardEntry = {
   address: `0x${string}`;
@@ -37,10 +38,6 @@ function Leaderboard() {
     functionName: "getLeaderboard",
     args: [page],
   });
-
-  function b(n: number) {
-    return BigInt(2) ** BigInt(n) - BigInt(1);
-  }
 
   useEffect(() => {
     console.log(data);
