@@ -32,7 +32,7 @@ function Leaderboard() {
 
   const { status, data } = useReadContract({
     abi,
-    address: contractAddress[chainId],
+    address: contractAddress[chainId as keyof typeof contractAddress],
     functionName: "getLeaderboard",
     args: [page],
   });

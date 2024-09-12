@@ -41,6 +41,10 @@ contract TreasureHuntCreator is
     bytes public questsRootCid;
     ITreasure public prize;
 
+    receive() external payable {}
+
+    fallback() external payable {}
+
     constructor(
         address[] memory solutions_,
         address[] memory keys,

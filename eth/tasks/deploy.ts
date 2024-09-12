@@ -45,7 +45,9 @@ task("deploy:thc", "Push THC to network")
       console.log(`  Artifacts path: ${artifacts}`);
 
       const rootHash = await readRootHash(artifacts);
+      console.log(`Root: ${rootHash}`);
       const { keys, chapters } = await readMetadata(artifacts);
+      console.log(`Chapters: ${chapters}`);
 
       const treasure = await loadContract(hre, "Treasure");
       const [contract, networkFile, argsFile] = await deployContract(

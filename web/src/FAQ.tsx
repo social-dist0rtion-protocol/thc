@@ -7,7 +7,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { APP_NAME } from "./vars";
+import { APP_NAME } from "./env";
 
 function FAQ() {
   return (

@@ -7,8 +7,6 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import { useChapter } from "./hooks/useChapter";
-import Markdown from "react-markdown";
 import { useEffect, useState } from "react";
 import {
   useAccount,
@@ -20,7 +18,7 @@ import {
   treasureHuntCreatorAbi as abi,
   treasureHuntCreatorAddress as contractAddress,
 } from "./generated";
-import { signatureFromSolution } from "./hooks/utils";
+import { signatureFromSolution } from "./lib";
 
 function SideQuests() {
   const toast = useToast();

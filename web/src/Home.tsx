@@ -4,11 +4,12 @@ import Markdown from "react-markdown";
 import { useEffect, useState } from "react";
 import { useSubmitSolution } from "./hooks/gelato";
 import { useAccount } from "./hooks/useAccount";
+import { addressFromSolution } from "./lib";
+import metadata from "./metadata.json";
 
 function Home() {
   const {
-    currentChapterIndex,
-    setCurrentChapterIndex,
+    currentSmartContractChapterIndex,
     setChapterPassword,
     currentChapterContent,
   } = useChapter();
@@ -16,20 +17,17 @@ function Home() {
   const account = useAccount();
   const [inputField, setInputField] = useState("");
   const [password, setPassword] = useState("");
-  const {
-    status: gelatoStatus,
-    data: gelatoData,
-    error: gelatoError,
-  } = useSubmitSolution(password, account!.address as `0x${string}`, account!);
+  const { status: gelatoStatus, error: gelatoError } = useSubmitSolution(
+    password,
+    account?.address as `0x${string}`,
+    account
+  );
 
   const handlePasswordChange = (event: any) =>
     setInputField(event.target.value);
 
   useEffect(() => {
     if (gelatoStatus === "success") {
-      setCurrentChapterIndex((currentChapterIndex + 1).toString());
-      setChapterPassword(password);
-
       toast({
         title: "Success!",
         description: "Next chapter",
@@ -58,8 +56,22 @@ function Home() {
         duration: 9000,
         isClosable: true,
       });
+    } else if (
+      addressFromSolution(inputField) !==
+      metadata.chapters[currentSmartContractChapterIndex]
+    ) {
+      toast({
+        title: "Error",
+        description: "Wrong solution",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
     } else {
+      console.log(inputField);
+      setChapterPassword(currentSmartContractChapterIndex, inputField);
       setPassword(inputField);
+      setInputField("");
     }
   }
 

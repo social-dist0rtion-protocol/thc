@@ -3,7 +3,8 @@ import { MNEMONIC_KEY } from "./keys";
 import { english, generateMnemonic } from "viem/accounts";
 import useLocalStorage from "use-local-storage";
 import { useToast } from "@chakra-ui/react";
-import { HDNodeWallet, Wallet } from "ethers";
+import { HDNodeWallet, JsonRpcProvider, Wallet } from "ethers";
+import { RPC_NODE_URL } from "../env";
 
 export function useBurnerWallet() {
   const toast = useToast();
@@ -30,7 +31,10 @@ export function useBurnerWallet() {
     if (mnemonic === "") {
       validateAndSetMnemonic(generateMnemonic(english));
     } else {
-      setBurnerWallet(Wallet.fromPhrase(mnemonic));
+      const wallet = Wallet.fromPhrase(mnemonic).connect(
+        new JsonRpcProvider(RPC_NODE_URL)
+      );
+      setBurnerWallet(wallet);
     }
   }, [mnemonic]);
 

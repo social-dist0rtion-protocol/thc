@@ -71,3 +71,11 @@ task("master-add", "Add a game master")
     const receipt = await tx.wait(3);
     console.log(`  Game Master successfully added. Receipt: ${receipt?.hash}`);
   });
+
+task("current-chapter", "Check player current chapter")
+  .addPositionalParam("address", "The address of the player")
+  .setAction(async ({ address }: { address: string }, hre) => {
+    const thcContract = await loadContract(hre, "TreasureHuntCreator");
+    const chapter = await thcContract.playerToCurrentChapter(address);
+    console.log(`Player ${address} is at chapter ${chapter}`);
+  });

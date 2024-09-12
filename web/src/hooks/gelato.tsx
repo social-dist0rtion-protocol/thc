@@ -1,4 +1,4 @@
-import { signatureFromSolution } from "./utils";
+import { signatureFromSolution } from "../lib";
 import {
   GelatoRelay,
   SignerOrProvider,
@@ -16,12 +16,12 @@ import { useInterval } from "./useInterval";
 
 type Status = "pending" | "success" | "error";
 
-const TOTAL_ATTEMPTS = 3;
+const TOTAL_ATTEMPTS = 10;
 
 export function useSubmitSolution(
   solution: string,
   address: `0x${string}` | undefined,
-  signer: SignerOrProvider
+  signer: SignerOrProvider | undefined
 ) {
   const [status, setStatus] = useState<Status>();
   const [error, setError] = useState<string>();
@@ -33,7 +33,7 @@ export function useSubmitSolution(
   const [attemptsLeft, setAttemptsLeft] = useState(TOTAL_ATTEMPTS);
 
   const [polling, setPolling] = useState(false);
-  const { rounds } = useInterval(polling, 1000);
+  const { rounds } = useInterval(polling, 4000);
 
   async function handleTaskStateChange() {
     const taskState = taskStatus?.taskState as string;
@@ -56,56 +56,88 @@ export function useSubmitSolution(
   }
 
   async function relay() {
-    if (!address) {
+    console.log("relay");
+    if (!address || !signer) {
       throw "missing account";
     }
 
-    const { r, s, v } = await signatureFromSolution(address, solution);
+    const { r, s, v } = await signatureFromSolution(solution, address);
+    console.log(`Solution ${solution}, address ${address}`);
     const encodedCall = encodeFunctionData({
       args: [v, r, s],
       abi: treasureHuntCreatorAbi,
       functionName: "submit",
     });
+
+    setStatus("pending");
     const response = await relayRequest(encodedCall, address, signer);
+    console.log(response);
+    await fetchTaskStatus(response.taskId);
     setTaskId(response.taskId);
   }
 
   async function poll() {
-    if (taskId) {
-      const relay = new GelatoRelay();
-
-      let taskStatus: TransactionStatusResponse | undefined;
+    if (taskId && polling) {
+      console.log("poll");
       setAttemptsLeft(attemptsLeft - 1);
-      taskStatus = await relay.getTaskStatus(taskId);
-      console.log(taskStatus?.lastCheckMessage);
-      setTaskStatus(taskStatus);
+      await fetchTaskStatus(taskId);
       handleTaskStateChange();
     }
   }
 
+  async function fetchTaskStatus(taskId: string) {
+    const relay = new GelatoRelay();
+    let taskStatus: TransactionStatusResponse | undefined;
+    let retries = 3;
+    while (retries > 0) {
+      try {
+        taskStatus = await relay.getTaskStatus(taskId);
+        console.log(taskStatus);
+        setTaskStatus(taskStatus);
+        return;
+      } catch (e: any) {
+        console.log(e);
+        retries--;
+      }
+    }
+
+    if (retries === 0) {
+      setStatus("error");
+      setError("error fetching status");
+    }
+  }
+
   useEffect(() => {
-    if (solution !== "" && address) {
+    if (solution !== "" && address && signer) {
+      console.log("relay");
+      console.log(solution);
       relay();
     }
   }, [solution, address]);
 
   useEffect(() => {
+    console.log(rounds);
     if (rounds === 0) {
       return;
     }
-
-    if (rounds > TOTAL_ATTEMPTS || status !== "pending") {
+    console.log(status);
+    if (status !== "pending") {
       setPolling(false);
-    } else if (rounds > TOTAL_ATTEMPTS || status !== "pending") {
+      console.log("error, other errors");
+    } else if (rounds > TOTAL_ATTEMPTS) {
+      console.log("error, gelato stuck");
       setPolling(false);
+      setStatus("error");
       setError("gelato is stuck");
-    } else if (rounds <= TOTAL_ATTEMPTS && status === "pending") {
+    } else {
+      console.log("polling");
       poll();
     }
   }, [rounds]);
 
   useEffect(() => {
     if (taskId) {
+      handleTaskStateChange();
       setPolling(true);
     }
   }, [taskId]);
@@ -144,7 +176,7 @@ export async function submitKey(
   address: `0x${string}`,
   signer: SignerOrProvider
 ) {
-  const { r, s, v } = await signatureFromSolution(address, key);
+  const { r, s, v } = await signatureFromSolution(key, address);
   const data = encodeFunctionData({
     args: [v, r, s],
     abi: treasureHuntCreatorAbi,

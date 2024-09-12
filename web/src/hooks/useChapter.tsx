@@ -5,13 +5,62 @@ import {
   CURRENT_CHAPTER_PASSWORD_KEY,
 } from "./keys";
 import { decrypt } from "../lib";
+import { useReadContract } from "wagmi";
+import {
+  treasureHuntCreatorAbi,
+  treasureHuntCreatorAddress,
+} from "../generated";
+import { CHAIN_ID } from "../env";
+import { useAccount } from "./useAccount";
 
 function prefixedPasswordKey(key: string) {
   return `${import.meta.env.VITE_ALCHEMY_APP_PREFIX}/${key}`;
 }
 
 function useRootCID() {
-  return "0x3209943bebf1c75d47028c740c59cc929eef963fd133fcff0bdb6ef80bc31306";
+  const result = useReadContract({
+    abi: treasureHuntCreatorAbi,
+    address:
+      treasureHuntCreatorAddress[
+        CHAIN_ID as keyof typeof treasureHuntCreatorAddress
+      ],
+    functionName: "questsRootCid",
+  });
+
+  // fix: use only sporadically, not at every mount and check when it changes
+
+  return result.data;
+}
+
+function useCurrentSmartContractChapterIndex(address?: string) {
+  const [chapter, setChapter] = useState(0);
+
+  const result = useReadContract({
+    abi: treasureHuntCreatorAbi,
+    address:
+      treasureHuntCreatorAddress[
+        CHAIN_ID as keyof typeof treasureHuntCreatorAddress
+      ],
+    functionName: "playerToCurrentChapter",
+    args: [address as `0x${string}`],
+    query: {
+      enabled: address !== undefined,
+      refetchInterval: 5000,
+      refetchOnMount: true,
+      refetchOnWindowFocus: true,
+    },
+  });
+
+  // fix: use only sporadically, not at every mount and check when it changes
+
+  useEffect(() => {
+    if (result.data) {
+      setChapter(Number(result.data as bigint));
+      console.log(result.data);
+    }
+  });
+
+  return chapter;
 }
 
 function useCurrentChapterIndex() {
@@ -33,21 +82,46 @@ function useChapterPassword(chapterIndex: number) {
   return { chapterPassword, setChapterPassword };
 }
 
+function setChapterPassword(chapterIndex: number, password: string) {
+  localStorage.setItem(
+    prefixedPasswordKey(`${CURRENT_CHAPTER_PASSWORD_KEY}/${chapterIndex}`),
+    password
+  );
+}
+
+function getChapterPassword(chapterIndex: number) {
+  return (
+    localStorage.getItem(
+      prefixedPasswordKey(`${CURRENT_CHAPTER_PASSWORD_KEY}/${chapterIndex}`)
+    ) || ""
+  );
+}
+
 export function useChapter() {
+  const account = useAccount();
   const [currentChapterContent, setCurrentChapterContent] =
     useState<string>("");
   const rootCID = useRootCID();
-  const { currentChapterIndex, setCurrentChapterIndex } =
-    useCurrentChapterIndex();
-  const { chapterPassword, setChapterPassword } =
-    useChapterPassword(currentChapterIndex);
+  //const { currentChapterIndex, setCurrentChapterIndex } =
+  //  useCurrentChapterIndex();
+  const currentSmartContractChapterIndex = useCurrentSmartContractChapterIndex(
+    account?.address
+  );
 
   useEffect(() => {
-    fetch(`game-data/${rootCID}/${currentChapterIndex}`)
-      .then((response) => response.text())
+    if (rootCID === undefined) {
+      return;
+    }
+
+    fetch(`game-data/${rootCID}/${currentSmartContractChapterIndex}`)
+      .then((response) => {
+        return response.text();
+      })
       .then((data) => {
-        console.log(data);
-        if (chapterPassword !== "") {
+        if (currentSmartContractChapterIndex > 0) {
+          const chapterPassword = getChapterPassword(
+            currentSmartContractChapterIndex - 1
+          );
           decrypt(data, chapterPassword).then((text: string) => {
             console.log(text);
             setCurrentChapterContent(text);
@@ -56,11 +130,10 @@ export function useChapter() {
           setCurrentChapterContent(data);
         }
       });
-  }, [chapterPassword]);
+  }, [rootCID, currentSmartContractChapterIndex]);
 
   return {
-    currentChapterIndex,
-    setCurrentChapterIndex,
+    currentSmartContractChapterIndex,
     setChapterPassword,
     currentChapterContent,
   };

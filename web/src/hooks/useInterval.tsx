@@ -2,21 +2,19 @@ import { useEffect, useState } from "react";
 
 export function useInterval(isOn: boolean, interval: number) {
   const [rounds, setRounds] = useState(0);
-  const [intervalId, setIntervalId] = useState<number>();
 
   useEffect(() => {
+    console.log(`${rounds} rounds ${isOn}`);
     if (isOn) {
-      const intervalTimer = setInterval(() => {
+      const intervalTimer = setTimeout(() => {
         setRounds(rounds + 1);
       }, interval);
 
-      setIntervalId(intervalTimer as unknown as number);
-      return () => clearInterval(intervalId);
+      return () => clearInterval(intervalTimer as unknown as number);
     } else {
-      if (intervalId) clearInterval(intervalId);
       setRounds(0);
     }
-  }, [isOn]);
+  }, [isOn, rounds]);
 
   return { rounds };
 }
