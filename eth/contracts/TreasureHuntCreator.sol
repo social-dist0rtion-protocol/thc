@@ -166,11 +166,22 @@ contract TreasureHuntCreator is
         }
     }
 
-    function withdraw(
+    receive() external payable {}
+
+    fallback() external payable {}
+
+    function withdrawERC20(
         IERC20 token,
         address receiver
     ) public onlyRole(DEFAULT_ADMIN_ROLE) {
         bool result = token.transfer(receiver, token.balanceOf(address(this)));
         require(result, "Transfer failed");
+    }
+
+    function withdraw(
+        address payable receiver
+    ) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        (bool sent, ) = receiver.call{value: address(this).balance}("");
+        require(sent, "Failed to send Ether");
     }
 }

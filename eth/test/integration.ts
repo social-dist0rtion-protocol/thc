@@ -13,7 +13,13 @@ import {
   TreasureHuntCreator,
   TreasureHuntCreator__factory,
 } from "../typechain";
-import { Signature, Wallet, keccak256, toUtf8Bytes } from "ethers";
+import {
+  Signature,
+  Wallet,
+  getDefaultProvider,
+  keccak256,
+  toUtf8Bytes,
+} from "ethers";
 import {
   cidToBytes,
   encodeTokenId,
@@ -660,7 +666,8 @@ describe("TreasureHuntCreator", () => {
       expect(resultSolution, testSolution);
     });
   });
-  describe("withdraw", () => {
+
+  describe("withdrawERC20", () => {
     let thc: TreasureHuntCreator;
     let token: MyToken;
 
@@ -671,14 +678,40 @@ describe("TreasureHuntCreator", () => {
     });
 
     it("should allow the admin to withdraw the tokens", async () => {
-      await thc.connect(deployer).withdraw(token.getAddress(), alice.address);
+      await thc
+        .connect(deployer)
+        .withdrawERC20(token.getAddress(), alice.address);
       expect(await token.balanceOf(alice.address)).equal(666);
     });
 
     it("should not allow anyone else to withdraw the tokens", async () => {
       await expect(
-        thc.connect(alice).withdraw(token.getAddress(), alice.address)
+        thc.connect(alice).withdrawERC20(token.getAddress(), alice.address)
       ).revertedWith(
+        `AccessControl: account ${alice.address.toLocaleLowerCase()} is missing role ${DEFAULT_ADMIN_ROLE}`
+      );
+    });
+  });
+
+  describe("withdraw", () => {
+    let thc: TreasureHuntCreator;
+    const receiver = Wallet.createRandom().address;
+
+    beforeEach(async () => {
+      thc = await deploy([], keys);
+      await alice.sendTransaction({
+        value: 666,
+        to: receiver,
+      });
+    });
+
+    it("should allow the admin to withdraw the tokens", async () => {
+      await thc.connect(deployer).withdraw(receiver);
+      expect(await ethers.provider.getBalance(receiver)).equal(666);
+    });
+
+    it("should not allow anyone else to withdraw the tokens", async () => {
+      await expect(thc.connect(alice).withdraw(alice.address)).revertedWith(
         `AccessControl: account ${alice.address.toLocaleLowerCase()} is missing role ${DEFAULT_ADMIN_ROLE}`
       );
     });
