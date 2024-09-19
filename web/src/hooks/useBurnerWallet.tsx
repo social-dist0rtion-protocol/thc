@@ -42,5 +42,6 @@ export function useBurnerWallet() {
     burnerWallet: burnerWallet,
     mnemonic: mnemonic,
     setMnemonic: validateAndSetMnemonic,
+    resetMnemonic: () => setMnemonic(""),
   };
 }

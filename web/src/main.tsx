@@ -6,11 +6,7 @@ import { WagmiProvider } from "wagmi";
 
 import App from "./App.tsx";
 import { config } from "./wagmi.ts";
-import {
-  ChakraProvider,
-  defineStyleConfig,
-  extendTheme,
-} from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
 import "./index.css";
 import { ConnectKitProvider } from "connectkit";
 import { createHashRouter, RouterProvider } from "react-router-dom";
@@ -19,44 +15,7 @@ import Settings from "./Settings.tsx";
 import FAQ from "./FAQ.tsx";
 import SideQuest from "./SideQuest.tsx";
 import Quest from "./Quest.tsx";
-
-const Button = defineStyleConfig({
-  // The styles all button have in common
-  baseStyle: {
-    textTransform: "uppercase",
-  },
-});
-
-const Heading = defineStyleConfig({
-  // The styles all button have in common
-  baseStyle: {
-    textTransform: "uppercase",
-  },
-  variants: {
-    h1: (props) => ({
-      fontSize: "2em",
-    }),
-    h2: (props) => ({
-      fontSize: "1.5em",
-      marginBottom: "10px",
-    }),
-  },
-  defaultProps: {
-    variant: "h1",
-  },
-});
-
-const theme = extendTheme({
-  styles: {
-    global: {
-      html: {},
-    },
-  },
-  components: {
-    Button,
-    Heading,
-  },
-});
+import { theme } from "./theme/theme.tsx";
 
 globalThis.Buffer = Buffer;
 

@@ -14,7 +14,6 @@ function SideQuest() {
       solutionMatcher={(solution: string) => checkKeyMatch(solution)}
     >
       <VStack className="content-pane" align="flex-start">
-        <Heading>Side Quests</Heading>
         <Heading variant="h2">
           You solved {currentSmartContractSideQuestIndex} side quests so far.
         </Heading>

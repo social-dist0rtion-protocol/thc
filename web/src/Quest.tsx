@@ -1,4 +1,4 @@
-import { Heading, VStack } from "@chakra-ui/react";
+import { Box, Heading, VStack } from "@chakra-ui/react";
 import { useChapter } from "./hooks/useChapter";
 import Markdown from "react-markdown";
 import Puzzle from "./Puzzle";
@@ -20,8 +20,7 @@ function Quest() {
         checkSolutionMatch(solution, currentSmartContractChapterIndex)
       }
     >
-      <VStack className="content-pane" align="flex-start">
-        <Heading>Home</Heading>
+      <VStack align="flex-start">
         <Heading variant="h2">
           Chapter {currentSmartContractChapterIndex}
         </Heading>

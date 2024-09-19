@@ -13,8 +13,8 @@ function FAQ() {
   return (
     <VStack gap="20px" className="content-pane" align="flex-start">
       <Heading>FAQ</Heading>
-      <Box>
-        <Heading variant="h2">I'm stuck, can I get a hint?</Heading>
+      <Box layerStyle="base">
+        <Heading variant="h3">I'm stuck, can I get a hint?</Heading>
         <List>
           <ListItem>
             We made this game for people to haffun, if you need a bit of help to
@@ -26,8 +26,8 @@ function FAQ() {
           </ListItem>
         </List>
       </Box>
-      <Box>
-        <Heading variant="h2">What are the "side quests"</Heading>
+      <Box layerStyle="base">
+        <Heading variant="h3">What are the "side quests"</Heading>
         <Text>
           The side quests are optional puzzles. All documents start with the
           hashtag symbol #. They may require specific technical skills. Don't
@@ -37,8 +37,8 @@ function FAQ() {
           them.
         </Text>
       </Box>
-      <Box>
-        <Heading variant="h2">I want to speak to the manager</Heading>
+      <Box layerStyle="base">
+        <Heading variant="h3">I want to speak to the manager</Heading>
         <Text>
           {APP_NAME} is a Treasure Hunt Challenge (THC for short) created by
           <Link href="https://dist0rtion.com" isExternal>
@@ -51,8 +51,8 @@ function FAQ() {
           </Link>
         </Text>
       </Box>
-      <Box>
-        <Heading variant="h2">Show me the code</Heading>
+      <Box layerStyle="base">
+        <Heading variant="h3">Show me the code</Heading>
         <Text>
           The Holy Code of Treasure Hunt Creator (or THC for short) is published
           on{" "}

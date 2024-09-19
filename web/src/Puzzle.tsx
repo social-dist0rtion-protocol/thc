@@ -94,7 +94,7 @@ function Puzzle(props: PuzzleProps) {
   }
 
   return (
-    <VStack className="content-pane" align="flex-start">
+    <VStack layerStyle="base" align="flex-start">
       {props.children}
       <Input ref={inputRef} placeholder="password" />
       <Button
