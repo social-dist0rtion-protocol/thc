@@ -1,9 +1,5 @@
 import { recoverMessageAddress, serializeSignature } from "viem";
-import {
-  addressFromSolution,
-  signatureFromSolution,
-  walletFromSolution,
-} from "./thc";
+import { addressFromSolution, signatureFromSolution } from "./thc";
 
 describe("addressFromSolution", () => {
   test("returns the address of a solution", async () => {
@@ -26,7 +22,7 @@ describe("addressFromSolution", () => {
 describe("signatureFromSolution", () => {
   test("returns a valid signature", async () => {
     const playerAddress = "0x197970E48082CD46f277ABDb8afe492bCCd78300";
-    const solutionAddress = await addressFromSolution("Testing Hard Cases");
+    const solutionAddress = addressFromSolution("Testing Hard Cases");
     const sig = await signatureFromSolution(
       "Testing Hard Cases",
       playerAddress
