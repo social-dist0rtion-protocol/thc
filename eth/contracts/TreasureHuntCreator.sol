@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 import {ITreasure} from "./ITreasure.sol";
 import {GelatoRelayContextERC2771} from "@gelatonetwork/relay-context/contracts/GelatoRelayContextERC2771.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
-import "hardhat/console.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract TreasureHuntCreator is
     Ownable,
@@ -40,10 +40,6 @@ contract TreasureHuntCreator is
 
     bytes public questsRootCid;
     ITreasure public prize;
-
-    receive() external payable {}
-
-    fallback() external payable {}
 
     constructor(
         address[] memory solutions_,
@@ -168,5 +164,13 @@ contract TreasureHuntCreator is
                 (uint256(keys) << 8) |
                 uint256(uint8(playerToCurrentChapter[player]));
         }
+    }
+
+    function withdraw(
+        IERC20 token,
+        address receiver
+    ) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        bool result = token.transfer(receiver, token.balanceOf(address(this)));
+        require(result, "Transfer failed");
     }
 }

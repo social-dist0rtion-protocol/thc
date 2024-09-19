@@ -6,6 +6,8 @@ import chaiAsPromised from "chai-as-promised";
 import {
   DisappearRenderer,
   DisappearRenderer__factory,
+  MyToken,
+  MyToken__factory,
   Treasure,
   Treasure__factory,
   TreasureHuntCreator,
@@ -14,6 +16,7 @@ import {
 import { Signature, Wallet, keccak256, toUtf8Bytes } from "ethers";
 import {
   cidToBytes,
+  encodeTokenId,
   getSignature,
   getSolutionAddress,
   getSolutionSignature,
@@ -27,6 +30,8 @@ const { expect } = chai;
 
 const PAGE_SIZE = 32;
 const GAME_MASTER_ROLE = keccak256(toUtf8Bytes("GAME_MASTER_ROLE"));
+const DEFAULT_ADMIN_ROLE =
+  "0x0000000000000000000000000000000000000000000000000000000000000000";
 const KEYS = [
   "order quick stereo library opera rack volume note useless dignity purchase avocado",
   "sort humor transfer labor bridge crisp spell nerve harvest poet sight mimic",
@@ -36,6 +41,7 @@ const KEYS = [
 
 describe("TreasureHuntCreator", () => {
   let thcFactory: TreasureHuntCreator__factory;
+  let myTokenFactory: MyToken__factory;
   let treasure: Treasure;
   let renderer: DisappearRenderer;
   let accounts: SignerWithAddress[];
@@ -72,6 +78,11 @@ describe("TreasureHuntCreator", () => {
       deployer
     )) as any as TreasureHuntCreator__factory;
 
+    myTokenFactory = (await ethers.getContractFactory(
+      "MyToken",
+      deployer
+    )) as unknown as MyToken__factory;
+
     accounts = await ethers.getSigners();
     totalPlayers = accounts.length;
 
@@ -97,6 +108,10 @@ describe("TreasureHuntCreator", () => {
     await treasure.updateRenderer(thc.getAddress(), renderer.getAddress());
 
     return thc;
+  }
+
+  async function deployMyToken(): Promise<MyToken> {
+    return await myTokenFactory.deploy();
   }
 
   async function solve(
@@ -398,7 +413,7 @@ describe("TreasureHuntCreator", () => {
       expect(balances[4]).equal(1n);
     });
 
-    it.only("should render badges", async () => {
+    it("should render badges", async () => {
       let testSolution1 = "A solution 1";
       let solutionKey1 = await getSolutionAddress(testSolution1);
 
@@ -643,6 +658,29 @@ describe("TreasureHuntCreator", () => {
       let resultSolution = await instance.solutions(0);
 
       expect(resultSolution, testSolution);
+    });
+  });
+  describe("withdraw", () => {
+    let thc: TreasureHuntCreator;
+    let token: MyToken;
+
+    beforeEach(async () => {
+      thc = await deploy([], keys);
+      token = await deployMyToken();
+      await token.mint(thc.getAddress(), 666);
+    });
+
+    it("should allow the admin to withdraw the tokens", async () => {
+      await thc.connect(deployer).withdraw(token.getAddress(), alice.address);
+      expect(await token.balanceOf(alice.address)).equal(666);
+    });
+
+    it("should not allow anyone else to withdraw the tokens", async () => {
+      await expect(
+        thc.connect(alice).withdraw(token.getAddress(), alice.address)
+      ).revertedWith(
+        `AccessControl: account ${alice.address.toLocaleLowerCase()} is missing role ${DEFAULT_ADMIN_ROLE}`
+      );
     });
   });
 });
