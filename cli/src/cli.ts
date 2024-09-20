@@ -2,7 +2,7 @@
 
 import dotenv from "dotenv";
 import { Command } from "commander";
-import { copyFile, cp, mkdir, readFile } from "fs/promises";
+import { cp, mkdir, readFile, writeFile } from "fs/promises";
 import { main } from "./utils";
 import { getWallet, getPublicClient, setRootHash } from "./evm";
 import { Config, isHexString } from "./types";
@@ -102,7 +102,7 @@ program
   .action(async (basePath: string, dappPath: string) => {
     dotenv.config({ path: path.join(basePath, ".env") });
     const endpoint = process.env.ETHEREUM_ENDPOINT;
-    const { chainId, thcAddress } = JSON.parse(
+    const { chainId, thcAddress, cname } = JSON.parse(
       await readFile(path.join(basePath, CONFIG_PATH), "utf8")
     ) as Config;
 
@@ -127,6 +127,11 @@ program
       console.error("Cannot find 'thcAddress' in config");
       process.exit(1);
     }
+
+    // Copy CNAME to public
+    console.log("porco dio", cname);
+    console.log(path.join(dappPath, "public", "CNAME"));
+    await writeFile(path.join(dappPath, "public", "CNAME"), cname);
 
     // Copy config.json to the dapp. The file contains info about the game.
     await cp(path.join(basePath, CONFIG_PATH), path.join(dappPath, "thc.json"));
