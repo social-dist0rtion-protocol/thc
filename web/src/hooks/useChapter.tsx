@@ -1,9 +1,5 @@
 import { useEffect, useState } from "react";
-import useLocalStorage from "use-local-storage";
-import {
-  CURRENT_CHAPTER_INDEX_KEY,
-  CURRENT_CHAPTER_PASSWORD_KEY,
-} from "./keys";
+import { CURRENT_CHAPTER_PASSWORD_KEY } from "./keys";
 import { decrypt } from "../lib";
 import { useReadContract } from "wagmi";
 import {
@@ -61,17 +57,6 @@ function useCurrentSmartContractChapterIndex(address?: string) {
   });
 
   return chapter;
-}
-
-function useCurrentChapterIndex() {
-  const [currentChapter, setCurrentChapterIndex] = useLocalStorage(
-    prefixedPasswordKey(CURRENT_CHAPTER_INDEX_KEY),
-    "0"
-  );
-  return {
-    currentChapterIndex: parseInt(currentChapter),
-    setCurrentChapterIndex,
-  };
 }
 
 function setChapterPassword(chapterIndex: number, password: string) {

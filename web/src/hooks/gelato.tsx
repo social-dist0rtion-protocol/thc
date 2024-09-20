@@ -67,7 +67,7 @@ export function useSubmitSolution(
 
     const { r, s, v } = await signatureFromSolution(solution, address);
     const encodedCall = encodeFunctionData({
-      args: [v, r, s],
+      args: [Number(v), r, s],
       abi: treasureHuntCreatorAbi,
       functionName: submitFunctionName,
     });
@@ -196,7 +196,7 @@ export async function submitKey(
 ) {
   const { r, s, v } = await signatureFromSolution(key, address);
   const data = encodeFunctionData({
-    args: [v, r, s],
+    args: [Number(v), r, s],
     abi: treasureHuntCreatorAbi,
     functionName: "submit",
   });

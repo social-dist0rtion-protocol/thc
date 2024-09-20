@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { b } from "../lib";
 import { useReadContract } from "wagmi";
 import {
   treasureHuntCreatorAbi,
