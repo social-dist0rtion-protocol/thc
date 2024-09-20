@@ -1,6 +1,14 @@
-import { Button, Heading, Text, Textarea, VStack } from "@chakra-ui/react";
+import {
+  Button,
+  Heading,
+  Text,
+  Textarea,
+  useToast,
+  VStack,
+} from "@chakra-ui/react";
 import { useBurnerWallet } from "./hooks/useBurnerWallet";
-import { useState } from "react";
+import { dump, restore } from "./hooks/storage";
+import { useEffect, useState } from "react";
 import QRCode from "react-qr-code";
 import { treasureHuntCreatorAddress } from "./generated";
 import { CHAIN_ID } from "./env";
@@ -13,17 +21,52 @@ function Settings() {
     resetMnemonic,
   } = useBurnerWallet();
 
+  const toast = useToast();
+
   let [temporaryMnemonic, setTemporaryMnemonic] = useState(mnemonic || "");
+  let [temporaryDump, setTemporaryDump] = useState(dump());
 
   let handleInputChange = (e: any) => {
     let inputValue = e.target.value;
     setTemporaryMnemonic(inputValue);
   };
 
+  let handleDumpChange = (e: any) => {
+    let inputValue = e.target.value;
+    setTemporaryDump(inputValue);
+  };
+
   function reset() {
+    localStorage.clear();
     resetMnemonic();
-    setTemporaryMnemonic(mnemonic);
   }
+
+  function restoreFromDump() {
+    if (temporaryDump !== "") {
+      restore(temporaryDump);
+      toast({
+        title: "Success!",
+        description: `You restored your game!`,
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+    } else {
+      toast({
+        title: "No dump",
+        description: `There is not dump in the text area`,
+        status: "info",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  }
+
+  useEffect(() => {
+    if (mnemonic !== "") setTemporaryMnemonic(mnemonic);
+
+    setTemporaryDump(dump());
+  }, [mnemonic]);
 
   return (
     <VStack alignItems="flex-start">
@@ -67,8 +110,26 @@ function Settings() {
       <Heading variant="h2" marginTop="40px">
         Reset Game
       </Heading>
-      <Text>Reset the current session, you'll start from Chapter 0 again</Text>
+      <Text>
+        Reset the current session, you'll start from Chapter 0 again. You should
+        make a backup first.
+      </Text>
+      <Textarea
+        value={temporaryDump}
+        onChange={handleDumpChange}
+        placeholder="Your dump"
+      ></Textarea>
       <Button onClick={() => reset()}>Reset Game</Button>
+      <Heading variant="h2" marginTop="40px">
+        Restore
+      </Heading>
+      <Text>Restore the game providing a dump</Text>
+      <Textarea
+        value={temporaryDump}
+        onChange={handleDumpChange}
+        placeholder="Your dump"
+      ></Textarea>
+      <Button onClick={() => restoreFromDump()}>Restore from dump</Button>
     </VStack>
   );
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { CURRENT_CHAPTER_PASSWORD_KEY } from "./keys";
+import { CURRENT_CHAPTER_PASSWORD_KEY } from "./storage";
 import { decrypt } from "../lib";
 import { useReadContract } from "wagmi";
 import {

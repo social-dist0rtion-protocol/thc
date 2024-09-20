@@ -16,6 +16,7 @@ function App({ children }: Props) {
         <Box
           backgroundColor="transparent"
           marginTop="20px"
+          marginBottom="60px"
           width={isMobile ? "95%" : "40%"}
         >
           {children}

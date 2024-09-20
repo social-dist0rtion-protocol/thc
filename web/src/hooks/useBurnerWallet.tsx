@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { MNEMONIC_KEY } from "./keys";
+import { MNEMONIC_KEY } from "./storage";
 import { english, generateMnemonic } from "viem/accounts";
 import useLocalStorage from "use-local-storage";
 import { useToast } from "@chakra-ui/react";
