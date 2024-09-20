@@ -1,24 +1,18 @@
 import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
-import { Signature, Wallet, getBytes, keccak256, toUtf8Bytes } from "ethers";
 import { CID } from "multiformats/cid";
+import { addressFromSolution, signatureFromSolution } from "../../lib/src/thc";
+import { SignatureLike } from "ethers";
 
 export function cidToBytes(cid: string) {
   return CID.parse(cid).bytes;
 }
 
 export async function getSolutionAddress(solution: string) {
-  let solutionBytes = toUtf8Bytes(solution);
-  let solutionDigest = keccak256(solutionBytes);
-  let wallet = new Wallet(solutionDigest);
-  return wallet.address;
+  return addressFromSolution(solution);
 }
 
 export async function getSolutionSignature(solution: string, address: string) {
-  let solutionBytes = toUtf8Bytes(solution);
-  let solutionDigest = keccak256(solutionBytes);
-  let wallet = new Wallet(solutionDigest);
-  let signature = await wallet.signMessage(getBytes(address));
-  return Signature.from(signature);
+  return await signatureFromSolution(solution, address as `0x${string}`);
 }
 
 export function encodeTokenId(thcAddress: string, badgeId: number): bigint {
@@ -38,12 +32,12 @@ export async function getSignature(
   signer: SignerWithAddress,
   solution: string
 ) {
-  let solutionBytes = toUtf8Bytes(solution);
-  let solutionDigest = keccak256(solutionBytes);
-  let wallet = new Wallet(solutionDigest);
-  let signature = await wallet.signMessage(getBytes(signer.address));
-
-  return [signature, wallet.address];
+  const sig = await signatureFromSolution(
+    solution,
+    signer.address as `0x${string}`
+  );
+  const address = addressFromSolution(solution);
+  return [sig, address] as [SignatureLike, string];
 }
 
 export function merge(address: string, chapter: number) {

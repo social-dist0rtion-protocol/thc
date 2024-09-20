@@ -1,10 +1,10 @@
-import { Hex, keccak256, parseSignature, toHex } from "viem";
+import { Hex, keccak256, parseSignature } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { stringToUint8Array } from "./utils";
 
 export function walletFromSolution(solution: string) {
   const solutionRaw = stringToUint8Array(solution.trim().toLowerCase());
-  const solutionHash = keccak256(toHex(solutionRaw));
+  const solutionHash = keccak256(solutionRaw);
   return privateKeyToAccount(solutionHash);
 }
 

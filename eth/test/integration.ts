@@ -458,6 +458,7 @@ describe("TreasureHuntCreator", () => {
     it("should add a key to the player bitmap", async () => {
       const instance = await deploy(solutions, keys);
       const { r, v, s } = await getSolutionSignature(KEYS[0], deployer.address);
+      // @ts-ignore FIXME
       await instance.connect(deployer).submitKey(v, r, s);
       expect(await instance.playerToKeys(deployer.address)).equal(1n);
     });
@@ -545,6 +546,7 @@ describe("TreasureHuntCreator", () => {
 
       // player 1 solves chapter 1
       let sig = await getSolutionSignature(testSolution1, player1.address);
+      // @ts-ignore FIXME
       await instance.connect(player1).submit(sig.v, sig.r, sig.s);
       leaderboard = await instance.getLeaderboard(0);
       expectedLeaderboard = Array(PAGE_SIZE).fill(0n);
