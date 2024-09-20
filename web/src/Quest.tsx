@@ -26,7 +26,11 @@ function Quest() {
         <Heading variant="h2">
           Chapter {currentSmartContractChapterIndex}
         </Heading>
-        <Markdown components={ChakraUIRenderer()} rehypePlugins={[rehypeRaw]}>
+        <Markdown
+          components={ChakraUIRenderer()}
+          urlTransform={(value: string) => value}
+          rehypePlugins={[rehypeRaw]}
+        >
           {currentChapterContent}
         </Markdown>
       </VStack>
