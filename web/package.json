@@ -1,0 +1,49 @@
+{
+  "name": "propcorn",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "biome check .",
+    "preview": "vite preview",
+    "deploy": "pnpm build && gh-pages -d dist"
+  },
+  "dependencies": {
+    "@chakra-ui/anatomy": "^2.2.2",
+    "@chakra-ui/react": "^2.8.2",
+    "@emotion/react": "^11.13.0",
+    "@emotion/styled": "^11.13.0",
+    "@gelatonetwork/relay-sdk": "^5.5.6",
+    "@scure/bip32": "^1.5.0",
+    "@scure/bip39": "^1.4.0",
+    "@tanstack/react-query": "5.45.1",
+    "@uidotdev/usehooks": "^2.4.1",
+    "burner-connector": "^0.0.8",
+    "connectkit": "^1.8.2",
+    "ethereum-ens-name": "^0.0.3",
+    "ethers": "6.7.0",
+    "framer-motion": "^11.3.28",
+    "hardhat": "^2.22.8",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-markdown": "^9.0.1",
+    "react-qr-code": "^2.0.15",
+    "react-router-dom": "^6.26.1",
+    "use-local-storage": "^3.0.0",
+    "viem": "^2.21.9",
+    "wagmi": "latest"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.8.0",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "@wagmi/cli": "^2.1.15",
+    "buffer": "^6.0.3",
+    "gh-pages": "^6.1.1",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.11"
+  }
+}

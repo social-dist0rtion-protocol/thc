@@ -16,7 +16,7 @@ import {
   wordlists,
 } from "ethers";
 
-const CONFIG_FILE_PATH = "./deployments";
+const CONFIG_FILE_PATH = "deployments";
 
 const FACTORIES: Record<string, any> = {
   TreasureHuntCreator: TreasureHuntCreator__factory,
@@ -80,8 +80,8 @@ export async function deployContract(
   });
   const contract = await factory.deploy(...args);
 
-  console.log("   Waiting for 5 confirmations...");
-  await contract.deploymentTransaction()?.wait(1);
+  console.log("   Waiting for 2 confirmations...");
+  await contract.deploymentTransaction()?.wait(2);
 
   const networkFile = await storeContractAddress(
     hre,
@@ -104,8 +104,8 @@ export async function deployUpgradeableContract(
     libraries: libraries,
   });
   const contract = await hre.upgrades.deployProxy(factory, ...args);
-  console.log("   Waiting for 5 confirmations...");
-  await contract.deploymentTransaction()?.wait(5);
+  console.log("   Waiting for 2 confirmations...");
+  await contract.deploymentTransaction()?.wait(2);
 
   const networkFile = await storeContractAddress(
     hre,

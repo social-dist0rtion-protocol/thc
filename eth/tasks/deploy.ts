@@ -1,13 +1,12 @@
 import { task } from "hardhat/config";
 import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
 import { TreasureHuntCreator } from "../typechain";
+import { readMetadata, readRootHash } from "./lib";
 
 import {
   deployContract,
   deployUpgradeableContract,
-  loadChapters,
   loadContract,
-  loadKeys,
 } from "./utils";
 import { readFileSync } from "fs";
 import { encodeTokenId } from "../test/utils";
@@ -33,43 +32,41 @@ task("deploy:treasure", "Push Treasure to network")
   });
 
 task("deploy:thc", "Push THC to network")
-  .addParam("chapters", "The file with all chapters")
-  .addParam("keysPath", "The file with all keys")
+  .addParam("artifacts", "game artifacts")
   .addFlag("verify", "Verify")
   .setAction(
     async (
-      {
-        chapters,
-        keysPath,
-        verify,
-      }: { chapters: string; keysPath: string; verify: boolean },
+      { artifacts, verify }: { artifacts: string; verify: boolean },
       hre
     ) => {
       console.log("Deploy contract Treasure Hunt Creator");
       const [deployer] = await hre.ethers.getSigners();
       console.log("Address:", deployer.address);
-      console.log(`  Chapters file: ${chapters}`);
+      console.log(`  Artifacts path: ${artifacts}`);
 
-      const { cid, solutions } = loadChapters(chapters);
-      console.log(cid);
-      const keys = loadKeys(keysPath);
+      const rootHash = await readRootHash(artifacts);
+      console.log(`Root: ${rootHash}`);
+      const { keys, chapters } = await readMetadata(artifacts);
+      console.log(`Chapters: ${chapters}`);
+
       const treasure = await loadContract(hre, "Treasure");
       const [contract, networkFile, argsFile] = await deployContract(
         hre,
         "TreasureHuntCreator",
         {},
-        solutions,
-        keys,
+        chapters,
+        keys.map((k) => k.address),
         await treasure.getAddress()
       );
 
-      await treasure.grantRole(
+      const receipt = await treasure.grantRole(
         await treasure.TREASURE_HUNT_ROLE(),
         await contract.getAddress()
       );
+      await receipt.wait(2);
 
       const thcContract = contract as unknown as TreasureHuntCreator;
-      await thcContract.setup(cid);
+      await thcContract.setup(rootHash);
 
       if (verify) {
         // It is recommended to wait for 5 confirmations before issuing the verification request

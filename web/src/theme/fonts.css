@@ -1,0 +1,42 @@
+@font-face {
+  font-family: "Bundes";
+  font-weight: 400;
+  src: url(./fonts/BundesSans-Regular.ttf);
+}
+@font-face {
+  font-family: "Dot";
+  font-weight: 400;
+  src: url(./fonts/Dot.ttf);
+}
+@font-face {
+  font-family: "Maison Neues";
+  font-weight: 400;
+  src: url(./fonts/Maison-Neue-Mono.ttf);
+}
+@font-face {
+  font-family: OCR;
+  font-weight: 400;
+  src: url(./fonts/OCR-AStd-Regular.ttf);
+}
+@font-face {
+  font-family: Roboto;
+  font-weight: 400;
+  src: url(./fonts/Roboto-Regular.ttf);
+}
+@font-face {
+  font-family: Roboto;
+  font-weight: 400;
+  font-style: italic;
+  src: url(./fonts/Roboto-Italic.ttf);
+}
+@font-face {
+  font-family: Roboto;
+  font-weight: 700;
+  src: url(./fonts/Roboto-Bold.ttf);
+}
+@font-face {
+  font-family: Roboto;
+  font-weight: 700;
+  font-style: italic;
+  src: url(./fonts/Roboto-BoldItalic.ttf);
+}

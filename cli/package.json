@@ -1,0 +1,33 @@
+{
+  "name": "@dist0rtion/thc",
+  "version": "0.0.4",
+  "description": "Treasure Hunt CLI",
+  "main": "./dist/cli/src/cli.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/cli/src/cli.js",
+    "copy-thc-artifacts": "cp ../eth/artifacts/contracts/TreasureHuntCreator.sol/TreasureHuntCreator.json src",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "prepublishOnly": "npm run copy-thc-artifacts && npm run build"
+  },
+  "bin": {
+    "thc": "./dist/cli/src/cli.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/node": "^22.5.4",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.2"
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "dotenv": "^16.4.5",
+    "viem": "^2.21.3"
+  }
+}
