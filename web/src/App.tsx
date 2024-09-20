@@ -13,7 +13,11 @@ function App({ children }: Props) {
     <Center>
       <VStack width="90%">
         <HeaderMenu />
-        <Box backgroundColor="transparent" width={isMobile ? "95%" : "40%"}>
+        <Box
+          backgroundColor="transparent"
+          marginTop="20px"
+          width={isMobile ? "95%" : "40%"}
+        >
           {children}
         </Box>
       </VStack>

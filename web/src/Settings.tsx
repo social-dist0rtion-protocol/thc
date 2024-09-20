@@ -27,9 +27,7 @@ function Settings() {
 
   return (
     <VStack alignItems="flex-start">
-      <Heading as="h1" size="xxl">
-        Settings
-      </Heading>
+      <Heading marginBottom="40px">Settings</Heading>
       <Heading variant="h2">Wallet Address</Heading>
       <Text>You are connected with the burner wallet</Text>
       <Text>{wallet?.address}</Text>

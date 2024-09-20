@@ -15,7 +15,7 @@ function SideQuest() {
     >
       <VStack className="content-pane" align="flex-start">
         <Heading variant="h2">
-          You solved {currentSmartContractSideQuestIndex} side quests so far.
+          You solved {currentSmartContractSideQuestIndex} side quests.
         </Heading>
         <Text>
           Did you find a side quest? Submit the password with this form to add

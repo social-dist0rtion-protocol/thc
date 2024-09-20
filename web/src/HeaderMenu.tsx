@@ -3,7 +3,7 @@ import { HELP_URL, MAP_URL } from "./env";
 
 function HeaderMenu() {
   return (
-    <Wrap justify="center">
+    <Wrap justify="center" marginTop="20px">
       <WrapItem>
         <Link href="/">
           <Button variant="menu">

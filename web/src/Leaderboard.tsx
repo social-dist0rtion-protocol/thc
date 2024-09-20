@@ -97,7 +97,7 @@ function Leaderboard() {
             <Tr>
               <Th>Address</Th>
               <Th>Chapter</Th>
-              <Th>Keys</Th>
+              <Th>Side Quests</Th>
             </Tr>
           </Thead>
           <Tbody>
