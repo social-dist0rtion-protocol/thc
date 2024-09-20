@@ -70,8 +70,8 @@ const Textarea = defineStyleConfig({
 const Heading = defineStyleConfig({
   // The styles all button have in common
   baseStyle: {
-    textTransform: "uppercase",
     fontFamily: "OCR",
+    textTransform: "uppercase",
     fontWeight: "bold",
   },
 
@@ -95,8 +95,8 @@ const Heading = defineStyleConfig({
 
 export const theme = extendTheme({
   fonts: {
-    heading: `"Bundes", "Arial", "serif"`,
-    body: `"Bundes", "Arial", "serif"`,
+    heading: `"Roboto", "Arial", "serif"`,
+    body: `"Roboto", "Arial", "serif"`,
   },
   styles: {
     global: {

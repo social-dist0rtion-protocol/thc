@@ -1,7 +1,9 @@
 import { Heading, VStack } from "@chakra-ui/react";
 import { useChapter } from "./hooks/useChapter";
 import Markdown from "react-markdown";
+import ChakraUIRenderer from "chakra-ui-markdown-renderer";
 import Puzzle from "./Puzzle";
+import rehypeRaw from "rehype-raw";
 import { checkSolutionMatch } from "./lib";
 
 function Quest() {
@@ -24,7 +26,9 @@ function Quest() {
         <Heading variant="h2">
           Chapter {currentSmartContractChapterIndex}
         </Heading>
-        <Markdown>{currentChapterContent}</Markdown>
+        <Markdown components={ChakraUIRenderer()} rehypePlugins={[rehypeRaw]}>
+          {currentChapterContent}
+        </Markdown>
       </VStack>
     </Puzzle>
   );
