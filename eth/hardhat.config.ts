@@ -10,7 +10,7 @@ import "@nomicfoundation/hardhat-verify";
 import { HardhatUserConfig } from "hardhat/types";
 
 import "solidity-coverage";
-//import "./tasks";
+import "./tasks";
 
 //import("./tasks").catch((e) => console.log("Cannot load tasks", e.toString()));
 

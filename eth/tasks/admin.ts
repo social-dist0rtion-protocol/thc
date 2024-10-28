@@ -1,27 +1,26 @@
 import { task } from "hardhat/config";
 import { TreasureHuntCreator } from "../typechain";
-import { CID } from "multiformats";
 import { loadChapters, loadContract } from "./utils";
 
 task("root-set", "Set root CID")
-  .addPositionalParam("cid", "The file with all chapters")
-  .setAction(async ({ cid }: { cid: string }, hre) => {
-    throw "not implemented";
+  .addPositionalParam("root", "The file with all chapters")
+  .setAction(async ({ root }: { root: string }, hre) => {
+    //throw "not implemented";
     const thcContract = (await loadContract(
       hre,
       "TreasureHuntCreator"
     )) as TreasureHuntCreator;
     console.log(
-      `Setting root CID ${cid} for contract ${thcContract.getAddress()}`
+      `Setting root ${root} for contract ${thcContract.getAddress()}`
     );
-    const cidBytes = CID.parse(cid).bytes;
-    const tx = await thcContract.setup(cidBytes);
+    const tx = await thcContract.setup(root);
 
     console.log(`  Transaction submitted. Waiting for 3 confirmation....`);
     const receipt = await tx.wait(3);
     console.log(`  Root CID successfully set. Receipt: ${receipt?.hash}`);
   });
 
+/*
 import * as readline from "readline";
 const rl = readline.createInterface({
   input: process.stdin,
@@ -87,3 +86,4 @@ task("leaderboard", "Check leaderboard")
     const leaderboard = await thcContract.getLeaderboard(page);
     console.log(leaderboard);
   });
+*/

@@ -4,7 +4,6 @@ export function useInterval(isOn: boolean, interval: number) {
   const [rounds, setRounds] = useState(0);
 
   useEffect(() => {
-    console.log(`${rounds} rounds ${isOn}`);
     if (isOn) {
       const intervalTimer = setTimeout(() => {
         setRounds(rounds + 1);

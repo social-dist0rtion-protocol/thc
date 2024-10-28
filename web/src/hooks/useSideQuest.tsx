@@ -36,7 +36,6 @@ function useCurrentSmartContractSideQuestIndex(address?: string) {
         .split("")
         .filter((k) => k === "1").length;
       setSideQuest(solvedKeys);
-      console.log(solvedKeys);
     }
   });
 

@@ -40,8 +40,6 @@ function Leaderboard() {
   });
 
   useEffect(() => {
-    console.log(data);
-    console.log(status);
     if (data) {
       const bitmaps = data as unknown as bigint[];
       const pageContent: LeaderBoardEntry[] = [];
@@ -70,7 +68,7 @@ function Leaderboard() {
           pages[Number(page)] = pageContent;
           setPages(pages);
         } else {
-          setPages(pages.concat([pageContent]));
+          setPages((prevPages) => [...prevPages, ...[pageContent]]);
         }
 
         if (pageContent.length === 32) {
@@ -81,7 +79,8 @@ function Leaderboard() {
   }, [data]);
 
   function sortedLeaderboard() {
-    return pages.flat().sort((x, y) => y.chapter - x.chapter);
+    const flattened = pages.flat().sort((x, y) => y.chapter - x.chapter);
+    return flattened;
   }
 
   function shortenAddress(address: string | undefined) {
@@ -103,7 +102,7 @@ function Leaderboard() {
           <Tbody>
             {sortedLeaderboard().map((entry: LeaderBoardEntry) => {
               return (
-                <Tr>
+                <Tr key={entry.address}>
                   <Td>
                     <ENSName
                       customDisplay={shortenAddress}

@@ -14,7 +14,6 @@ export function useAccount(): UnifiedSigner | undefined {
   const { burnerWallet, mnemonic } = useBurnerWallet(); // Your custom HDAccount
   const seed = mnemonicToSeedSync(mnemonic);
   const { privateKey } = HDKey.fromMasterSeed(seed);
-  console.log(burnerWallet, privateKey);
   /*const { data: wagmiSigner } = useSigner(); // Wagmi's signer
   const account = useWagmiAccount();
 
