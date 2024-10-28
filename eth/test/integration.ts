@@ -27,6 +27,7 @@ import {
   getSolutionAddress,
   getSolutionSignature,
   leaderboardEntry,
+  parseLeaderboard,
 } from "./utils";
 import { time } from "@nomicfoundation/hardhat-network-helpers";
 import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
@@ -517,11 +518,13 @@ describe("TreasureHuntCreator", () => {
         keys
       );
 
-      let leaderboard = await instance.getLeaderboard(0);
-      let expectedLeaderboard = Array(PAGE_SIZE).fill(0n);
-      expect(leaderboard.map((n) => n.toString())).eql(
-        expectedLeaderboard.map((n) => n.toString())
+      let leaderboard = parseLeaderboard(await instance.getLeaderboard(0));
+
+      const expectedLeaderboard = Array(PAGE_SIZE).fill(
+        leaderboardEntry("0x0000000000000000000000000000000000000000", [], 0)
       );
+
+      expect(leaderboard).to.deep.equal(expectedLeaderboard);
     });
 
     it("should return the list of players and chapters", async () => {
@@ -543,18 +546,17 @@ describe("TreasureHuntCreator", () => {
 
       // Let the game begin!
       let leaderboard;
-      let expectedLeaderboard;
+      const expectedLeaderboard = Array(PAGE_SIZE).fill(
+        leaderboardEntry("0x0000000000000000000000000000000000000000", [], 0)
+      );
 
       // player 1 solves chapter 1
       let sig = await getSolutionSignature(testSolution1, player1.address);
       // @ts-ignore FIXME
       await instance.connect(player1).submit(sig.v, sig.r, sig.s);
-      leaderboard = await instance.getLeaderboard(0);
-      expectedLeaderboard = Array(PAGE_SIZE).fill(0n);
+      leaderboard = parseLeaderboard(await instance.getLeaderboard(0));
       expectedLeaderboard[0] = leaderboardEntry(player1.address, [], 1);
-      expect(leaderboard.map((n) => n.toString())).eql(
-        expectedLeaderboard.map((n) => n.toString())
-      );
+      expect(leaderboard).to.deep.equal(expectedLeaderboard);
 
       // player 1 finds key 0
       await submitKey(instance, KEYS[0], player1);
@@ -562,13 +564,10 @@ describe("TreasureHuntCreator", () => {
       // player 2 solves chapter 1
       await solve(instance, testSolution1, player2);
 
-      leaderboard = await instance.getLeaderboard(0);
-      expectedLeaderboard = Array(PAGE_SIZE).fill(0n);
+      leaderboard = parseLeaderboard(await instance.getLeaderboard(0));
       expectedLeaderboard[0] = leaderboardEntry(player1.address, [0], 1);
       expectedLeaderboard[1] = leaderboardEntry(player2.address, [], 1);
-      expect(leaderboard.map((n) => n.toString())).eql(
-        expectedLeaderboard.map((n) => n.toString())
-      );
+      expect(leaderboard).to.deep.equal(expectedLeaderboard);
 
       // plot twist: player 3 solves chapter 1, 2, and 3
       await solve(instance, testSolution1, player3);
@@ -579,15 +578,12 @@ describe("TreasureHuntCreator", () => {
       await submitKey(instance, KEYS[0], player3);
       await submitKey(instance, KEYS[2], player3);
 
-      leaderboard = await instance.getLeaderboard(0);
+      leaderboard = parseLeaderboard(await instance.getLeaderboard(0));
 
-      expectedLeaderboard = Array(PAGE_SIZE).fill(0n);
       expectedLeaderboard[0] = leaderboardEntry(player1.address, [0], 1);
       expectedLeaderboard[1] = leaderboardEntry(player2.address, [], 1);
       expectedLeaderboard[2] = leaderboardEntry(player3.address, [0, 2], 3);
-      expect(leaderboard.map((n) => n.toString())).eql(
-        expectedLeaderboard.map((n) => n.toString())
-      );
+      expect(leaderboard).to.deep.equal(expectedLeaderboard);
     });
   });
 
@@ -720,7 +716,7 @@ describe("TreasureHuntCreator", () => {
     });
   });
 
-  describe.only("timestamp", () => {
+  describe("timestamp", () => {
     let thc: TreasureHuntCreator;
     let testSolution1 = "A solution 1";
     let solutionKey1: `0x${string}`;
