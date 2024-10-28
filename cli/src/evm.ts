@@ -5,11 +5,11 @@ import {
   getContract,
   Hex,
   http,
-  PublicClient,
 } from "viem";
 import { mainnet, localhost, optimism, sepolia } from "viem/chains";
 import TreasureHuntCreatorAbi from "./TreasureHuntCreator.json";
 import { privateKeyToAccount } from "viem/accounts";
+import { LeaderboardEntry, processLeaderboard } from "./lib";
 
 const ID_TO_CHAIN = {
   [mainnet.id]: mainnet,
@@ -41,7 +41,6 @@ export function getWallet(privateKey: Hex, chainId: number, endpoint: string) {
 
 export function getPublicClient(chainId: number, endpoint: string) {
   // If anyone can explain me how to use a wallet client to call
-  //
   return createPublicClient({
     chain: mainnet,
     transport: http(endpoint),
@@ -50,10 +49,36 @@ export function getPublicClient(chainId: number, endpoint: string) {
 
 export async function setRootHash(client: Client, address: Hex, rootHash: Hex) {
   const contract = getContract({
-    address: "0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2",
+    address,
     abi: TreasureHuntCreatorAbi.abi,
     client,
   });
 
   return await contract.write.setup([rootHash]);
+}
+
+export async function getLeaderboard(client: Client, address: Hex) {
+  const contract = getContract({
+    address,
+    abi: TreasureHuntCreatorAbi.abi,
+    client,
+  });
+
+  let leaderboard: LeaderboardEntry[] = [];
+  let nextPage: null | number = 0;
+
+  for (let i = 0; ; i++) {
+    const rawLeaderboard: any = await contract.read.getLeaderboard();
+
+    ({ leaderboard, nextPage } = processLeaderboard(
+      rawLeaderboard,
+      nextPage,
+      leaderboard
+    ));
+
+    if (nextPage === null) {
+      break;
+    }
+  }
+  return leaderboard;
 }

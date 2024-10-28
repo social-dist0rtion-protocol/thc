@@ -1,11 +1,9 @@
 #!/usr/bin/env node
-
-import dotenv from "dotenv";
 import { Command } from "commander";
-import { cp, mkdir, readFile, writeFile } from "fs/promises";
-import { main } from "./utils";
-import { getWallet, getPublicClient, setRootHash } from "./evm";
-import { Config, isHexString } from "./types";
+import { cp, mkdir, writeFile } from "fs/promises";
+import { load, main } from "./utils";
+import { setRootHash, getLeaderboard } from "./evm";
+import { isHexString } from "./types";
 import path from "path";
 import packageJson from "../package.json";
 import {
@@ -22,8 +20,6 @@ program
   .name("thc")
   .description(packageJson.description)
   .version(packageJson.version);
-
-const CONFIG_PATH = "thc.json";
 
 program
   .command("build <basePath>")
@@ -45,47 +41,14 @@ program
   .command("set-root-hash <basePath>")
   .description("Update root hash")
   .action(async (basePath: string) => {
-    dotenv.config({ path: path.join(basePath, ".env") });
-    const endpoint = process.env.ETHEREUM_ENDPOINT;
-    const privateKey = process.env.PRIVATE_KEY;
-    const { chainId, thcAddress } = JSON.parse(
-      await readFile(path.join(basePath, CONFIG_PATH), "utf8")
-    ) as Config;
-
+    const { wallet, client, thcAddress, chainId } = await load(basePath);
     const rootHash = await readRootHash(basePath);
-
-    if (!endpoint) {
-      console.error("Cannot find 'endpoint' in env");
-      process.exit(1);
-    }
-
-    if (!privateKey) {
-      console.error("Cannot find 'privateKey' in env");
-      process.exit(1);
-    }
-
-    if (!isHexString(privateKey)) {
-      console.error("'privateKey' should start with '0x'");
-      process.exit(1);
-    }
-
-    if (!chainId) {
-      console.error("Cannot find 'chainId' in config");
-      process.exit(1);
-    }
-
-    if (!isHexString(thcAddress)) {
-      console.error("Cannot find 'thcAddress' in config");
-      process.exit(1);
-    }
 
     if (!isHexString(rootHash)) {
       console.error("Cannot find 'thcAddress' in config");
       process.exit(1);
     }
 
-    const wallet = getWallet(privateKey, chainId, endpoint);
-    const client = getPublicClient(chainId, endpoint);
     console.log("Wallet address", await wallet.getAddresses());
     console.log("Root hash", rootHash);
 
@@ -97,39 +60,21 @@ program
   });
 
 program
+  .command("leaderboard <basePath>")
+  .description("Show leaderboard")
+  .action(async (basePath: string) => {
+    const { client, thcAddress } = await load(basePath);
+    const leaderboard = await getLeaderboard(client, thcAddress);
+    console.log(leaderboard);
+  });
+
+program
   .command("provide-dapp <basePath> <dappPath>")
   .description("Copy game artifacts to the dapp")
   .action(async (basePath: string, dappPath: string) => {
-    dotenv.config({ path: path.join(basePath, ".env") });
-    const endpoint = process.env.ETHEREUM_ENDPOINT;
-    const { chainId, thcAddress, cname } = JSON.parse(
-      await readFile(path.join(basePath, CONFIG_PATH), "utf8")
-    ) as Config;
-
-    const rootHash = await readRootHash(basePath);
-
-    if (!endpoint) {
-      console.error("Cannot find 'endpoint' in env");
-      process.exit(1);
-    }
-
-    if (!chainId) {
-      console.error("Cannot find 'chainId' in config");
-      process.exit(1);
-    }
-
-    if (!isHexString(thcAddress)) {
-      console.error("Cannot find 'thcAddress' in config");
-      process.exit(1);
-    }
-
-    if (!isHexString(rootHash)) {
-      console.error("Cannot find 'thcAddress' in config");
-      process.exit(1);
-    }
+    const { cname, CONFIG_PATH } = await load(basePath);
 
     // Copy CNAME to public
-    console.log("porco dio", cname);
     console.log(path.join(dappPath, "public", "CNAME"));
     await writeFile(path.join(dappPath, "public", "CNAME"), cname);
 

@@ -1,9 +1,13 @@
+import dotenv from "dotenv";
+
 import { readFile, writeFile, readdir, mkdir, rename } from "fs/promises";
 import { promises as fs } from "fs";
 import os from "os";
 import path from "path";
 import { keccak256, toHex } from "viem";
 import { addressFromSolution, encrypt, Metadata } from "./lib";
+import { Config, isHexString } from "./types";
+import { getPublicClient, getWallet } from "./evm";
 
 async function inlineImagesInMarkdown(filePath: string): Promise<string> {
   try {
@@ -184,4 +188,44 @@ export async function main(
   await writeFile(metadataPath, JSON.stringify(metadata));
 
   return chapters;
+}
+
+const CONFIG_PATH = "thc.json";
+
+export async function load(basePath: string) {
+  dotenv.config({ path: path.join(basePath, ".env") });
+  const endpoint = process.env.ETHEREUM_ENDPOINT;
+  const privateKey = process.env.PRIVATE_KEY;
+  const { chainId, thcAddress, cname } = JSON.parse(
+    await readFile(path.join(basePath, CONFIG_PATH), "utf8")
+  ) as Config;
+
+  if (!endpoint) {
+    console.error("Cannot find 'endpoint' in env");
+    process.exit(1);
+  }
+
+  if (!privateKey) {
+    console.error("Cannot find 'privateKey' in env");
+    process.exit(1);
+  }
+
+  if (!isHexString(privateKey)) {
+    console.error("'privateKey' should start with '0x'");
+    process.exit(1);
+  }
+
+  if (!chainId) {
+    console.error("Cannot find 'chainId' in config");
+    process.exit(1);
+  }
+
+  if (!isHexString(thcAddress)) {
+    console.error("Cannot find 'thcAddress' in config");
+    process.exit(1);
+  }
+
+  const wallet = getWallet(privateKey, chainId, endpoint);
+  const client = getPublicClient(chainId, endpoint);
+  return { wallet, client, thcAddress, chainId, cname, CONFIG_PATH };
 }
