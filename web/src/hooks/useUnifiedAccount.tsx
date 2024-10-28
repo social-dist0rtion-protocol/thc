@@ -1,7 +1,7 @@
 // import { useAccount as useWagmiAccount } from "wagmi";
-import { useBurnerWallet } from "./useBurnerWallet";
-import { mnemonicToSeedSync } from "@scure/bip39";
-import { HDKey } from "@scure/bip32";
+// import { useBurnerWallet } from "./useBurnerWallet";
+// import { mnemonicToSeedSync } from "@scure/bip39";
+// import { HDKey } from "@scure/bip32";
 // import { signMessage, signTransaction } from "viem/accounts";
 
 type UnifiedSigner = {
@@ -11,10 +11,11 @@ type UnifiedSigner = {
 };
 
 export function useAccount(): UnifiedSigner | undefined {
+  /*
   const { burnerWallet, mnemonic } = useBurnerWallet(); // Your custom HDAccount
   const seed = mnemonicToSeedSync(mnemonic);
   const { privateKey } = HDKey.fromMasterSeed(seed);
-  /*const { data: wagmiSigner } = useSigner(); // Wagmi's signer
+  const { data: wagmiSigner } = useSigner(); // Wagmi's signer
   const account = useWagmiAccount();
 
   // If Wagmi account is connected, return Wagmi's signer with unified methods
