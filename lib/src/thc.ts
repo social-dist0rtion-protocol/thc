@@ -27,6 +27,13 @@ export async function signatureFromSolution(
 
 export type LeaderboardEntry = {
   account: `0x${string}`;
+  keys: string[];
+  chapter: number;
+  timestamp: number;
+};
+
+export type RawLeaderboardEntry = {
+  account: `0x${string}`;
   keys: bigint;
   chapter: number;
   timestamp: number;
@@ -38,17 +45,32 @@ export type Leaderboard = {
 };
 
 export function processLeaderboard(
-  rawLeaderboard: LeaderboardEntry[],
+  rawLeaderboard: RawLeaderboardEntry[],
   prevPage = 0,
-  prevLeaderboard: LeaderboardEntry[] = []
+  prevLeaderboard: LeaderboardEntry[] = [],
+  totalKeys: number,
+  emojis: string[]
 ) {
   const nextPage =
     rawLeaderboard[rawLeaderboard.length - 1].account === ADDRESS_ZERO
       ? null
       : prevPage + 1;
 
+  function processKeys(bitmap: bigint) {
+    const keys: (string | null)[] = [];
+    for (let i = 0; i < totalKeys; i++) {
+      if ((bitmap & (1n << BigInt(i))) > 0n) {
+        keys.push(emojis[i]);
+      } else {
+        keys.push(null);
+      }
+    }
+    return keys;
+  }
+
   const processed = rawLeaderboard.map((entry) => ({
     ...entry,
+    keys: processKeys(entry.keys),
     // timestamp is uint64 but I'm quite sure we will be all dead way before
     // we reach that amount of bits
     timestamp: Number(entry.timestamp),

@@ -19,69 +19,38 @@ import {
 } from "./generated";
 import metadata from "./metadata.json";
 import { CHAIN_ID } from "./env";
-import { b } from "./lib";
+import { LeaderboardEntry, processLeaderboard } from "./lib";
 
-type LeaderBoardEntry = {
-  address: `0x${string}`;
-  keys: boolean[];
-  chapter: number;
-};
+const EMOJIS = metadata.keys.map((k) => k.emoji);
 
-function Leaderboard() {
-  const [page, setPage] = useState(BigInt(0));
-  const [pages, setPages] = useState<LeaderBoardEntry[][]>([]);
-  const keys = metadata.keys;
-
+function LeaderboardComponent() {
+  const [nextPage, setNextPage] = useState(0);
+  const [leaderboardEntries, setLeaderboardEntries] = useState<
+    LeaderboardEntry[]
+  >([]);
   const { status, data } = useReadContract({
     abi,
     address: contractAddress[CHAIN_ID as keyof typeof contractAddress],
     functionName: "getLeaderboard",
-    args: [page],
+    args: [BigInt(nextPage)],
   });
 
   useEffect(() => {
     if (data) {
-      const bitmaps = data as unknown as bigint[];
-      const pageContent: LeaderBoardEntry[] = [];
-      for (let i = 0; i < bitmaps.length; i++) {
-        const bitmap = bitmaps[i];
-        const chapter = Number(bitmap & b(8));
-        const keysString = ((bitmap >> BigInt(8)) & b(80))
-          .toString(2)
-          .padEnd(keys.length, "0")
-          .split("")
-          .map((k) => Number(k) === 1);
-        const addressInt = bitmap >> BigInt(96);
+      const r = processLeaderboard(
+        data as any,
+        nextPage,
+        leaderboardEntries,
+        EMOJIS.length,
+        EMOJIS
+      );
 
-        if (addressInt === BigInt(0)) {
-          break;
-        }
-
-        const address = ("0x" +
-          addressInt.toString(16).padStart(40, "0")) as `0x${string}`;
-
-        pageContent.push({ chapter, keys: keysString, address });
-      }
-
-      if (pageContent.length > 0) {
-        if (pages.length > page) {
-          pages[Number(page)] = pageContent;
-          setPages(pages);
-        } else {
-          setPages((prevPages) => [...prevPages, ...[pageContent]]);
-        }
-
-        if (pageContent.length === 32) {
-          setPage(page + BigInt(1));
-        }
+      setLeaderboardEntries(r.leaderboard);
+      if (r.nextPage !== null) {
+        setNextPage(r.nextPage);
       }
     }
   }, [data]);
-
-  function sortedLeaderboard() {
-    const flattened = pages.flat().sort((x, y) => y.chapter - x.chapter);
-    return flattened;
-  }
 
   function shortenAddress(address: string | undefined) {
     return `${address?.slice(0, 6)}..${address?.slice(address?.length - 3, address?.length)}`;
@@ -100,21 +69,17 @@ function Leaderboard() {
             </Tr>
           </Thead>
           <Tbody>
-            {sortedLeaderboard().map((entry: LeaderBoardEntry) => {
+            {leaderboardEntries.map((entry: LeaderboardEntry) => {
               return (
-                <Tr key={entry.address}>
+                <Tr key={entry.account}>
                   <Td>
                     <ENSName
                       customDisplay={shortenAddress}
-                      address={entry.address}
+                      address={entry.account}
                     />
                   </Td>
                   <Td isNumeric>{entry.chapter}</Td>
-                  <Td>
-                    {entry.keys
-                      .map((k, i) => (k ? keys[i].emoji : "?"))
-                      .join(",")}
-                  </Td>
+                  <Td>{entry.keys.map((k) => k ?? "?").join(",")}</Td>
                 </Tr>
               );
             })}
@@ -126,4 +91,4 @@ function Leaderboard() {
   );
 }
 
-export default Leaderboard;
+export default LeaderboardComponent;
