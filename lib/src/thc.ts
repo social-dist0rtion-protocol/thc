@@ -1,7 +1,8 @@
 import { Hex, keccak256, parseSignature } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { stringToUint8Array } from "./utils";
-import { TreasureHuntCreator } from "../../eth/typechain";
+
+const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
 
 export function walletFromSolution(solution: string) {
   const solutionRaw = stringToUint8Array(solution.trim().toLowerCase());
@@ -37,27 +38,26 @@ export type Leaderboard = {
 };
 
 export function processLeaderboard(
-  rawLeaderboard: TreasureHuntCreator.LeaderboardEntryStructOutput[],
+  rawLeaderboard: LeaderboardEntry[],
   prevPage = 0,
   prevLeaderboard: LeaderboardEntry[] = []
 ) {
   const nextPage =
-    rawLeaderboard[rawLeaderboard.length - 1][0] !==
-    "0x0000000000000000000000000000000000000000"
-      ? prevPage + 1
-      : null;
+    rawLeaderboard[rawLeaderboard.length - 1].account === ADDRESS_ZERO
+      ? null
+      : prevPage + 1;
 
   const processed = rawLeaderboard.map((entry) => ({
-    account: entry[0],
-    keys: entry[1],
-    // chapter is a unit16 so it definitely fits a js number
-    chapter: Number(entry[2]),
+    ...entry,
     // timestamp is uint64 but I'm quite sure we will be all dead way before
     // we reach that amount of bits
-    timestamp: Number(entry[3]),
+    timestamp: Number(entry.timestamp),
   }));
 
-  const leaderboard = [...prevLeaderboard, ...processed];
+  const leaderboard = [
+    ...prevLeaderboard,
+    ...processed.filter((x) => x.account !== ADDRESS_ZERO),
+  ];
 
   if (nextPage === null) {
     leaderboard.sort((a, b) => b.timestamp - a.timestamp);

@@ -68,7 +68,7 @@ export async function getLeaderboard(client: Client, address: Hex) {
   let nextPage: null | number = 0;
 
   for (let i = 0; ; i++) {
-    const rawLeaderboard: any = await contract.read.getLeaderboard();
+    const rawLeaderboard: any = await contract.read.getLeaderboard([nextPage]);
 
     ({ leaderboard, nextPage } = processLeaderboard(
       rawLeaderboard,

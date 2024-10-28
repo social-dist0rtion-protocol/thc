@@ -22,27 +22,27 @@ program
   .version(packageJson.version);
 
 program
-  .command("build <basePath>")
+  .command("build <cbd>")
   .description("Build THC artifacts")
-  .action(async (basePath: string) => {
-    await mkdir(getArtifactsPath(basePath), {
+  .action(async (cbd: string) => {
+    await mkdir(getArtifactsPath(cbd), {
       recursive: true,
     });
 
     await main(
-      path.join(basePath, "chapters"),
-      getChaptersPath(basePath),
-      getMetadataPath(basePath),
-      getRootHashPath(basePath)
+      path.join(cbd, "chapters"),
+      getChaptersPath(cbd),
+      getMetadataPath(cbd),
+      getRootHashPath(cbd)
     );
   });
 
 program
-  .command("set-root-hash <basePath>")
+  .command("set-root-hash <cbd>")
   .description("Update root hash")
-  .action(async (basePath: string) => {
-    const { wallet, client, thcAddress, chainId } = await load(basePath);
-    const rootHash = await readRootHash(basePath);
+  .action(async (cbd: string) => {
+    const { wallet, client, thcAddress, chainId } = await load(cbd);
+    const rootHash = await readRootHash(cbd);
 
     if (!isHexString(rootHash)) {
       console.error("Cannot find 'thcAddress' in config");
@@ -60,39 +60,33 @@ program
   });
 
 program
-  .command("leaderboard <basePath>")
+  .command("leaderboard <cbd>")
   .description("Show leaderboard")
-  .action(async (basePath: string) => {
-    const { client, thcAddress } = await load(basePath);
+  .action(async (cbd: string) => {
+    const { client, thcAddress } = await load(cbd);
     const leaderboard = await getLeaderboard(client, thcAddress);
     console.log(leaderboard);
   });
 
 program
-  .command("provide-dapp <basePath> <dappPath>")
+  .command("provide-dapp <cbd> <dappPath>")
   .description("Copy game artifacts to the dapp")
-  .action(async (basePath: string, dappPath: string) => {
-    const { cname, CONFIG_PATH } = await load(basePath);
+  .action(async (cbd: string, dappPath: string) => {
+    const { cname, CONFIG_PATH } = await load(cbd);
 
     // Copy CNAME to public
-    console.log(path.join(dappPath, "public", "CNAME"));
     await writeFile(path.join(dappPath, "public", "CNAME"), cname);
 
     // Copy config.json to the dapp. The file contains info about the game.
-    await cp(path.join(basePath, CONFIG_PATH), path.join(dappPath, "thc.json"));
+    await cp(path.join(cbd, CONFIG_PATH), path.join(dappPath, "thc.json"));
 
     // Copy metadata.json to the dapp. It contains all solution addresses
-    await cp(
-      getMetadataPath(basePath),
-      path.join(dappPath, "src", "metadata.json")
-    );
+    await cp(getMetadataPath(cbd), path.join(dappPath, "src", "metadata.json"));
 
     // Copy the encrypted chapters to the dapp
-    await cp(
-      getChaptersPath(basePath),
-      path.join(dappPath, "public", "game-data"),
-      { recursive: true }
-    );
+    await cp(getChaptersPath(cbd), path.join(dappPath, "public", "game-data"), {
+      recursive: true,
+    });
   });
 
 program.parse(process.argv);
