@@ -2,6 +2,7 @@ import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
 import { CID } from "multiformats/cid";
 import { addressFromSolution, signatureFromSolution } from "../../lib/src/thc";
 import { SignatureLike } from "ethers";
+import { TreasureHuntCreator } from "../typechain";
 
 export function cidToBytes(cid: string) {
   return CID.parse(cid).bytes;
@@ -48,19 +49,29 @@ export function merge(address: string, chapter: number) {
 }
 
 export function leaderboardEntry(
-  address: string,
+  account: string,
   keys: number[],
   chapter: number
 ) {
-  const addressBigInt = BigInt(address) << 96n;
-
   let keysBigInt = 0n;
-  for (let pos of keys) {
-    keysBigInt |= 1n << BigInt(pos);
+  for (let index of keys) {
+    keysBigInt |= 1n << BigInt(index);
   }
-  keysBigInt <<= 8n;
 
-  const chapterBigInt = BigInt(chapter);
+  return {
+    account,
+    keys: keysBigInt,
+    chapter,
+  };
+}
 
-  return addressBigInt | keysBigInt | chapterBigInt;
+export function parseLeaderboard(
+  leaderboard: TreasureHuntCreator.LeaderboardEntryStructOutput[]
+) {
+  return leaderboard.map((entry) => ({
+    account: entry[0],
+    keys: entry[1],
+    // chapter is a unit16 so it definitely fits a js number
+    chapter: Number(entry[2]),
+  }));
 }

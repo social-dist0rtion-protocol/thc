@@ -14,10 +14,10 @@ cd eth
 npx hardhat deploy:treasure --network <network> --verify
 
 # Deploy THC
-npx hardhat deploy:thc --network <network> --artifacts <artifactsPath> --verify
+npx hardhat deploy:thc --network <network> --cbd <cbd-path> --verify
 
-# Copy address to game config in ./try/config.json
+# Copy address to game config in cbd/config.json
 # Now we are ready to provide the dapp
 
-thc provide-dapp <game-path> <dapp-path>
+thc provide-dapp <cbd-path> <dapp-path>
 ```

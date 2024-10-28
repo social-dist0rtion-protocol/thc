@@ -10,7 +10,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import "./index.css";
 import { ConnectKitProvider } from "connectkit";
 import { createHashRouter, RouterProvider } from "react-router-dom";
-import Leaderboard from "./Leaderboard.tsx";
+import LeaderboardComponent from "./Leaderboard.tsx";
 import Settings from "./Settings.tsx";
 import FAQ from "./FAQ.tsx";
 import SideQuest from "./SideQuest.tsx";
@@ -28,7 +28,7 @@ const router = createHashRouter([
   },
   {
     path: "/leaderboard",
-    element: <Leaderboard />,
+    element: <LeaderboardComponent />,
   },
   {
     path: "/settings",

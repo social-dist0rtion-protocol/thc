@@ -8,7 +8,8 @@
     "build": "tsc && vite build",
     "lint": "biome check .",
     "preview": "vite preview",
-    "deploy": "pnpm build && gh-pages -d dist"
+    "deploy": "npm build && gh-pages -d dist",
+    "wagmi-generate": "npm wagmi generate"
   },
   "dependencies": {
     "@chakra-ui/anatomy": "^2.2.2",

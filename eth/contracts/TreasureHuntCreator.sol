@@ -27,10 +27,11 @@ contract TreasureHuntCreator is
 
     event KeyCompleted(address indexed player, uint256 indexed completedKey);
 
-    uint256 constant PAGE_SIZE = 32;
+    uint256 public constant PAGE_SIZE = 1024;
 
     mapping(uint96 => address[]) public chapterToPlayers;
-    mapping(address => uint96) public playerToCurrentChapter;
+    mapping(address => uint16) public playerToCurrentChapter;
+    mapping(address => uint64) public playerToTimestamp;
     mapping(address => uint8) public keyToPos;
     mapping(address => uint80) public playerToKeys;
     uint8 public totalKeys;
@@ -81,7 +82,7 @@ contract TreasureHuntCreator is
         return solutions.length;
     }
 
-    function currentChapter() public view returns (uint96) {
+    function currentChapter() public view returns (uint16) {
         return playerToCurrentChapter[_getMsgSender()];
     }
 
@@ -99,6 +100,7 @@ contract TreasureHuntCreator is
             players.push(_getMsgSender());
         }
         playerToCurrentChapter[_getMsgSender()]++;
+        playerToTimestamp[_getMsgSender()] = uint64(block.timestamp);
         chapterToPlayers[playerChapter].push(_getMsgSender());
         _rewardMain(playerChapter, _getMsgSender());
 
@@ -147,22 +149,27 @@ contract TreasureHuntCreator is
         }
     }
 
-    // 160 bit address
-    //   8 bit future use lol sure thing
-    //  80 bit keys
-    //   8 bit chapter
+    struct LeaderboardEntry {
+        address account;
+        uint80 keys;
+        uint16 chapter;
+        uint64 timestamp;
+    }
+
     function getLeaderboard(
         uint256 page
-    ) public view returns (uint256[PAGE_SIZE] memory leaderboard) {
+    ) public view returns (LeaderboardEntry[PAGE_SIZE] memory leaderboard) {
         uint256 offset = page * PAGE_SIZE;
         for (uint256 i = 0; i < PAGE_SIZE && i + offset < players.length; i++) {
-            address player = players[i + offset];
-            uint80 keys = playerToKeys[player];
+            address account = players[i + offset];
 
-            leaderboard[i] =
-                (uint256(uint160(player)) << 96) |
-                (uint256(keys) << 8) |
-                uint256(uint8(playerToCurrentChapter[player]));
+            // Create a new LeaderboardEntry struct and assign to the array
+            leaderboard[i] = LeaderboardEntry({
+                account: account,
+                keys: playerToKeys[account],
+                chapter: playerToCurrentChapter[account],
+                timestamp: playerToTimestamp[account]
+            });
         }
     }
 

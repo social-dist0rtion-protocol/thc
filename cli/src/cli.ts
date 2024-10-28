@@ -1,11 +1,9 @@
 #!/usr/bin/env node
-
-import dotenv from "dotenv";
 import { Command } from "commander";
-import { cp, mkdir, readFile, writeFile } from "fs/promises";
-import { main } from "./utils";
-import { getWallet, getPublicClient, setRootHash } from "./evm";
-import { Config, isHexString } from "./types";
+import { cp, mkdir, writeFile } from "fs/promises";
+import { load, main } from "./utils";
+import { setRootHash, getLeaderboard } from "./evm";
+import { isHexString } from "./types";
 import path from "path";
 import packageJson from "../package.json";
 import {
@@ -23,69 +21,34 @@ program
   .description(packageJson.description)
   .version(packageJson.version);
 
-const CONFIG_PATH = "thc.json";
-
 program
-  .command("build <basePath>")
+  .command("build <cbd>")
   .description("Build THC artifacts")
-  .action(async (basePath: string) => {
-    await mkdir(getArtifactsPath(basePath), {
+  .action(async (cbd: string) => {
+    await mkdir(getArtifactsPath(cbd), {
       recursive: true,
     });
 
     await main(
-      path.join(basePath, "chapters"),
-      getChaptersPath(basePath),
-      getMetadataPath(basePath),
-      getRootHashPath(basePath)
+      path.join(cbd, "chapters"),
+      getChaptersPath(cbd),
+      getMetadataPath(cbd),
+      getRootHashPath(cbd)
     );
   });
 
 program
-  .command("set-root-hash <basePath>")
+  .command("set-root-hash <cbd>")
   .description("Update root hash")
-  .action(async (basePath: string) => {
-    dotenv.config({ path: path.join(basePath, ".env") });
-    const endpoint = process.env.ETHEREUM_ENDPOINT;
-    const privateKey = process.env.PRIVATE_KEY;
-    const { chainId, thcAddress } = JSON.parse(
-      await readFile(path.join(basePath, CONFIG_PATH), "utf8")
-    ) as Config;
-
-    const rootHash = await readRootHash(basePath);
-
-    if (!endpoint) {
-      console.error("Cannot find 'endpoint' in env");
-      process.exit(1);
-    }
-
-    if (!privateKey) {
-      console.error("Cannot find 'privateKey' in env");
-      process.exit(1);
-    }
-
-    if (!isHexString(privateKey)) {
-      console.error("'privateKey' should start with '0x'");
-      process.exit(1);
-    }
-
-    if (!chainId) {
-      console.error("Cannot find 'chainId' in config");
-      process.exit(1);
-    }
-
-    if (!isHexString(thcAddress)) {
-      console.error("Cannot find 'thcAddress' in config");
-      process.exit(1);
-    }
+  .action(async (cbd: string) => {
+    const { wallet, client, thcAddress, chainId } = await load(cbd);
+    const rootHash = await readRootHash(cbd);
 
     if (!isHexString(rootHash)) {
       console.error("Cannot find 'thcAddress' in config");
       process.exit(1);
     }
 
-    const wallet = getWallet(privateKey, chainId, endpoint);
-    const client = getPublicClient(chainId, endpoint);
     console.log("Wallet address", await wallet.getAddresses());
     console.log("Root hash", rootHash);
 
@@ -97,57 +60,38 @@ program
   });
 
 program
-  .command("provide-dapp <basePath> <dappPath>")
+  .command("leaderboard <cbd>")
+  .description("Show leaderboard")
+  .action(async (cbd: string) => {
+    const { client, thcAddress, metadata } = await load(cbd);
+    const leaderboard = await getLeaderboard(
+      client,
+      thcAddress,
+      metadata.keys.length,
+      metadata.keys.map((x) => x.emoji)
+    );
+    console.log(leaderboard);
+  });
+
+program
+  .command("provide-dapp <cbd> <dappPath>")
   .description("Copy game artifacts to the dapp")
-  .action(async (basePath: string, dappPath: string) => {
-    dotenv.config({ path: path.join(basePath, ".env") });
-    const endpoint = process.env.ETHEREUM_ENDPOINT;
-    const { chainId, thcAddress, cname } = JSON.parse(
-      await readFile(path.join(basePath, CONFIG_PATH), "utf8")
-    ) as Config;
-
-    const rootHash = await readRootHash(basePath);
-
-    if (!endpoint) {
-      console.error("Cannot find 'endpoint' in env");
-      process.exit(1);
-    }
-
-    if (!chainId) {
-      console.error("Cannot find 'chainId' in config");
-      process.exit(1);
-    }
-
-    if (!isHexString(thcAddress)) {
-      console.error("Cannot find 'thcAddress' in config");
-      process.exit(1);
-    }
-
-    if (!isHexString(rootHash)) {
-      console.error("Cannot find 'thcAddress' in config");
-      process.exit(1);
-    }
+  .action(async (cbd: string, dappPath: string) => {
+    const { cname, CONFIG_PATH } = await load(cbd);
 
     // Copy CNAME to public
-    console.log("porco dio", cname);
-    console.log(path.join(dappPath, "public", "CNAME"));
     await writeFile(path.join(dappPath, "public", "CNAME"), cname);
 
     // Copy config.json to the dapp. The file contains info about the game.
-    await cp(path.join(basePath, CONFIG_PATH), path.join(dappPath, "thc.json"));
+    await cp(path.join(cbd, CONFIG_PATH), path.join(dappPath, "thc.json"));
 
     // Copy metadata.json to the dapp. It contains all solution addresses
-    await cp(
-      getMetadataPath(basePath),
-      path.join(dappPath, "src", "metadata.json")
-    );
+    await cp(getMetadataPath(cbd), path.join(dappPath, "src", "metadata.json"));
 
     // Copy the encrypted chapters to the dapp
-    await cp(
-      getChaptersPath(basePath),
-      path.join(dappPath, "public", "game-data"),
-      { recursive: true }
-    );
+    await cp(getChaptersPath(cbd), path.join(dappPath, "public", "game-data"), {
+      recursive: true,
+    });
   });
 
 program.parse(process.argv);

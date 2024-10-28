@@ -32,53 +32,48 @@ task("deploy:treasure", "Push Treasure to network")
   });
 
 task("deploy:thc", "Push THC to network")
-  .addParam("artifacts", "game artifacts")
+  .addParam("cbd", "Content base directory")
   .addFlag("verify", "Verify")
-  .setAction(
-    async (
-      { artifacts, verify }: { artifacts: string; verify: boolean },
-      hre
-    ) => {
-      console.log("Deploy contract Treasure Hunt Creator");
-      const [deployer] = await hre.ethers.getSigners();
-      console.log("Address:", deployer.address);
-      console.log(`  Artifacts path: ${artifacts}`);
+  .setAction(async ({ cbd, verify }: { cbd: string; verify: boolean }, hre) => {
+    console.log("Deploy contract Treasure Hunt Creator");
+    const [deployer] = await hre.ethers.getSigners();
+    console.log("Address:", deployer.address);
+    console.log(`  CBD: ${cbd}`);
 
-      const rootHash = await readRootHash(artifacts);
-      console.log(`Root: ${rootHash}`);
-      const { keys, chapters } = await readMetadata(artifacts);
-      console.log(`Chapters: ${chapters}`);
+    const rootHash = await readRootHash(cbd);
+    console.log(`Root: ${rootHash}`);
+    const { keys, chapters } = await readMetadata(cbd);
+    console.log(`Chapters: ${chapters}`);
 
-      const treasure = await loadContract(hre, "Treasure");
-      const [contract, networkFile, argsFile] = await deployContract(
-        hre,
-        "TreasureHuntCreator",
-        {},
-        chapters,
-        keys.map((k) => k.address),
-        await treasure.getAddress()
-      );
+    const treasure = await loadContract(hre, "Treasure");
+    const [contract, networkFile, argsFile] = await deployContract(
+      hre,
+      "TreasureHuntCreator",
+      {},
+      chapters,
+      keys.map((k) => k.address),
+      await treasure.getAddress()
+    );
 
-      const receipt = await treasure.grantRole(
-        await treasure.TREASURE_HUNT_ROLE(),
-        await contract.getAddress()
-      );
-      await receipt.wait(2);
+    const receipt = await treasure.grantRole(
+      await treasure.TREASURE_HUNT_ROLE(),
+      await contract.getAddress()
+    );
+    await receipt.wait(5);
 
-      const thcContract = contract as unknown as TreasureHuntCreator;
-      await thcContract.setup(rootHash);
+    const thcContract = contract as unknown as TreasureHuntCreator;
+    await thcContract.setup(rootHash);
 
-      if (verify) {
-        // It is recommended to wait for 5 confirmations before issuing the verification request
-        console.log("Verfication in progress...");
-        await hre.run("verify", {
-          address: await thcContract.getAddress(),
-          constructorArgs: argsFile,
-          contract: "contracts/TreasureHuntCreator.sol:TreasureHuntCreator",
-        });
-      }
+    if (verify) {
+      // It is recommended to wait for 5 confirmations before issuing the verification request
+      console.log("Verfication in progress...");
+      await hre.run("verify", {
+        address: await thcContract.getAddress(),
+        constructorArgs: argsFile,
+        contract: "contracts/TreasureHuntCreator.sol:TreasureHuntCreator",
+      });
     }
-  );
+  });
 
 task("solve", "Solve")
   .addParam("passwords", "The file with all passwords")
@@ -199,18 +194,3 @@ task("setup:disappear", "Push Disappear to network")
       });
     }
   });
-
-task("submit", "send tx").setAction(async (_, hre) => {
-  const thcContract = (await loadContract(
-    hre,
-    "TreasureHuntCreator"
-  )) as TreasureHuntCreator;
-
-  const r = await thcContract.submit(
-    0,
-    toUtf8Bytes("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
-    toUtf8Bytes("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
-  );
-  console.log(r.hash);
-  await r.wait(4);
-});

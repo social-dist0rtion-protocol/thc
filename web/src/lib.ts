@@ -1,6 +1,12 @@
 export { decrypt } from "../../lib/src/aes";
 export { signatureFromSolution } from "../../lib/src/thc";
 import { addressFromSolution } from "../../lib/src/thc";
+export { processLeaderboard } from "../../lib/src/thc";
+export type {
+  RawLeaderboardEntry,
+  LeaderboardEntry,
+  Leaderboard,
+} from "../../lib/src/thc";
 import metadata from "./metadata.json";
 
 export function b(n: number) {

@@ -556,6 +556,157 @@ export const erc165UpgradeableAbi = [
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ERC20
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const erc20Abi = [
+  {
+    type: 'constructor',
+    inputs: [
+      { name: 'name_', internalType: 'string', type: 'string' },
+      { name: 'symbol_', internalType: 'string', type: 'string' },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'spender',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'value',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'Approval',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'from', internalType: 'address', type: 'address', indexed: true },
+      { name: 'to', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'value',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'Transfer',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'owner', internalType: 'address', type: 'address' },
+      { name: 'spender', internalType: 'address', type: 'address' },
+    ],
+    name: 'allowance',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'spender', internalType: 'address', type: 'address' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'approve',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'balanceOf',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'decimals',
+    outputs: [{ name: '', internalType: 'uint8', type: 'uint8' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'spender', internalType: 'address', type: 'address' },
+      { name: 'subtractedValue', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'decreaseAllowance',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'spender', internalType: 'address', type: 'address' },
+      { name: 'addedValue', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'increaseAllowance',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'name',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'symbol',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'totalSupply',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'transfer',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'from', internalType: 'address', type: 'address' },
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'transferFrom',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // IAccessControl
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1435,6 +1586,129 @@ export const ierc20Abi = [
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// IERC20Metadata
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const ierc20MetadataAbi = [
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'spender',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'value',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'Approval',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'from', internalType: 'address', type: 'address', indexed: true },
+      { name: 'to', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'value',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'Transfer',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'owner', internalType: 'address', type: 'address' },
+      { name: 'spender', internalType: 'address', type: 'address' },
+    ],
+    name: 'allowance',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'spender', internalType: 'address', type: 'address' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'approve',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'balanceOf',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'decimals',
+    outputs: [{ name: '', internalType: 'uint8', type: 'uint8' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'name',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'symbol',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'totalSupply',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'transfer',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'from', internalType: 'address', type: 'address' },
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'transferFrom',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // IERC20Permit
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1698,6 +1972,160 @@ export const initializableAbi = [
       { name: 'version', internalType: 'uint8', type: 'uint8', indexed: false },
     ],
     name: 'Initialized',
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// MyToken
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const myTokenAbi = [
+  { type: 'constructor', inputs: [], stateMutability: 'nonpayable' },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'spender',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'value',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'Approval',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'from', internalType: 'address', type: 'address', indexed: true },
+      { name: 'to', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'value',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'Transfer',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'owner', internalType: 'address', type: 'address' },
+      { name: 'spender', internalType: 'address', type: 'address' },
+    ],
+    name: 'allowance',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'spender', internalType: 'address', type: 'address' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'approve',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'balanceOf',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'decimals',
+    outputs: [{ name: '', internalType: 'uint8', type: 'uint8' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'spender', internalType: 'address', type: 'address' },
+      { name: 'subtractedValue', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'decreaseAllowance',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'spender', internalType: 'address', type: 'address' },
+      { name: 'addedValue', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'increaseAllowance',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'mint',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'name',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'symbol',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'totalSupply',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'transfer',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'from', internalType: 'address', type: 'address' },
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'transferFrom',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
   },
 ] as const
 
@@ -2178,7 +2606,7 @@ export const treasureAbi = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const treasureHuntCreatorAbi = [
   {
@@ -2356,6 +2784,13 @@ export const treasureHuntCreatorAbi = [
   },
   {
     type: 'function',
+    inputs: [],
+    name: 'PAGE_SIZE',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     inputs: [{ name: 'solution', internalType: 'address', type: 'address' }],
     name: 'addSolution',
     outputs: [],
@@ -2382,7 +2817,7 @@ export const treasureHuntCreatorAbi = [
     type: 'function',
     inputs: [],
     name: 'currentChapter',
-    outputs: [{ name: '', internalType: 'uint96', type: 'uint96' }],
+    outputs: [{ name: '', internalType: 'uint16', type: 'uint16' }],
     stateMutability: 'view',
   },
   {
@@ -2404,7 +2839,17 @@ export const treasureHuntCreatorAbi = [
     inputs: [{ name: 'page', internalType: 'uint256', type: 'uint256' }],
     name: 'getLeaderboard',
     outputs: [
-      { name: 'leaderboard', internalType: 'uint256[32]', type: 'uint256[32]' },
+      {
+        name: 'leaderboard',
+        internalType: 'struct TreasureHuntCreator.LeaderboardEntry[1024]',
+        type: 'tuple[1024]',
+        components: [
+          { name: 'account', internalType: 'address', type: 'address' },
+          { name: 'keys', internalType: 'uint80', type: 'uint80' },
+          { name: 'chapter', internalType: 'uint16', type: 'uint16' },
+          { name: 'timestamp', internalType: 'uint64', type: 'uint64' },
+        ],
+      },
     ],
     stateMutability: 'view',
   },
@@ -2460,7 +2905,7 @@ export const treasureHuntCreatorAbi = [
     type: 'function',
     inputs: [{ name: '', internalType: 'address', type: 'address' }],
     name: 'playerToCurrentChapter',
-    outputs: [{ name: '', internalType: 'uint96', type: 'uint96' }],
+    outputs: [{ name: '', internalType: 'uint16', type: 'uint16' }],
     stateMutability: 'view',
   },
   {
@@ -2468,6 +2913,13 @@ export const treasureHuntCreatorAbi = [
     inputs: [{ name: '', internalType: 'address', type: 'address' }],
     name: 'playerToKeys',
     outputs: [{ name: '', internalType: 'uint80', type: 'uint80' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: '', internalType: 'address', type: 'address' }],
+    name: 'playerToTimestamp',
+    outputs: [{ name: '', internalType: 'uint64', type: 'uint64' }],
     stateMutability: 'view',
   },
   {
@@ -2584,18 +3036,37 @@ export const treasureHuntCreatorAbi = [
     outputs: [],
     stateMutability: 'nonpayable',
   },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'receiver', internalType: 'address payable', type: 'address' },
+    ],
+    name: 'withdraw',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'token', internalType: 'contract IERC20', type: 'address' },
+      { name: 'receiver', internalType: 'address', type: 'address' },
+    ],
+    name: 'withdrawERC20',
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
   { type: 'receive', stateMutability: 'payable' },
 ] as const
 
 /**
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const treasureHuntCreatorAddress = {
-  11155111: '0xfF016753393916E420c1E66bDF7A3512F3A42676',
+  11155111: '0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E',
 } as const
 
 /**
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const treasureHuntCreatorConfig = {
   address: treasureHuntCreatorAddress,
@@ -3227,6 +3698,184 @@ export const useWatchErc165UpgradeableInitializedEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
     abi: erc165UpgradeableAbi,
     eventName: 'Initialized',
+  })
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link erc20Abi}__
+ */
+export const useReadErc20 = /*#__PURE__*/ createUseReadContract({
+  abi: erc20Abi,
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link erc20Abi}__ and `functionName` set to `"allowance"`
+ */
+export const useReadErc20Allowance = /*#__PURE__*/ createUseReadContract({
+  abi: erc20Abi,
+  functionName: 'allowance',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link erc20Abi}__ and `functionName` set to `"balanceOf"`
+ */
+export const useReadErc20BalanceOf = /*#__PURE__*/ createUseReadContract({
+  abi: erc20Abi,
+  functionName: 'balanceOf',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link erc20Abi}__ and `functionName` set to `"decimals"`
+ */
+export const useReadErc20Decimals = /*#__PURE__*/ createUseReadContract({
+  abi: erc20Abi,
+  functionName: 'decimals',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link erc20Abi}__ and `functionName` set to `"name"`
+ */
+export const useReadErc20Name = /*#__PURE__*/ createUseReadContract({
+  abi: erc20Abi,
+  functionName: 'name',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link erc20Abi}__ and `functionName` set to `"symbol"`
+ */
+export const useReadErc20Symbol = /*#__PURE__*/ createUseReadContract({
+  abi: erc20Abi,
+  functionName: 'symbol',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link erc20Abi}__ and `functionName` set to `"totalSupply"`
+ */
+export const useReadErc20TotalSupply = /*#__PURE__*/ createUseReadContract({
+  abi: erc20Abi,
+  functionName: 'totalSupply',
+})
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link erc20Abi}__
+ */
+export const useWriteErc20 = /*#__PURE__*/ createUseWriteContract({
+  abi: erc20Abi,
+})
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link erc20Abi}__ and `functionName` set to `"approve"`
+ */
+export const useWriteErc20Approve = /*#__PURE__*/ createUseWriteContract({
+  abi: erc20Abi,
+  functionName: 'approve',
+})
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link erc20Abi}__ and `functionName` set to `"decreaseAllowance"`
+ */
+export const useWriteErc20DecreaseAllowance =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: erc20Abi,
+    functionName: 'decreaseAllowance',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link erc20Abi}__ and `functionName` set to `"increaseAllowance"`
+ */
+export const useWriteErc20IncreaseAllowance =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: erc20Abi,
+    functionName: 'increaseAllowance',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link erc20Abi}__ and `functionName` set to `"transfer"`
+ */
+export const useWriteErc20Transfer = /*#__PURE__*/ createUseWriteContract({
+  abi: erc20Abi,
+  functionName: 'transfer',
+})
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link erc20Abi}__ and `functionName` set to `"transferFrom"`
+ */
+export const useWriteErc20TransferFrom = /*#__PURE__*/ createUseWriteContract({
+  abi: erc20Abi,
+  functionName: 'transferFrom',
+})
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link erc20Abi}__
+ */
+export const useSimulateErc20 = /*#__PURE__*/ createUseSimulateContract({
+  abi: erc20Abi,
+})
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link erc20Abi}__ and `functionName` set to `"approve"`
+ */
+export const useSimulateErc20Approve = /*#__PURE__*/ createUseSimulateContract({
+  abi: erc20Abi,
+  functionName: 'approve',
+})
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link erc20Abi}__ and `functionName` set to `"decreaseAllowance"`
+ */
+export const useSimulateErc20DecreaseAllowance =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: erc20Abi,
+    functionName: 'decreaseAllowance',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link erc20Abi}__ and `functionName` set to `"increaseAllowance"`
+ */
+export const useSimulateErc20IncreaseAllowance =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: erc20Abi,
+    functionName: 'increaseAllowance',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link erc20Abi}__ and `functionName` set to `"transfer"`
+ */
+export const useSimulateErc20Transfer = /*#__PURE__*/ createUseSimulateContract(
+  { abi: erc20Abi, functionName: 'transfer' },
+)
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link erc20Abi}__ and `functionName` set to `"transferFrom"`
+ */
+export const useSimulateErc20TransferFrom =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: erc20Abi,
+    functionName: 'transferFrom',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link erc20Abi}__
+ */
+export const useWatchErc20Event = /*#__PURE__*/ createUseWatchContractEvent({
+  abi: erc20Abi,
+})
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link erc20Abi}__ and `eventName` set to `"Approval"`
+ */
+export const useWatchErc20ApprovalEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: erc20Abi,
+    eventName: 'Approval',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link erc20Abi}__ and `eventName` set to `"Transfer"`
+ */
+export const useWatchErc20TransferEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: erc20Abi,
+    eventName: 'Transfer',
   })
 
 /**
@@ -4166,6 +4815,156 @@ export const useWatchIerc20TransferEvent =
   })
 
 /**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link ierc20MetadataAbi}__
+ */
+export const useReadIerc20Metadata = /*#__PURE__*/ createUseReadContract({
+  abi: ierc20MetadataAbi,
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link ierc20MetadataAbi}__ and `functionName` set to `"allowance"`
+ */
+export const useReadIerc20MetadataAllowance =
+  /*#__PURE__*/ createUseReadContract({
+    abi: ierc20MetadataAbi,
+    functionName: 'allowance',
+  })
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link ierc20MetadataAbi}__ and `functionName` set to `"balanceOf"`
+ */
+export const useReadIerc20MetadataBalanceOf =
+  /*#__PURE__*/ createUseReadContract({
+    abi: ierc20MetadataAbi,
+    functionName: 'balanceOf',
+  })
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link ierc20MetadataAbi}__ and `functionName` set to `"decimals"`
+ */
+export const useReadIerc20MetadataDecimals =
+  /*#__PURE__*/ createUseReadContract({
+    abi: ierc20MetadataAbi,
+    functionName: 'decimals',
+  })
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link ierc20MetadataAbi}__ and `functionName` set to `"name"`
+ */
+export const useReadIerc20MetadataName = /*#__PURE__*/ createUseReadContract({
+  abi: ierc20MetadataAbi,
+  functionName: 'name',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link ierc20MetadataAbi}__ and `functionName` set to `"symbol"`
+ */
+export const useReadIerc20MetadataSymbol = /*#__PURE__*/ createUseReadContract({
+  abi: ierc20MetadataAbi,
+  functionName: 'symbol',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link ierc20MetadataAbi}__ and `functionName` set to `"totalSupply"`
+ */
+export const useReadIerc20MetadataTotalSupply =
+  /*#__PURE__*/ createUseReadContract({
+    abi: ierc20MetadataAbi,
+    functionName: 'totalSupply',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link ierc20MetadataAbi}__
+ */
+export const useWriteIerc20Metadata = /*#__PURE__*/ createUseWriteContract({
+  abi: ierc20MetadataAbi,
+})
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link ierc20MetadataAbi}__ and `functionName` set to `"approve"`
+ */
+export const useWriteIerc20MetadataApprove =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: ierc20MetadataAbi,
+    functionName: 'approve',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link ierc20MetadataAbi}__ and `functionName` set to `"transfer"`
+ */
+export const useWriteIerc20MetadataTransfer =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: ierc20MetadataAbi,
+    functionName: 'transfer',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link ierc20MetadataAbi}__ and `functionName` set to `"transferFrom"`
+ */
+export const useWriteIerc20MetadataTransferFrom =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: ierc20MetadataAbi,
+    functionName: 'transferFrom',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link ierc20MetadataAbi}__
+ */
+export const useSimulateIerc20Metadata =
+  /*#__PURE__*/ createUseSimulateContract({ abi: ierc20MetadataAbi })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link ierc20MetadataAbi}__ and `functionName` set to `"approve"`
+ */
+export const useSimulateIerc20MetadataApprove =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: ierc20MetadataAbi,
+    functionName: 'approve',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link ierc20MetadataAbi}__ and `functionName` set to `"transfer"`
+ */
+export const useSimulateIerc20MetadataTransfer =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: ierc20MetadataAbi,
+    functionName: 'transfer',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link ierc20MetadataAbi}__ and `functionName` set to `"transferFrom"`
+ */
+export const useSimulateIerc20MetadataTransferFrom =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: ierc20MetadataAbi,
+    functionName: 'transferFrom',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link ierc20MetadataAbi}__
+ */
+export const useWatchIerc20MetadataEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({ abi: ierc20MetadataAbi })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link ierc20MetadataAbi}__ and `eventName` set to `"Approval"`
+ */
+export const useWatchIerc20MetadataApprovalEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: ierc20MetadataAbi,
+    eventName: 'Approval',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link ierc20MetadataAbi}__ and `eventName` set to `"Transfer"`
+ */
+export const useWatchIerc20MetadataTransferEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: ierc20MetadataAbi,
+    eventName: 'Transfer',
+  })
+
+/**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link ierc20PermitAbi}__
  */
 export const useReadIerc20Permit = /*#__PURE__*/ createUseReadContract({
@@ -4459,6 +5258,202 @@ export const useWatchInitializableInitializedEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
     abi: initializableAbi,
     eventName: 'Initialized',
+  })
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link myTokenAbi}__
+ */
+export const useReadMyToken = /*#__PURE__*/ createUseReadContract({
+  abi: myTokenAbi,
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link myTokenAbi}__ and `functionName` set to `"allowance"`
+ */
+export const useReadMyTokenAllowance = /*#__PURE__*/ createUseReadContract({
+  abi: myTokenAbi,
+  functionName: 'allowance',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link myTokenAbi}__ and `functionName` set to `"balanceOf"`
+ */
+export const useReadMyTokenBalanceOf = /*#__PURE__*/ createUseReadContract({
+  abi: myTokenAbi,
+  functionName: 'balanceOf',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link myTokenAbi}__ and `functionName` set to `"decimals"`
+ */
+export const useReadMyTokenDecimals = /*#__PURE__*/ createUseReadContract({
+  abi: myTokenAbi,
+  functionName: 'decimals',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link myTokenAbi}__ and `functionName` set to `"name"`
+ */
+export const useReadMyTokenName = /*#__PURE__*/ createUseReadContract({
+  abi: myTokenAbi,
+  functionName: 'name',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link myTokenAbi}__ and `functionName` set to `"symbol"`
+ */
+export const useReadMyTokenSymbol = /*#__PURE__*/ createUseReadContract({
+  abi: myTokenAbi,
+  functionName: 'symbol',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link myTokenAbi}__ and `functionName` set to `"totalSupply"`
+ */
+export const useReadMyTokenTotalSupply = /*#__PURE__*/ createUseReadContract({
+  abi: myTokenAbi,
+  functionName: 'totalSupply',
+})
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link myTokenAbi}__
+ */
+export const useWriteMyToken = /*#__PURE__*/ createUseWriteContract({
+  abi: myTokenAbi,
+})
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link myTokenAbi}__ and `functionName` set to `"approve"`
+ */
+export const useWriteMyTokenApprove = /*#__PURE__*/ createUseWriteContract({
+  abi: myTokenAbi,
+  functionName: 'approve',
+})
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link myTokenAbi}__ and `functionName` set to `"decreaseAllowance"`
+ */
+export const useWriteMyTokenDecreaseAllowance =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: myTokenAbi,
+    functionName: 'decreaseAllowance',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link myTokenAbi}__ and `functionName` set to `"increaseAllowance"`
+ */
+export const useWriteMyTokenIncreaseAllowance =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: myTokenAbi,
+    functionName: 'increaseAllowance',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link myTokenAbi}__ and `functionName` set to `"mint"`
+ */
+export const useWriteMyTokenMint = /*#__PURE__*/ createUseWriteContract({
+  abi: myTokenAbi,
+  functionName: 'mint',
+})
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link myTokenAbi}__ and `functionName` set to `"transfer"`
+ */
+export const useWriteMyTokenTransfer = /*#__PURE__*/ createUseWriteContract({
+  abi: myTokenAbi,
+  functionName: 'transfer',
+})
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link myTokenAbi}__ and `functionName` set to `"transferFrom"`
+ */
+export const useWriteMyTokenTransferFrom = /*#__PURE__*/ createUseWriteContract(
+  { abi: myTokenAbi, functionName: 'transferFrom' },
+)
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link myTokenAbi}__
+ */
+export const useSimulateMyToken = /*#__PURE__*/ createUseSimulateContract({
+  abi: myTokenAbi,
+})
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link myTokenAbi}__ and `functionName` set to `"approve"`
+ */
+export const useSimulateMyTokenApprove =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: myTokenAbi,
+    functionName: 'approve',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link myTokenAbi}__ and `functionName` set to `"decreaseAllowance"`
+ */
+export const useSimulateMyTokenDecreaseAllowance =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: myTokenAbi,
+    functionName: 'decreaseAllowance',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link myTokenAbi}__ and `functionName` set to `"increaseAllowance"`
+ */
+export const useSimulateMyTokenIncreaseAllowance =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: myTokenAbi,
+    functionName: 'increaseAllowance',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link myTokenAbi}__ and `functionName` set to `"mint"`
+ */
+export const useSimulateMyTokenMint = /*#__PURE__*/ createUseSimulateContract({
+  abi: myTokenAbi,
+  functionName: 'mint',
+})
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link myTokenAbi}__ and `functionName` set to `"transfer"`
+ */
+export const useSimulateMyTokenTransfer =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: myTokenAbi,
+    functionName: 'transfer',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link myTokenAbi}__ and `functionName` set to `"transferFrom"`
+ */
+export const useSimulateMyTokenTransferFrom =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: myTokenAbi,
+    functionName: 'transferFrom',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link myTokenAbi}__
+ */
+export const useWatchMyTokenEvent = /*#__PURE__*/ createUseWatchContractEvent({
+  abi: myTokenAbi,
+})
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link myTokenAbi}__ and `eventName` set to `"Approval"`
+ */
+export const useWatchMyTokenApprovalEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: myTokenAbi,
+    eventName: 'Approval',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link myTokenAbi}__ and `eventName` set to `"Transfer"`
+ */
+export const useWatchMyTokenTransferEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: myTokenAbi,
+    eventName: 'Transfer',
   })
 
 /**
@@ -5029,7 +6024,7 @@ export const useWatchTreasureUriEvent =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useReadTreasureHuntCreator = /*#__PURE__*/ createUseReadContract({
   abi: treasureHuntCreatorAbi,
@@ -5039,7 +6034,7 @@ export const useReadTreasureHuntCreator = /*#__PURE__*/ createUseReadContract({
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"DEFAULT_ADMIN_ROLE"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useReadTreasureHuntCreatorDefaultAdminRole =
   /*#__PURE__*/ createUseReadContract({
@@ -5051,7 +6046,7 @@ export const useReadTreasureHuntCreatorDefaultAdminRole =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"GAME_MASTER_ROLE"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useReadTreasureHuntCreatorGameMasterRole =
   /*#__PURE__*/ createUseReadContract({
@@ -5061,9 +6056,21 @@ export const useReadTreasureHuntCreatorGameMasterRole =
   })
 
 /**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"PAGE_SIZE"`
+ *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
+ */
+export const useReadTreasureHuntCreatorPageSize =
+  /*#__PURE__*/ createUseReadContract({
+    abi: treasureHuntCreatorAbi,
+    address: treasureHuntCreatorAddress,
+    functionName: 'PAGE_SIZE',
+  })
+
+/**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"chapterToPlayers"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useReadTreasureHuntCreatorChapterToPlayers =
   /*#__PURE__*/ createUseReadContract({
@@ -5075,7 +6082,7 @@ export const useReadTreasureHuntCreatorChapterToPlayers =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"contextCounter"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useReadTreasureHuntCreatorContextCounter =
   /*#__PURE__*/ createUseReadContract({
@@ -5087,7 +6094,7 @@ export const useReadTreasureHuntCreatorContextCounter =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"currentChapter"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useReadTreasureHuntCreatorCurrentChapter =
   /*#__PURE__*/ createUseReadContract({
@@ -5099,7 +6106,7 @@ export const useReadTreasureHuntCreatorCurrentChapter =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"gameMasters"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useReadTreasureHuntCreatorGameMasters =
   /*#__PURE__*/ createUseReadContract({
@@ -5111,7 +6118,7 @@ export const useReadTreasureHuntCreatorGameMasters =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"getAddressHash"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useReadTreasureHuntCreatorGetAddressHash =
   /*#__PURE__*/ createUseReadContract({
@@ -5123,7 +6130,7 @@ export const useReadTreasureHuntCreatorGetAddressHash =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"getLeaderboard"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useReadTreasureHuntCreatorGetLeaderboard =
   /*#__PURE__*/ createUseReadContract({
@@ -5135,7 +6142,7 @@ export const useReadTreasureHuntCreatorGetLeaderboard =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"getQuestsRootCID"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useReadTreasureHuntCreatorGetQuestsRootCid =
   /*#__PURE__*/ createUseReadContract({
@@ -5147,7 +6154,7 @@ export const useReadTreasureHuntCreatorGetQuestsRootCid =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"getRoleAdmin"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useReadTreasureHuntCreatorGetRoleAdmin =
   /*#__PURE__*/ createUseReadContract({
@@ -5159,7 +6166,7 @@ export const useReadTreasureHuntCreatorGetRoleAdmin =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"hasRole"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useReadTreasureHuntCreatorHasRole =
   /*#__PURE__*/ createUseReadContract({
@@ -5171,7 +6178,7 @@ export const useReadTreasureHuntCreatorHasRole =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"keyToPos"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useReadTreasureHuntCreatorKeyToPos =
   /*#__PURE__*/ createUseReadContract({
@@ -5183,7 +6190,7 @@ export const useReadTreasureHuntCreatorKeyToPos =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"owner"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useReadTreasureHuntCreatorOwner =
   /*#__PURE__*/ createUseReadContract({
@@ -5195,7 +6202,7 @@ export const useReadTreasureHuntCreatorOwner =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"playerToCurrentChapter"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useReadTreasureHuntCreatorPlayerToCurrentChapter =
   /*#__PURE__*/ createUseReadContract({
@@ -5207,7 +6214,7 @@ export const useReadTreasureHuntCreatorPlayerToCurrentChapter =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"playerToKeys"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useReadTreasureHuntCreatorPlayerToKeys =
   /*#__PURE__*/ createUseReadContract({
@@ -5217,9 +6224,21 @@ export const useReadTreasureHuntCreatorPlayerToKeys =
   })
 
 /**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"playerToTimestamp"`
+ *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
+ */
+export const useReadTreasureHuntCreatorPlayerToTimestamp =
+  /*#__PURE__*/ createUseReadContract({
+    abi: treasureHuntCreatorAbi,
+    address: treasureHuntCreatorAddress,
+    functionName: 'playerToTimestamp',
+  })
+
+/**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"players"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useReadTreasureHuntCreatorPlayers =
   /*#__PURE__*/ createUseReadContract({
@@ -5231,7 +6250,7 @@ export const useReadTreasureHuntCreatorPlayers =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"prize"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useReadTreasureHuntCreatorPrize =
   /*#__PURE__*/ createUseReadContract({
@@ -5243,7 +6262,7 @@ export const useReadTreasureHuntCreatorPrize =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"questsRootCid"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useReadTreasureHuntCreatorQuestsRootCid =
   /*#__PURE__*/ createUseReadContract({
@@ -5255,7 +6274,7 @@ export const useReadTreasureHuntCreatorQuestsRootCid =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"solutions"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useReadTreasureHuntCreatorSolutions =
   /*#__PURE__*/ createUseReadContract({
@@ -5267,7 +6286,7 @@ export const useReadTreasureHuntCreatorSolutions =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"supportsInterface"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useReadTreasureHuntCreatorSupportsInterface =
   /*#__PURE__*/ createUseReadContract({
@@ -5279,7 +6298,7 @@ export const useReadTreasureHuntCreatorSupportsInterface =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"totalChapters"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useReadTreasureHuntCreatorTotalChapters =
   /*#__PURE__*/ createUseReadContract({
@@ -5291,7 +6310,7 @@ export const useReadTreasureHuntCreatorTotalChapters =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"totalKeys"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useReadTreasureHuntCreatorTotalKeys =
   /*#__PURE__*/ createUseReadContract({
@@ -5303,7 +6322,7 @@ export const useReadTreasureHuntCreatorTotalKeys =
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useWriteTreasureHuntCreator = /*#__PURE__*/ createUseWriteContract(
   { abi: treasureHuntCreatorAbi, address: treasureHuntCreatorAddress },
@@ -5312,7 +6331,7 @@ export const useWriteTreasureHuntCreator = /*#__PURE__*/ createUseWriteContract(
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"addSolution"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useWriteTreasureHuntCreatorAddSolution =
   /*#__PURE__*/ createUseWriteContract({
@@ -5324,7 +6343,7 @@ export const useWriteTreasureHuntCreatorAddSolution =
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"grantRole"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useWriteTreasureHuntCreatorGrantRole =
   /*#__PURE__*/ createUseWriteContract({
@@ -5336,7 +6355,7 @@ export const useWriteTreasureHuntCreatorGrantRole =
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"renounceOwnership"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useWriteTreasureHuntCreatorRenounceOwnership =
   /*#__PURE__*/ createUseWriteContract({
@@ -5348,7 +6367,7 @@ export const useWriteTreasureHuntCreatorRenounceOwnership =
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"renounceRole"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useWriteTreasureHuntCreatorRenounceRole =
   /*#__PURE__*/ createUseWriteContract({
@@ -5360,7 +6379,7 @@ export const useWriteTreasureHuntCreatorRenounceRole =
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"revokeRole"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useWriteTreasureHuntCreatorRevokeRole =
   /*#__PURE__*/ createUseWriteContract({
@@ -5372,7 +6391,7 @@ export const useWriteTreasureHuntCreatorRevokeRole =
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"setup"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useWriteTreasureHuntCreatorSetup =
   /*#__PURE__*/ createUseWriteContract({
@@ -5384,7 +6403,7 @@ export const useWriteTreasureHuntCreatorSetup =
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"submit"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useWriteTreasureHuntCreatorSubmit =
   /*#__PURE__*/ createUseWriteContract({
@@ -5396,7 +6415,7 @@ export const useWriteTreasureHuntCreatorSubmit =
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"submitKey"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useWriteTreasureHuntCreatorSubmitKey =
   /*#__PURE__*/ createUseWriteContract({
@@ -5408,7 +6427,7 @@ export const useWriteTreasureHuntCreatorSubmitKey =
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"transferOwnership"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useWriteTreasureHuntCreatorTransferOwnership =
   /*#__PURE__*/ createUseWriteContract({
@@ -5418,9 +6437,33 @@ export const useWriteTreasureHuntCreatorTransferOwnership =
   })
 
 /**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"withdraw"`
+ *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
+ */
+export const useWriteTreasureHuntCreatorWithdraw =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: treasureHuntCreatorAbi,
+    address: treasureHuntCreatorAddress,
+    functionName: 'withdraw',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"withdrawERC20"`
+ *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
+ */
+export const useWriteTreasureHuntCreatorWithdrawErc20 =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: treasureHuntCreatorAbi,
+    address: treasureHuntCreatorAddress,
+    functionName: 'withdrawERC20',
+  })
+
+/**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useSimulateTreasureHuntCreator =
   /*#__PURE__*/ createUseSimulateContract({
@@ -5431,7 +6474,7 @@ export const useSimulateTreasureHuntCreator =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"addSolution"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useSimulateTreasureHuntCreatorAddSolution =
   /*#__PURE__*/ createUseSimulateContract({
@@ -5443,7 +6486,7 @@ export const useSimulateTreasureHuntCreatorAddSolution =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"grantRole"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useSimulateTreasureHuntCreatorGrantRole =
   /*#__PURE__*/ createUseSimulateContract({
@@ -5455,7 +6498,7 @@ export const useSimulateTreasureHuntCreatorGrantRole =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"renounceOwnership"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useSimulateTreasureHuntCreatorRenounceOwnership =
   /*#__PURE__*/ createUseSimulateContract({
@@ -5467,7 +6510,7 @@ export const useSimulateTreasureHuntCreatorRenounceOwnership =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"renounceRole"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useSimulateTreasureHuntCreatorRenounceRole =
   /*#__PURE__*/ createUseSimulateContract({
@@ -5479,7 +6522,7 @@ export const useSimulateTreasureHuntCreatorRenounceRole =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"revokeRole"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useSimulateTreasureHuntCreatorRevokeRole =
   /*#__PURE__*/ createUseSimulateContract({
@@ -5491,7 +6534,7 @@ export const useSimulateTreasureHuntCreatorRevokeRole =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"setup"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useSimulateTreasureHuntCreatorSetup =
   /*#__PURE__*/ createUseSimulateContract({
@@ -5503,7 +6546,7 @@ export const useSimulateTreasureHuntCreatorSetup =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"submit"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useSimulateTreasureHuntCreatorSubmit =
   /*#__PURE__*/ createUseSimulateContract({
@@ -5515,7 +6558,7 @@ export const useSimulateTreasureHuntCreatorSubmit =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"submitKey"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useSimulateTreasureHuntCreatorSubmitKey =
   /*#__PURE__*/ createUseSimulateContract({
@@ -5527,7 +6570,7 @@ export const useSimulateTreasureHuntCreatorSubmitKey =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"transferOwnership"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useSimulateTreasureHuntCreatorTransferOwnership =
   /*#__PURE__*/ createUseSimulateContract({
@@ -5537,9 +6580,33 @@ export const useSimulateTreasureHuntCreatorTransferOwnership =
   })
 
 /**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"withdraw"`
+ *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
+ */
+export const useSimulateTreasureHuntCreatorWithdraw =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: treasureHuntCreatorAbi,
+    address: treasureHuntCreatorAddress,
+    functionName: 'withdraw',
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"withdrawERC20"`
+ *
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
+ */
+export const useSimulateTreasureHuntCreatorWithdrawErc20 =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: treasureHuntCreatorAbi,
+    address: treasureHuntCreatorAddress,
+    functionName: 'withdrawERC20',
+  })
+
+/**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link treasureHuntCreatorAbi}__
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useWatchTreasureHuntCreatorEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
@@ -5550,7 +6617,7 @@ export const useWatchTreasureHuntCreatorEvent =
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `eventName` set to `"ChapterCompleted"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useWatchTreasureHuntCreatorChapterCompletedEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
@@ -5562,7 +6629,7 @@ export const useWatchTreasureHuntCreatorChapterCompletedEvent =
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `eventName` set to `"IncrementCounter"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useWatchTreasureHuntCreatorIncrementCounterEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
@@ -5574,7 +6641,7 @@ export const useWatchTreasureHuntCreatorIncrementCounterEvent =
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `eventName` set to `"KeyCompleted"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useWatchTreasureHuntCreatorKeyCompletedEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
@@ -5586,7 +6653,7 @@ export const useWatchTreasureHuntCreatorKeyCompletedEvent =
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `eventName` set to `"OwnershipTransferred"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useWatchTreasureHuntCreatorOwnershipTransferredEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
@@ -5598,7 +6665,7 @@ export const useWatchTreasureHuntCreatorOwnershipTransferredEvent =
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `eventName` set to `"PrizeMinted"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useWatchTreasureHuntCreatorPrizeMintedEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
@@ -5610,7 +6677,7 @@ export const useWatchTreasureHuntCreatorPrizeMintedEvent =
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `eventName` set to `"RoleAdminChanged"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useWatchTreasureHuntCreatorRoleAdminChangedEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
@@ -5622,7 +6689,7 @@ export const useWatchTreasureHuntCreatorRoleAdminChangedEvent =
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `eventName` set to `"RoleGranted"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useWatchTreasureHuntCreatorRoleGrantedEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
@@ -5634,7 +6701,7 @@ export const useWatchTreasureHuntCreatorRoleGrantedEvent =
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `eventName` set to `"RoleRevoked"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xfF016753393916E420c1E66bDF7A3512F3A42676)
+ * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E)
  */
 export const useWatchTreasureHuntCreatorRoleRevokedEvent =
   /*#__PURE__*/ createUseWatchContractEvent({

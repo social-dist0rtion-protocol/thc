@@ -13,13 +13,7 @@ import {
   TreasureHuntCreator,
   TreasureHuntCreator__factory,
 } from "../typechain";
-import {
-  Signature,
-  Wallet,
-  getDefaultProvider,
-  keccak256,
-  toUtf8Bytes,
-} from "ethers";
+import { Signature, Wallet, keccak256, toUtf8Bytes } from "ethers";
 import {
   cidToBytes,
   encodeTokenId,
@@ -27,14 +21,15 @@ import {
   getSolutionAddress,
   getSolutionSignature,
   leaderboardEntry,
+  parseLeaderboard,
 } from "./utils";
+import { time } from "@nomicfoundation/hardhat-network-helpers";
 import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
 import { mkdirSync, writeFileSync } from "fs";
 
 chai.use(chaiAsPromised);
 const { expect } = chai;
 
-const PAGE_SIZE = 32;
 const GAME_MASTER_ROLE = keccak256(toUtf8Bytes("GAME_MASTER_ROLE"));
 const DEFAULT_ADMIN_ROLE =
   "0x0000000000000000000000000000000000000000000000000000000000000000";
@@ -51,7 +46,6 @@ describe("TreasureHuntCreator", () => {
   let treasure: Treasure;
   let renderer: DisappearRenderer;
   let accounts: SignerWithAddress[];
-  let totalPlayers: number;
   let solutions: string[];
   let keys: string[];
   let questsRootCid: Uint8Array;
@@ -60,6 +54,7 @@ describe("TreasureHuntCreator", () => {
   let bob: SignerWithAddress;
   let carl: SignerWithAddress;
   let dean: SignerWithAddress;
+  let PAGE_SIZE: number;
 
   beforeEach(async () => {
     [deployer, alice, bob, carl, dean] = await ethers.getSigners();
@@ -71,6 +66,7 @@ describe("TreasureHuntCreator", () => {
     treasure = (await upgrades.deployProxy(
       TreasureFactory
     )) as unknown as Treasure;
+
     await treasure.waitForDeployment();
 
     const RendererFactory = (await ethers.getContractFactory(
@@ -90,11 +86,12 @@ describe("TreasureHuntCreator", () => {
     )) as unknown as MyToken__factory;
 
     accounts = await ethers.getSigners();
-    totalPlayers = accounts.length;
 
     solutions = accounts.map((x) => x.address);
     keys = await Promise.all(KEYS.map((x) => getSolutionAddress(x)));
 
+    const thc = await thcFactory.deploy(solutions, keys, treasure.getAddress());
+    PAGE_SIZE = Number(await thc.PAGE_SIZE());
     questsRootCid = cidToBytes(
       "QmUYWv6RaHHWkk5BMHJH4xKPEKNqAYKomeiTVobAMyxsbz"
     );
@@ -516,11 +513,13 @@ describe("TreasureHuntCreator", () => {
         keys
       );
 
-      let leaderboard = await instance.getLeaderboard(0);
-      let expectedLeaderboard = Array(PAGE_SIZE).fill(0n);
-      expect(leaderboard.map((n) => n.toString())).eql(
-        expectedLeaderboard.map((n) => n.toString())
+      let leaderboard = parseLeaderboard(await instance.getLeaderboard(0));
+
+      const expectedLeaderboard = Array(PAGE_SIZE).fill(
+        leaderboardEntry("0x0000000000000000000000000000000000000000", [], 0)
       );
+
+      expect(leaderboard).to.deep.equal(expectedLeaderboard);
     });
 
     it("should return the list of players and chapters", async () => {
@@ -542,18 +541,17 @@ describe("TreasureHuntCreator", () => {
 
       // Let the game begin!
       let leaderboard;
-      let expectedLeaderboard;
+      const expectedLeaderboard = Array(PAGE_SIZE).fill(
+        leaderboardEntry("0x0000000000000000000000000000000000000000", [], 0)
+      );
 
       // player 1 solves chapter 1
       let sig = await getSolutionSignature(testSolution1, player1.address);
       // @ts-ignore FIXME
       await instance.connect(player1).submit(sig.v, sig.r, sig.s);
-      leaderboard = await instance.getLeaderboard(0);
-      expectedLeaderboard = Array(PAGE_SIZE).fill(0n);
+      leaderboard = parseLeaderboard(await instance.getLeaderboard(0));
       expectedLeaderboard[0] = leaderboardEntry(player1.address, [], 1);
-      expect(leaderboard.map((n) => n.toString())).eql(
-        expectedLeaderboard.map((n) => n.toString())
-      );
+      expect(leaderboard).to.deep.equal(expectedLeaderboard);
 
       // player 1 finds key 0
       await submitKey(instance, KEYS[0], player1);
@@ -561,13 +559,10 @@ describe("TreasureHuntCreator", () => {
       // player 2 solves chapter 1
       await solve(instance, testSolution1, player2);
 
-      leaderboard = await instance.getLeaderboard(0);
-      expectedLeaderboard = Array(PAGE_SIZE).fill(0n);
+      leaderboard = parseLeaderboard(await instance.getLeaderboard(0));
       expectedLeaderboard[0] = leaderboardEntry(player1.address, [0], 1);
       expectedLeaderboard[1] = leaderboardEntry(player2.address, [], 1);
-      expect(leaderboard.map((n) => n.toString())).eql(
-        expectedLeaderboard.map((n) => n.toString())
-      );
+      expect(leaderboard).to.deep.equal(expectedLeaderboard);
 
       // plot twist: player 3 solves chapter 1, 2, and 3
       await solve(instance, testSolution1, player3);
@@ -578,15 +573,12 @@ describe("TreasureHuntCreator", () => {
       await submitKey(instance, KEYS[0], player3);
       await submitKey(instance, KEYS[2], player3);
 
-      leaderboard = await instance.getLeaderboard(0);
+      leaderboard = parseLeaderboard(await instance.getLeaderboard(0));
 
-      expectedLeaderboard = Array(PAGE_SIZE).fill(0n);
       expectedLeaderboard[0] = leaderboardEntry(player1.address, [0], 1);
       expectedLeaderboard[1] = leaderboardEntry(player2.address, [], 1);
       expectedLeaderboard[2] = leaderboardEntry(player3.address, [0, 2], 3);
-      expect(leaderboard.map((n) => n.toString())).eql(
-        expectedLeaderboard.map((n) => n.toString())
-      );
+      expect(leaderboard).to.deep.equal(expectedLeaderboard);
     });
   });
 
@@ -716,6 +708,23 @@ describe("TreasureHuntCreator", () => {
       await expect(thc.connect(alice).withdraw(alice.address)).revertedWith(
         `AccessControl: account ${alice.address.toLocaleLowerCase()} is missing role ${DEFAULT_ADMIN_ROLE}`
       );
+    });
+  });
+
+  describe("timestamp", () => {
+    let thc: TreasureHuntCreator;
+    let testSolution1 = "A solution 1";
+    let solutionKey1: `0x${string}`;
+
+    beforeEach(async () => {
+      solutionKey1 = await getSolutionAddress(testSolution1);
+      thc = await deploy([solutionKey1], keys);
+    });
+
+    it("should not set the timestamp if already set", async () => {
+      await solve(thc, testSolution1, alice);
+      const ts = await time.latest();
+      expect(await thc.playerToTimestamp(alice.address)).equal(ts);
     });
   });
 });
