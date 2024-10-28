@@ -30,7 +30,6 @@ import { mkdirSync, writeFileSync } from "fs";
 chai.use(chaiAsPromised);
 const { expect } = chai;
 
-const PAGE_SIZE = 32;
 const GAME_MASTER_ROLE = keccak256(toUtf8Bytes("GAME_MASTER_ROLE"));
 const DEFAULT_ADMIN_ROLE =
   "0x0000000000000000000000000000000000000000000000000000000000000000";
@@ -55,6 +54,7 @@ describe("TreasureHuntCreator", () => {
   let bob: SignerWithAddress;
   let carl: SignerWithAddress;
   let dean: SignerWithAddress;
+  let PAGE_SIZE: number;
 
   beforeEach(async () => {
     [deployer, alice, bob, carl, dean] = await ethers.getSigners();
@@ -66,6 +66,7 @@ describe("TreasureHuntCreator", () => {
     treasure = (await upgrades.deployProxy(
       TreasureFactory
     )) as unknown as Treasure;
+
     await treasure.waitForDeployment();
 
     const RendererFactory = (await ethers.getContractFactory(
@@ -89,6 +90,8 @@ describe("TreasureHuntCreator", () => {
     solutions = accounts.map((x) => x.address);
     keys = await Promise.all(KEYS.map((x) => getSolutionAddress(x)));
 
+    const thc = await thcFactory.deploy(solutions, keys, treasure.getAddress());
+    PAGE_SIZE = Number(await thc.PAGE_SIZE());
     questsRootCid = cidToBytes(
       "QmUYWv6RaHHWkk5BMHJH4xKPEKNqAYKomeiTVobAMyxsbz"
     );
@@ -718,30 +721,10 @@ describe("TreasureHuntCreator", () => {
       thc = await deploy([solutionKey1], keys);
     });
 
-    it("should set the timestamp on a successful submission", async () => {
-      await solve(thc, testSolution1, alice);
-      const startTimestamp = await thc.startTimestamp();
-
-      const submissionTimestamp = await time.latest();
-      const playerTimestamp = await thc.playerToRelativeTimestamp(
-        alice.address
-      );
-
-      expect(startTimestamp).equal(submissionTimestamp);
-      expect(playerTimestamp).equal(0);
-    });
-
     it("should not set the timestamp if already set", async () => {
       await solve(thc, testSolution1, alice);
-      const startTimestamp = Number(await thc.startTimestamp());
-
-      time.increase(666);
-
-      await solve(thc, testSolution1, bob);
-
-      // startTimestamp shuold not change
-      expect(await thc.startTimestamp()).to.equal(startTimestamp);
-      expect(await thc.playerToRelativeTimestamp(bob.address)).equal(666);
+      const ts = await time.latest();
+      expect(await thc.playerToTimestamp(alice.address)).equal(ts);
     });
   });
 });

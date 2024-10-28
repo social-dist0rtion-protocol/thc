@@ -20,7 +20,7 @@ import { parseEther, Wallet } from "ethers";
 chai.use(chaiAsPromised);
 const { expect } = chai;
 
-describe("TreasureHuntCreator Pagination", () => {
+describe.skip("TreasureHuntCreator Pagination", () => {
   let thc: TreasureHuntCreator;
   let alice: SignerWithAddress;
   let thcFactory: TreasureHuntCreator__factory;

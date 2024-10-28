@@ -31,16 +31,13 @@ contract TreasureHuntCreator is
 
     mapping(uint96 => address[]) public chapterToPlayers;
     mapping(address => uint16) public playerToCurrentChapter;
-    mapping(address => uint32) public playerToRelativeTimestamp;
+    mapping(address => uint64) public playerToTimestamp;
     mapping(address => uint8) public keyToPos;
     mapping(address => uint80) public playerToKeys;
     uint8 public totalKeys;
     address[] public solutions;
     address[] public players;
     address[] public gameMasters;
-
-    // timestamp of the first succesful submission
-    uint256 public startTimestamp;
 
     bytes public questsRootCid;
     ITreasure public prize;
@@ -90,10 +87,6 @@ contract TreasureHuntCreator is
     }
 
     function submit(uint8 v, bytes32 r, bytes32 s) public {
-        if (startTimestamp == 0) {
-            startTimestamp = block.timestamp;
-        }
-
         uint96 playerChapter = playerToCurrentChapter[_getMsgSender()];
         address playerChapterSolution = solutions[playerChapter];
         bytes32 addressHash = getAddressHash(_getMsgSender());
@@ -107,9 +100,7 @@ contract TreasureHuntCreator is
             players.push(_getMsgSender());
         }
         playerToCurrentChapter[_getMsgSender()]++;
-        playerToRelativeTimestamp[_getMsgSender()] = uint32(
-            block.timestamp - startTimestamp
-        );
+        playerToTimestamp[_getMsgSender()] = uint64(block.timestamp);
         chapterToPlayers[playerChapter].push(_getMsgSender());
         _rewardMain(playerChapter, _getMsgSender());
 
@@ -162,6 +153,7 @@ contract TreasureHuntCreator is
         address account;
         uint80 keys;
         uint16 chapter;
+        uint64 timestamp;
     }
 
     function getLeaderboard(
@@ -170,14 +162,13 @@ contract TreasureHuntCreator is
         uint256 offset = page * PAGE_SIZE;
         for (uint256 i = 0; i < PAGE_SIZE && i + offset < players.length; i++) {
             address account = players[i + offset];
-            uint80 keys = playerToKeys[account];
-            uint16 chapter = playerToCurrentChapter[account];
 
             // Create a new LeaderboardEntry struct and assign to the array
             leaderboard[i] = LeaderboardEntry({
                 account: account,
-                keys: keys,
-                chapter: chapter
+                keys: playerToKeys[account],
+                chapter: playerToCurrentChapter[account],
+                timestamp: playerToTimestamp[account]
             });
         }
     }
