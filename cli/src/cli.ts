@@ -63,8 +63,13 @@ program
   .command("leaderboard <cbd>")
   .description("Show leaderboard")
   .action(async (cbd: string) => {
-    const { client, thcAddress } = await load(cbd);
-    const leaderboard = await getLeaderboard(client, thcAddress);
+    const { client, thcAddress, metadata } = await load(cbd);
+    const leaderboard = await getLeaderboard(
+      client,
+      thcAddress,
+      metadata.keys.length,
+      metadata.keys.map((x) => x.emoji)
+    );
     console.log(leaderboard);
   });
 

@@ -5,7 +5,7 @@ import { promises as fs } from "fs";
 import os from "os";
 import path from "path";
 import { keccak256, toHex } from "viem";
-import { addressFromSolution, encrypt, Metadata } from "./lib";
+import { addressFromSolution, encrypt, getMetadataPath, Metadata } from "./lib";
 import { Config, isHexString } from "./types";
 import { getPublicClient, getWallet } from "./evm";
 
@@ -192,12 +192,15 @@ export async function main(
 
 const CONFIG_PATH = "thc.json";
 
-export async function load(basePath: string) {
-  dotenv.config({ path: path.join(basePath, ".env") });
+export async function load(cbd: string) {
+  dotenv.config({ path: path.join(cbd, ".env") });
   const endpoint = process.env.ETHEREUM_ENDPOINT;
   const privateKey = process.env.PRIVATE_KEY;
+  const metadata = JSON.parse(
+    await readFile(getMetadataPath(cbd), "utf8")
+  ) as Metadata;
   const { chainId, thcAddress, cname } = JSON.parse(
-    await readFile(path.join(basePath, CONFIG_PATH), "utf8")
+    await readFile(path.join(cbd, CONFIG_PATH), "utf8")
   ) as Config;
 
   if (!endpoint) {
@@ -227,5 +230,5 @@ export async function load(basePath: string) {
 
   const wallet = getWallet(privateKey, chainId, endpoint);
   const client = getPublicClient(chainId, endpoint);
-  return { wallet, client, thcAddress, chainId, cname, CONFIG_PATH };
+  return { wallet, client, thcAddress, chainId, cname, metadata, CONFIG_PATH };
 }

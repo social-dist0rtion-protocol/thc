@@ -57,7 +57,12 @@ export async function setRootHash(client: Client, address: Hex, rootHash: Hex) {
   return await contract.write.setup([rootHash]);
 }
 
-export async function getLeaderboard(client: Client, address: Hex) {
+export async function getLeaderboard(
+  client: Client,
+  address: Hex,
+  totalKeys: number,
+  emojis: string[]
+) {
   const contract = getContract({
     address,
     abi: TreasureHuntCreatorAbi.abi,
@@ -73,7 +78,9 @@ export async function getLeaderboard(client: Client, address: Hex) {
     ({ leaderboard, nextPage } = processLeaderboard(
       rawLeaderboard,
       nextPage,
-      leaderboard
+      leaderboard,
+      totalKeys,
+      emojis
     ));
 
     if (nextPage === null) {
