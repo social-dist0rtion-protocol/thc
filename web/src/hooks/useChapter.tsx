@@ -73,7 +73,7 @@ function useCurrentSmartContractChapterIndex(address?: string) {
 
   useEffect(() => {
     if (result.data !== undefined) {
-      setChapter(Number(result.data as bigint));
+      setChapter(Number(result.data));
     }
   });
 
