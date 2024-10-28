@@ -27,7 +27,7 @@ contract TreasureHuntCreator is
 
     event KeyCompleted(address indexed player, uint256 indexed completedKey);
 
-    uint256 constant PAGE_SIZE = 32;
+    uint256 public constant PAGE_SIZE = 1024;
 
     mapping(uint96 => address[]) public chapterToPlayers;
     mapping(address => uint16) public playerToCurrentChapter;

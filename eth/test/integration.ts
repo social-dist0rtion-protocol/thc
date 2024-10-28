@@ -13,13 +13,7 @@ import {
   TreasureHuntCreator,
   TreasureHuntCreator__factory,
 } from "../typechain";
-import {
-  Signature,
-  Wallet,
-  getDefaultProvider,
-  keccak256,
-  toUtf8Bytes,
-} from "ethers";
+import { Signature, Wallet, keccak256, toUtf8Bytes } from "ethers";
 import {
   cidToBytes,
   encodeTokenId,
@@ -53,7 +47,6 @@ describe("TreasureHuntCreator", () => {
   let treasure: Treasure;
   let renderer: DisappearRenderer;
   let accounts: SignerWithAddress[];
-  let totalPlayers: number;
   let solutions: string[];
   let keys: string[];
   let questsRootCid: Uint8Array;
@@ -92,7 +85,6 @@ describe("TreasureHuntCreator", () => {
     )) as unknown as MyToken__factory;
 
     accounts = await ethers.getSigners();
-    totalPlayers = accounts.length;
 
     solutions = accounts.map((x) => x.address);
     keys = await Promise.all(KEYS.map((x) => getSolutionAddress(x)));
