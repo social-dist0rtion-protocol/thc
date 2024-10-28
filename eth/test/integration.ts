@@ -28,6 +28,7 @@ import {
   getSolutionSignature,
   leaderboardEntry,
 } from "./utils";
+import { time } from "@nomicfoundation/hardhat-network-helpers";
 import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
 import { mkdirSync, writeFileSync } from "fs";
 
@@ -716,6 +717,43 @@ describe("TreasureHuntCreator", () => {
       await expect(thc.connect(alice).withdraw(alice.address)).revertedWith(
         `AccessControl: account ${alice.address.toLocaleLowerCase()} is missing role ${DEFAULT_ADMIN_ROLE}`
       );
+    });
+  });
+
+  describe.only("timestamp", () => {
+    let thc: TreasureHuntCreator;
+    let testSolution1 = "A solution 1";
+    let solutionKey1: `0x${string}`;
+
+    beforeEach(async () => {
+      solutionKey1 = await getSolutionAddress(testSolution1);
+      thc = await deploy([solutionKey1], keys);
+    });
+
+    it("should set the timestamp on a successful submission", async () => {
+      await solve(thc, testSolution1, alice);
+      const startTimestamp = await thc.startTimestamp();
+
+      const submissionTimestamp = await time.latest();
+      const playerTimestamp = await thc.playerToRelativeTimestamp(
+        alice.address
+      );
+
+      expect(startTimestamp).equal(submissionTimestamp);
+      expect(playerTimestamp).equal(0);
+    });
+
+    it("should not set the timestamp if already set", async () => {
+      await solve(thc, testSolution1, alice);
+      const startTimestamp = Number(await thc.startTimestamp());
+
+      time.increase(666);
+
+      await solve(thc, testSolution1, bob);
+
+      // startTimestamp shuold not change
+      expect(await thc.startTimestamp()).to.equal(startTimestamp);
+      expect(await thc.playerToRelativeTimestamp(bob.address)).equal(666);
     });
   });
 });

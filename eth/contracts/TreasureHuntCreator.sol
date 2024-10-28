@@ -30,13 +30,17 @@ contract TreasureHuntCreator is
     uint256 constant PAGE_SIZE = 32;
 
     mapping(uint96 => address[]) public chapterToPlayers;
-    mapping(address => uint96) public playerToCurrentChapter;
+    mapping(address => uint64) public playerToCurrentChapter;
+    mapping(address => uint32) public playerToRelativeTimestamp;
     mapping(address => uint8) public keyToPos;
     mapping(address => uint80) public playerToKeys;
     uint8 public totalKeys;
     address[] public solutions;
     address[] public players;
     address[] public gameMasters;
+
+    // timestamp of the first succesful submission
+    uint256 public startTimestamp;
 
     bytes public questsRootCid;
     ITreasure public prize;
@@ -86,6 +90,10 @@ contract TreasureHuntCreator is
     }
 
     function submit(uint8 v, bytes32 r, bytes32 s) public {
+        if (startTimestamp == 0) {
+            startTimestamp = block.timestamp;
+        }
+
         uint96 playerChapter = playerToCurrentChapter[_getMsgSender()];
         address playerChapterSolution = solutions[playerChapter];
         bytes32 addressHash = getAddressHash(_getMsgSender());
@@ -99,6 +107,9 @@ contract TreasureHuntCreator is
             players.push(_getMsgSender());
         }
         playerToCurrentChapter[_getMsgSender()]++;
+        playerToRelativeTimestamp[_getMsgSender()] = uint32(
+            block.timestamp - startTimestamp
+        );
         chapterToPlayers[playerChapter].push(_getMsgSender());
         _rewardMain(playerChapter, _getMsgSender());
 
