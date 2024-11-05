@@ -7,7 +7,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { APP_NAME } from "./env";
+import { CONTRACT_ADDRESS } from "./env";
 
 function FAQ() {
   return (
@@ -40,7 +40,8 @@ function FAQ() {
       <Box layerStyle="base">
         <Heading variant="h3">I want to speak to the manager</Heading>
         <Text>
-          {APP_NAME} is a Treasure Hunt Challenge (THC for short) created by
+          {CONTRACT_ADDRESS} is a Treasure Hunt Challenge (THC for short)
+          created by
           <Link href="https://dist0rtion.com" isExternal>
             Social Dist0rtion Protocol
           </Link>

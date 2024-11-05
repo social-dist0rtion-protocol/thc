@@ -4,7 +4,7 @@ import { treasureHuntCreatorAddress } from "./generated";
 export const MAP_URL = thc.mapUrl;
 export const HELP_URL = thc.helpUrl;
 export const CHAIN_ID = thc.chainId;
-export const APP_NAME =
+export const CONTRACT_ADDRESS =
   treasureHuntCreatorAddress[
     CHAIN_ID as keyof typeof treasureHuntCreatorAddress
   ];

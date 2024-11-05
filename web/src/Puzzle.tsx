@@ -10,6 +10,7 @@ type PuzzleProps = {
   solutionMatcher: (solution: string) => boolean;
   submitFunctionName: "submit" | "submitKey";
   children: ReactNode;
+  isLast: boolean;
 };
 
 function Puzzle(props: PuzzleProps) {
@@ -27,7 +28,9 @@ function Puzzle(props: PuzzleProps) {
   );
 
   useEffect(() => {
+    console.log(gelatoStatus);
     if (gelatoStatus === "error") {
+      toast.closeAll();
       toast({
         title: "Error",
         description: `An error occurred: ${gelatoError}`,
@@ -36,12 +39,21 @@ function Puzzle(props: PuzzleProps) {
         isClosable: true,
       });
       setPassword("");
+    } else if (gelatoStatus === "pending") {
+      toast({
+        title: "Waiting...",
+        description: `Transaction is being finalized`,
+        status: "info",
+        duration: null,
+        isClosable: true,
+      });
     }
   }, [gelatoStatus]);
 
   useEffect(() => {
     if (props.index !== undefined && props.index !== currentChapter) {
       if (password !== "" && currentChapter != undefined) {
+        toast.closeAll();
         toast({
           title: "Success!",
           description: `Transaction finalized. Congrats!`,
@@ -80,10 +92,9 @@ function Puzzle(props: PuzzleProps) {
       } else {
         toast({
           title: "Correct!",
-          description:
-            "Correct solution. Waiting for the transaction to be finalized...",
-          status: "info",
-          duration: 9000,
+          description: "Correct solution!",
+          status: "success",
+          duration: 5000,
           isClosable: true,
         });
 
@@ -96,13 +107,17 @@ function Puzzle(props: PuzzleProps) {
   return (
     <VStack layerStyle="base" align="flex-start">
       {props.children}
-      <Input ref={inputRef} placeholder="password" />
-      <Button
-        isDisabled={gelatoStatus === "pending"}
-        onClick={() => submitPassword()}
-      >
-        Submit
-      </Button>
+      {!props.isLast && (
+        <>
+          <Input ref={inputRef} placeholder="password" />
+          <Button
+            isDisabled={gelatoStatus === "pending"}
+            onClick={() => submitPassword()}
+          >
+            Submit
+          </Button>
+        </>
+      )}
     </VStack>
   );
 }

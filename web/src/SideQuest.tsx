@@ -8,6 +8,7 @@ function SideQuest() {
 
   return (
     <Puzzle
+      isLast={false}
       index={currentSmartContractSideQuestIndex}
       setPasswordAtIndex={() => {}}
       submitFunctionName="submitKey"

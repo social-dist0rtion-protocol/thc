@@ -11,10 +11,12 @@ function Quest() {
     currentSmartContractChapterIndex,
     currentChapterContent,
     setChapterPassword,
+    isLast,
   } = useChapter();
 
   return (
     <Puzzle
+      isLast={isLast}
       index={currentSmartContractChapterIndex}
       setPasswordAtIndex={setChapterPassword}
       submitFunctionName="submit"

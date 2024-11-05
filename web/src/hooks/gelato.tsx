@@ -11,7 +11,7 @@ import {
 } from "../generated";
 import { encodeFunctionData } from "viem";
 import { useEffect, useState } from "react";
-import { APP_NAME, CHAIN_ID, GELATO_FEE_TOKEN } from "../env";
+import { CONTRACT_ADDRESS, CHAIN_ID, GELATO_FEE_TOKEN } from "../env";
 import { useInterval } from "./useInterval";
 import { useLocalStorage } from "@uidotdev/usehooks";
 
@@ -31,7 +31,7 @@ export function useSubmitSolution(
   const [taskStatus, setTaskStatus] = useLocalStorage<
     TransactionStatusResponse | undefined
   >(
-    `${APP_NAME}/taskStatus/${submitFunctionName}/${(index !== undefined
+    `${CONTRACT_ADDRESS}/taskStatus/${submitFunctionName}/${(index !== undefined
       ? index.toString()
       : "unknown"
     ).toString()}`
@@ -74,6 +74,7 @@ export function useSubmitSolution(
 
     setStatus("pending");
     const response = await relayRequest(encodedCall, address, signer);
+    setTaskId(response.taskId);
     await fetchTaskStatus(response.taskId);
     console.log(`set ${index} to taskId ${response.taskId}`);
   }
@@ -119,6 +120,10 @@ export function useSubmitSolution(
   }
 
   useEffect(() => {
+    console.log(index);
+    console.log(solution);
+    console.log(address);
+    console.log(taskStatus);
     if (
       solution !== "" &&
       address &&
@@ -128,7 +133,7 @@ export function useSubmitSolution(
     ) {
       relay();
     }
-  }, [solution]);
+  }, [solution, address, signer, taskStatus, index]);
 
   useEffect(() => {
     if (taskStatus) {

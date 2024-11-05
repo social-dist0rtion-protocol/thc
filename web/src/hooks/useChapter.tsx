@@ -2,16 +2,13 @@ import { useEffect, useState } from "react";
 import { CURRENT_CHAPTER_PASSWORD_KEY } from "./storage";
 import { decrypt } from "../lib";
 import { useReadContract } from "wagmi";
-import {
-  treasureHuntCreatorAbi,
-  treasureHuntCreatorAddress,
-} from "../generated";
-import { CHAIN_ID } from "../env";
+import { treasureHuntCreatorAbi } from "../generated";
+import { CONTRACT_ADDRESS } from "../env";
 import { useAccount } from "./useAccount";
 import { useToast } from "@chakra-ui/react";
 
 function prefixedPasswordKey(key: string) {
-  return `${import.meta.env.VITE_ALCHEMY_APP_PREFIX}/${key}`;
+  return `${CONTRACT_ADDRESS}/${key}`;
 }
 
 function useRootCID() {
@@ -19,10 +16,7 @@ function useRootCID() {
   const [root, setRoot] = useState("");
   const result = useReadContract({
     abi: treasureHuntCreatorAbi,
-    address:
-      treasureHuntCreatorAddress[
-        CHAIN_ID as keyof typeof treasureHuntCreatorAddress
-      ],
+    address: CONTRACT_ADDRESS,
     functionName: "questsRootCid",
     query: {
       refetchInterval: 20000,
@@ -55,15 +49,12 @@ function useCurrentSmartContractChapterIndex(address?: string) {
 
   const result = useReadContract({
     abi: treasureHuntCreatorAbi,
-    address:
-      treasureHuntCreatorAddress[
-        CHAIN_ID as keyof typeof treasureHuntCreatorAddress
-      ],
+    address: CONTRACT_ADDRESS,
     functionName: "playerToCurrentChapter",
     args: [address as `0x${string}`],
     query: {
       enabled: address !== undefined,
-      refetchInterval: 5000,
+      refetchInterval: 10000,
       refetchOnMount: true,
       refetchOnWindowFocus: true,
     },
@@ -103,6 +94,7 @@ export function useChapter() {
   const currentSmartContractChapterIndex = useCurrentSmartContractChapterIndex(
     account?.address
   );
+  const [isLast, setIsLast] = useState(false);
 
   async function updateChapterContent(chapter: number) {
     const response = await fetch(`game-data/${rootCID}/${chapter}`);
@@ -113,6 +105,14 @@ export function useChapter() {
       setCurrentChapterContent(text);
     } else {
       setCurrentChapterContent(data);
+    }
+
+    try {
+      const nextResult = await fetch(`game-data/${rootCID}/${chapter + 1}`);
+      const data = await nextResult.text();
+      setIsLast(data.indexOf("<html") !== -1);
+    } catch (e) {
+      setIsLast(true);
     }
   }
 
@@ -130,5 +130,6 @@ export function useChapter() {
     currentSmartContractChapterIndex,
     setChapterPassword,
     currentChapterContent,
+    isLast,
   };
 }
