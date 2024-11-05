@@ -47,6 +47,15 @@ function Puzzle(props: PuzzleProps) {
         duration: null,
         isClosable: true,
       });
+    } else if (gelatoStatus === "success") {
+      toast.closeAll();
+      toast({
+        title: "Success!",
+        description: `Transaction finalized. Congrats!`,
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
     }
   }, [gelatoStatus]);
 

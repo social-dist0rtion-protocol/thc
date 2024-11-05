@@ -43,6 +43,8 @@ export function useSubmitSolution(
 
   function handleTaskStateChange() {
     const taskState = taskStatus?.taskState as string;
+
+    console.log(taskState);
     if (
       ["CheckPending", "ExecPending", "WaitingForConfirmation"].includes(
         taskState
@@ -110,11 +112,12 @@ export function useSubmitSolution(
     status: Status | undefined,
     info?: { data?: string; error?: string }
   ) {
+    console.log(`status ${status}`);
     setStatus(status);
     setError(info?.error);
     setData(info?.data);
     setPolling(false);
-    if (status == "error") {
+    if (status == "error" || submitFunctionName === "submitKey") {
       setTaskStatus(undefined);
     }
   }
@@ -123,7 +126,6 @@ export function useSubmitSolution(
     console.log(index);
     console.log(solution);
     console.log(address);
-    console.log(taskStatus);
     if (
       solution !== "" &&
       address &&
@@ -133,7 +135,7 @@ export function useSubmitSolution(
     ) {
       relay();
     }
-  }, [solution, address, signer, taskStatus, index]);
+  }, [solution, address, signer, index]);
 
   useEffect(() => {
     if (taskStatus) {
