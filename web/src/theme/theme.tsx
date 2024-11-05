@@ -14,12 +14,12 @@ const Button = defineStyleConfig({
   },
   variants: {
     main: {
-      background: "rgba(230, 91, 84, 0.666)",
+      background: "#8c72ae",
       color: "white",
       borderRadius: "0px",
       transition: "all 0.5s",
       _hover: {
-        background: "rgba(230, 91, 84, 1)",
+        background: "#7D52F4",
       },
       _disabled: {
         color: "rgb(148, 148, 148)",
@@ -28,13 +28,14 @@ const Button = defineStyleConfig({
       },
     },
     menu: {
-      fontFamily: "OCR",
-      background: "rgba(230, 91, 84, 0.666)",
-      color: "black",
+      fontFamily: "Inter",
+      background: "rgb(69, 69, 69)",
+      border: "1px solid #aaa",
+      color: "white",
       borderRadius: "full",
       fontSize: "0.8em",
       transition: "all 0.5s",
-      fontWeight: "bold",
+      fontWeight: "normal",
       height: "30px",
     },
   },
@@ -44,6 +45,11 @@ const Button = defineStyleConfig({
 });
 
 const Input = defineMultiStyleConfig({
+  baseStyle: definePartsStyle({
+    field: {
+      borderColor: "#aaa",
+    },
+  }),
   sizes: {
     md: definePartsStyle({
       field: defineStyle({
@@ -55,7 +61,6 @@ const Input = defineMultiStyleConfig({
 
 const Textarea = defineStyleConfig({
   // The styles all button have in common
-
   variants: {
     base: {
       borderRadius: "0px",
@@ -70,7 +75,7 @@ const Textarea = defineStyleConfig({
 const Heading = defineStyleConfig({
   // The styles all button have in common
   baseStyle: {
-    fontFamily: "OCR",
+    fontFamily: "Inter",
     textTransform: "uppercase",
     fontWeight: "bold",
   },
@@ -95,15 +100,17 @@ const Heading = defineStyleConfig({
 
 export const theme = extendTheme({
   fonts: {
-    heading: `"Roboto", "Arial", "serif"`,
-    body: `"Roboto", "Arial", "serif"`,
+    heading: `"Poppins", "Arial", "serif"`,
+    body: `"Inter", "Arial", "serif"`,
   },
   styles: {
     global: {
       html: {
-        background: "url(./images/bg.png)",
-        backgroundSize: "contain",
+        backgroundImage: "url(./images/bg.avif)",
+        backgroundSize: "cover",
         backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
       },
       body: {
         background: "transparent",
@@ -112,7 +119,7 @@ export const theme = extendTheme({
   },
   layerStyles: {
     base: {
-      background: "rgba(255, 255, 255, 0.666)",
+      background: "rgba(255, 255, 255, 0.888)",
       padding: "10px",
     },
   },
