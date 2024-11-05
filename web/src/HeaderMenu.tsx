@@ -6,51 +6,37 @@ function HeaderMenu() {
     <Wrap justify="center" marginTop="20px">
       <WrapItem>
         <Link href="/">
-          <Button variant="menu">
-            {"<<"}H{"<"}ome
-          </Button>
+          <Button variant="menu">Home</Button>
         </Link>
       </WrapItem>
       <WrapItem>
         <Link href="/#sides">
-          <Button variant="menu">
-            {"<<"}S{"<"}ide Quests
-          </Button>
+          <Button variant="menu">Side Quests</Button>
         </Link>
       </WrapItem>
       <WrapItem>
         <Link href={MAP_URL}>
-          <Button variant="menu">
-            {"<<"}M{"<"}ap
-          </Button>
+          <Button variant="menu">Map</Button>
         </Link>
       </WrapItem>
       <WrapItem>
         <Link href={HELP_URL}>
-          <Button variant="menu">
-            {"<<"}H{"<"}elp
-          </Button>
+          <Button variant="menu">Help</Button>
         </Link>
       </WrapItem>
       <WrapItem>
         <Link href="/#leaderboard">
-          <Button variant="menu">
-            {"<<"}L{"<"}eaderboard
-          </Button>
+          <Button variant="menu">Leaderboard</Button>
         </Link>
       </WrapItem>
       <WrapItem>
         <Link href="/#settings">
-          <Button variant="menu">
-            {"<<"}S{"<"}ettings
-          </Button>
+          <Button variant="menu">Settings</Button>
         </Link>
       </WrapItem>
       <WrapItem>
         <Link href="/#faq">
-          <Button variant="menu">
-            {"<<"}F{"<"}AQ
-          </Button>
+          <Button variant="menu">FAQ</Button>
         </Link>
       </WrapItem>
     </Wrap>

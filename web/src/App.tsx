@@ -11,13 +11,14 @@ function App({ children }: Props) {
   const isMobile = useIsMobile();
   return (
     <Center>
-      <VStack width="90%">
+      <VStack width="100%">
         <HeaderMenu />
         <Box
           backgroundColor="transparent"
           marginTop="20px"
           marginBottom="60px"
           width={isMobile ? "95%" : "40%"}
+          layerStyle="base"
         >
           {children}
         </Box>
