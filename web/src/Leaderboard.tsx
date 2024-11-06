@@ -1,13 +1,12 @@
 import {
   Heading,
-  Spinner,
   Table,
   TableContainer,
   Tbody,
   Td,
   Th,
-  Thead,
   Text,
+  Thead,
   Tr,
 } from "@chakra-ui/react";
 import { formatDistance } from "date-fns";
@@ -22,6 +21,7 @@ import metadata from "./metadata.json";
 import { CHAIN_ID } from "./env";
 import { LeaderboardEntry, processLeaderboard } from "./lib";
 import { useBurnerWallet } from "./hooks/useBurnerWallet";
+import CenteredSpinner from "./CenteredSpinner";
 
 const EMOJIS = metadata.keys.map((k) => k.emoji);
 
@@ -58,8 +58,6 @@ function LeaderboardComponent() {
   function shortenAddress(address: string | undefined) {
     return `${address?.slice(0, 6)}...${address?.slice(address?.length - 3, address?.length)}`;
   }
-
-  console.log(leaderboardEntries);
 
   return (
     <>
@@ -107,7 +105,7 @@ function LeaderboardComponent() {
           </Tbody>
         </Table>
       </TableContainer>
-      {status === "pending" && <Spinner />}
+      {status === "pending" && <CenteredSpinner />}
     </>
   );
 }

@@ -44,7 +44,7 @@ export function useSubmitSolution(
   function handleTaskStateChange() {
     const taskState = taskStatus?.taskState as string;
 
-    console.log(taskState);
+    console.log("Task state change", taskState);
     if (
       ["CheckPending", "ExecPending", "WaitingForConfirmation"].includes(
         taskState
@@ -62,7 +62,7 @@ export function useSubmitSolution(
   }
 
   async function relay() {
-    console.log(`relay ${solution}`);
+    console.log("Relay", solution);
     if (!address || !signer) {
       throw "missing account";
     }
@@ -78,7 +78,6 @@ export function useSubmitSolution(
     const response = await relayRequest(encodedCall, address, signer);
     setTaskId(response.taskId);
     await fetchTaskStatus(response.taskId);
-    console.log(`set ${index} to taskId ${response.taskId}`);
   }
 
   async function poll() {
@@ -112,7 +111,7 @@ export function useSubmitSolution(
     status: Status | undefined,
     info?: { data?: string; error?: string }
   ) {
-    console.log(`status ${status}`);
+    console.log("Task status", status);
     setStatus(status);
     setError(info?.error);
     setData(info?.data);
@@ -123,9 +122,6 @@ export function useSubmitSolution(
   }
 
   useEffect(() => {
-    console.log(index);
-    console.log(solution);
-    console.log(address);
     if (
       solution !== "" &&
       address &&

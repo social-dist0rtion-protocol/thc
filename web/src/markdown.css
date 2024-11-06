@@ -1,0 +1,13 @@
+.markdown h1 {
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.markdown h2 {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.markdown p {
+  margin-bottom: 1em;
+}

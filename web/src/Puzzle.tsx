@@ -28,7 +28,7 @@ function Puzzle(props: PuzzleProps) {
   );
 
   useEffect(() => {
-    console.log(gelatoStatus);
+    console.log("Gelato status", gelatoStatus);
     if (gelatoStatus === "error") {
       toast.closeAll();
       toast({

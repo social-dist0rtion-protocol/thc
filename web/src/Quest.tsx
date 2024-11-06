@@ -1,10 +1,11 @@
-import { Heading, VStack } from "@chakra-ui/react";
+import { Box, Heading, VStack } from "@chakra-ui/react";
 import { useChapter } from "./hooks/useChapter";
 import Markdown from "react-markdown";
-import ChakraUIRenderer from "chakra-ui-markdown-renderer";
 import Puzzle from "./Puzzle";
 import rehypeRaw from "rehype-raw";
 import { checkSolutionMatch } from "./lib";
+import CenteredSpinner from "./CenteredSpinner";
+import "./markdown.css";
 
 function Quest() {
   const {
@@ -13,6 +14,10 @@ function Quest() {
     setChapterPassword,
     isLast,
   } = useChapter();
+
+  const isLoading =
+    currentSmartContractChapterIndex === undefined ||
+    currentChapterContent.length === 0;
 
   return (
     <Puzzle
@@ -24,18 +29,25 @@ function Quest() {
         checkSolutionMatch(solution, currentSmartContractChapterIndex)
       }
     >
-      <VStack align="flex-start">
-        <Heading variant="h2">
-          Chapter {currentSmartContractChapterIndex}
-        </Heading>
-        <Markdown
-          components={ChakraUIRenderer()}
-          urlTransform={(value: string) => value}
-          rehypePlugins={[rehypeRaw]}
-        >
-          {currentChapterContent}
-        </Markdown>
-      </VStack>
+      {isLoading ? (
+        <CenteredSpinner />
+      ) : (
+        <VStack align="flex-start">
+          <Heading variant="h3">
+            Chapter {currentSmartContractChapterIndex}
+          </Heading>
+          <Box as="article" fontSize="md" lineHeight="tall" color="gray.700">
+            <div className="markdown">
+              <Markdown
+                urlTransform={(value: string) => value}
+                rehypePlugins={[rehypeRaw]}
+              >
+                {currentChapterContent}
+              </Markdown>
+            </div>
+          </Box>
+        </VStack>
+      )}
     </Puzzle>
   );
 }
