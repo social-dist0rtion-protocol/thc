@@ -24,23 +24,29 @@ const queryClient = new QueryClient();
 const router = createHashRouter([
   {
     path: "/",
-    element: <Quest />,
-  },
-  {
-    path: "/leaderboard",
-    element: <LeaderboardComponent />,
-  },
-  {
-    path: "/settings",
-    element: <Settings />,
-  },
-  {
-    path: "/sides",
-    element: <SideQuest />,
-  },
-  {
-    path: "/faq",
-    element: <FAQ />,
+    element: <App />,
+    children: [
+      {
+        path: "/",
+        element: <Quest />,
+      },
+      {
+        path: "/leaderboard",
+        element: <LeaderboardComponent />,
+      },
+      {
+        path: "/settings",
+        element: <Settings />,
+      },
+      {
+        path: "/sides",
+        element: <SideQuest />,
+      },
+      {
+        path: "/faq",
+        element: <FAQ />,
+      },
+    ],
   },
 ]);
 
@@ -50,9 +56,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <QueryClientProvider client={queryClient}>
         <ChakraProvider theme={theme}>
           <ConnectKitProvider>
-            <App>
-              <RouterProvider router={router} />
-            </App>
+            <RouterProvider router={router} />
           </ConnectKitProvider>
         </ChakraProvider>
       </QueryClientProvider>
