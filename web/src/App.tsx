@@ -1,13 +1,9 @@
 import { Box, Center, VStack } from "@chakra-ui/react";
 import HeaderMenu from "./HeaderMenu";
-import { ReactNode } from "react";
 import useIsMobile from "./hooks/useIsMobile";
+import { Outlet } from "react-router-dom";
 
-type Props = {
-  children: ReactNode;
-};
-
-function App({ children }: Props) {
+function App() {
   const isMobile = useIsMobile();
   return (
     <Center>
@@ -20,7 +16,7 @@ function App({ children }: Props) {
           width={isMobile ? "95%" : "40%"}
           layerStyle="base"
         >
-          {children}
+          <Outlet />
         </Box>
       </VStack>
     </Center>

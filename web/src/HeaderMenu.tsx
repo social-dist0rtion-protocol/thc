@@ -1,41 +1,42 @@
-import { Button, Link, Wrap, WrapItem } from "@chakra-ui/react";
+import { Button, Wrap, WrapItem } from "@chakra-ui/react";
 import { HELP_URL, MAP_URL } from "./env";
+import { Link } from "react-router-dom";
 
 function HeaderMenu() {
   return (
     <Wrap justify="center" marginTop="20px">
       <WrapItem>
-        <Link href="/">
+        <Link to="/">
           <Button variant="menu">Home</Button>
         </Link>
       </WrapItem>
       <WrapItem>
-        <Link href="/#sides">
+        <Link to="/sides">
           <Button variant="menu">Side Quests</Button>
         </Link>
       </WrapItem>
       <WrapItem>
-        <Link href={MAP_URL}>
+        <Link to={MAP_URL} target="_blank">
           <Button variant="menu">Map</Button>
         </Link>
       </WrapItem>
       <WrapItem>
-        <Link href={HELP_URL}>
+        <Link to={HELP_URL} target="_blank">
           <Button variant="menu">Help</Button>
         </Link>
       </WrapItem>
       <WrapItem>
-        <Link href="/#leaderboard">
+        <Link to="/leaderboard">
           <Button variant="menu">Leaderboard</Button>
         </Link>
       </WrapItem>
       <WrapItem>
-        <Link href="/#settings">
+        <Link to="/settings">
           <Button variant="menu">Settings</Button>
         </Link>
       </WrapItem>
       <WrapItem>
-        <Link href="/#faq">
+        <Link to="/faq">
           <Button variant="menu">FAQ</Button>
         </Link>
       </WrapItem>
