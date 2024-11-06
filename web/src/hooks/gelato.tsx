@@ -87,10 +87,14 @@ export function useSubmitSolution(
     }
   }
 
+  function sleep(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
   async function fetchTaskStatus(taskId: string) {
     const relay = new GelatoRelay();
     let taskStatus: TransactionStatusResponse | undefined;
-    let retries = 3;
+    let retries = 10;
     while (retries > 0) {
       try {
         taskStatus = await relay.getTaskStatus(taskId);
@@ -98,6 +102,7 @@ export function useSubmitSolution(
         return;
       } catch (e: any) {
         console.log(e);
+        await sleep(1000);
         retries--;
       }
     }
