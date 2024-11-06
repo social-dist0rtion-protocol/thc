@@ -72,7 +72,9 @@ function Settings() {
       <Heading marginBottom="40px">Settings</Heading>
       <Heading variant="h2">Wallet Address</Heading>
       <Text>You are connected with the burner wallet</Text>
-      <Text>{wallet?.address}</Text>
+      <Text whiteSpace="normal" wordBreak="break-all">
+        {wallet?.address}
+      </Text>
       {wallet !== undefined && <QRCode value={wallet?.address} />}
       {/*
       account.isConnected ? (
@@ -88,7 +90,9 @@ function Settings() {
       <Heading variant="h2" marginTop="40px">
         Smart Contract
       </Heading>
-      <Text>{CONTRACT_ADDRESS}</Text>
+      <Text whiteSpace="normal" wordBreak="break-all">
+        {CONTRACT_ADDRESS}
+      </Text>
       <Heading variant="h2" marginTop="40px">
         Change Seedphrase
       </Heading>
