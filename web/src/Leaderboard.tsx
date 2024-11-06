@@ -7,9 +7,10 @@ import {
   Td,
   Th,
   Thead,
+  Text,
   Tr,
-  VStack,
 } from "@chakra-ui/react";
+import { formatDistance } from "date-fns";
 import { ENSName } from "ethereum-ens-name";
 import { useEffect, useState } from "react";
 import { useReadContract } from "wagmi";
@@ -20,6 +21,7 @@ import {
 import metadata from "./metadata.json";
 import { CHAIN_ID } from "./env";
 import { LeaderboardEntry, processLeaderboard } from "./lib";
+import { useBurnerWallet } from "./hooks/useBurnerWallet";
 
 const EMOJIS = metadata.keys.map((k) => k.emoji);
 
@@ -28,6 +30,7 @@ function LeaderboardComponent() {
   const [leaderboardEntries, setLeaderboardEntries] = useState<
     LeaderboardEntry[]
   >([]);
+  const { burnerWallet: wallet } = useBurnerWallet();
   const { status, data } = useReadContract({
     abi,
     address: contractAddress[CHAIN_ID as keyof typeof contractAddress],
@@ -53,11 +56,13 @@ function LeaderboardComponent() {
   }, [data]);
 
   function shortenAddress(address: string | undefined) {
-    return `${address?.slice(0, 6)}..${address?.slice(address?.length - 3, address?.length)}`;
+    return `${address?.slice(0, 6)}...${address?.slice(address?.length - 3, address?.length)}`;
   }
 
+  console.log(leaderboardEntries);
+
   return (
-    <VStack alignItems="flex-start">
+    <>
       <Heading>Leaderboard</Heading>
       <TableContainer>
         <Table variant="simple">
@@ -71,12 +76,28 @@ function LeaderboardComponent() {
           <Tbody>
             {leaderboardEntries.map((entry: LeaderboardEntry) => {
               return (
-                <Tr key={entry.account}>
+                <Tr
+                  key={entry.account}
+                  bg={
+                    entry.account.toLowerCase() ===
+                    wallet?.address.toLowerCase()
+                      ? "yellow.100"
+                      : "transparent"
+                  }
+                >
                   <Td>
                     <ENSName
                       customDisplay={shortenAddress}
                       address={entry.account}
                     />
+                    <br />
+                    <Text fontSize="xs">
+                      {formatDistance(
+                        new Date(entry.timestamp * 1000).toLocaleString(),
+                        new Date(),
+                        { addSuffix: true }
+                      )}
+                    </Text>
                   </Td>
                   <Td isNumeric>{entry.chapter}</Td>
                   <Td>{entry.keys.map((k) => k ?? "?").join(",")}</Td>
@@ -87,7 +108,7 @@ function LeaderboardComponent() {
         </Table>
       </TableContainer>
       {status === "pending" && <Spinner />}
-    </VStack>
+    </>
   );
 }
 

@@ -84,8 +84,8 @@ export function processLeaderboard(
   if (nextPage === null) {
     leaderboard.sort((a, b) =>
       a.chapter !== b.chapter
-        ? a.chapter - b.chapter
-        : b.timestamp - a.timestamp
+        ? b.chapter - a.chapter
+        : a.timestamp - b.timestamp
     );
   }
 

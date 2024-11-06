@@ -24,6 +24,7 @@
     "burner-connector": "^0.0.8",
     "chakra-ui-markdown-renderer": "^4.1.0",
     "connectkit": "^1.8.2",
+    "date-fns": "^4.1.0",
     "ethereum-ens-name": "^0.0.3",
     "ethers": "6.7.0",
     "framer-motion": "^11.3.28",
