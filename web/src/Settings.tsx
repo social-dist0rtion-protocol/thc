@@ -10,8 +10,7 @@ import { useBurnerWallet } from "./hooks/useBurnerWallet";
 import { dump, restore } from "./hooks/storage";
 import { useEffect, useState } from "react";
 import QRCode from "react-qr-code";
-import { treasureHuntCreatorAddress } from "./generated";
-import { CHAIN_ID } from "./env";
+import { CONTRACT_ADDRESS } from "./env";
 
 function Settings() {
   const {
@@ -89,13 +88,7 @@ function Settings() {
       <Heading variant="h2" marginTop="40px">
         Smart Contract
       </Heading>
-      <Text>
-        {
-          treasureHuntCreatorAddress[
-            CHAIN_ID as keyof typeof treasureHuntCreatorAddress
-          ]
-        }
-      </Text>
+      <Text>{CONTRACT_ADDRESS}</Text>
       <Heading variant="h2" marginTop="40px">
         Change Seedphrase
       </Heading>

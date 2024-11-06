@@ -28,6 +28,7 @@ export function useBurnerWallet() {
   }
 
   useEffect(() => {
+    console.log("Mnemonic", mnemonic);
     if (mnemonic === "") {
       validateAndSetMnemonic(generateMnemonic(english));
     } else {
