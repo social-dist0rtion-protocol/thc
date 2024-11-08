@@ -57,9 +57,12 @@ async function chapter(dirIn: string, dirOut: string, prevSolution: string) {
 
   await mkdir(dirOut, { recursive: true });
 
-  const solution = await readFile(solutionFileIn, "utf8");
-  const address = addressFromSolution(solution);
-  await writeFile(addressFileOut, address);
+  let address;
+  try {
+    const solution = await readFile(solutionFileIn, "utf8");
+    address = addressFromSolution(solution);
+    await writeFile(addressFileOut, address);
+  } catch (e) {}
 
   if (prevSolution.length) {
     questOut = await encrypt(questIn, prevSolution);
@@ -182,7 +185,9 @@ export async function main(
 
   const metadata: Metadata = {
     keys,
-    chapters: chapters.map((c) => c.solutionAddress),
+    chapters: chapters
+      .filter((x) => x.solutionAddress !== undefined)
+      .map((c) => c.solutionAddress) as `0x${string}`[],
   };
 
   await writeFile(metadataPath, JSON.stringify(metadata));
