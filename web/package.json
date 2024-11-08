@@ -5,11 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm wagmi-generate && tsc && vite build",
+    "build": "npm run wagmi-generate && tsc && vite build",
     "lint": "biome check .",
     "preview": "vite preview",
     "deploy": "npm build && gh-pages -d dist",
-    "wagmi-generate": "npm wagmi generate"
+    "wagmi-generate": "npx wagmi generate"
   },
   "dependencies": {
     "@chakra-ui/anatomy": "^2.2.2",
