@@ -5,9 +5,9 @@ import {
   DisappearRenderer__factory,
   TreasureHuntCreator__factory,
   Treasure__factory,
+  SybilDefenseRenderer__factory,
 } from "../typechain";
 import {
-  BaseContract,
   Contract,
   Mnemonic,
   Wallet,
@@ -22,6 +22,7 @@ const FACTORIES: Record<string, any> = {
   TreasureHuntCreator: TreasureHuntCreator__factory,
   Treasure: Treasure__factory,
   DisappearRenderer: DisappearRenderer__factory,
+  SybilDefenseRenderer: SybilDefenseRenderer__factory,
 };
 
 type Chapter = {
