@@ -167,8 +167,8 @@ task("verify:tokens", "Verify Tokens").setAction(
   }
 );
 
-task("setup:thc", "Setup THC to network")
-  .addParam("renderer", "Verify")
+task("setup:thc", "Setup THC")
+  .addParam("renderer", "Renderer name")
   .addFlag("verify", "Verify")
   .setAction(
     async (

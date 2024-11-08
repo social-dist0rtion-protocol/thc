@@ -6,9 +6,9 @@ import {
   SybilDefenseRenderer__factory,
   TreasureHuntCreator__factory,
   Treasure__factory,
+  SybilDefenseRenderer__factory,
 } from "../typechain";
 import {
-  BaseContract,
   Contract,
   Mnemonic,
   Wallet,
