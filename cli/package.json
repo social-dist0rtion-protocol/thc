@@ -1,6 +1,6 @@
 {
   "name": "@dist0rtion/thc",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Treasure Hunt CLI",
   "main": "./dist/cli/src/cli.js",
   "scripts": {
