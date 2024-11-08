@@ -168,29 +168,35 @@ task("verify:tokens", "Verify Tokens").setAction(
 );
 
 task("setup:disappear", "Push Disappear to network")
+  .addParam("renderer", "Verify")
   .addFlag("verify", "Verify")
-  .setAction(async ({ verify }: { verify: boolean }, hre) => {
-    const [renderer, , argsFile] = await deployContract(
-      hre,
-      "DisappearRenderer",
-      {},
-      []
-    );
-    const treasure = await loadContract(hre, "Treasure");
-    const thc = await loadContract(hre, "TreasureHuntCreator");
+  .setAction(
+    async (
+      { rendererName, verify }: { rendererName: string; verify: boolean },
+      hre
+    ) => {
+      const [renderer, , argsFile] = await deployContract(
+        hre,
+        rendererName,
+        {},
+        []
+      );
+      const treasure = await loadContract(hre, "Treasure");
+      const thc = await loadContract(hre, "TreasureHuntCreator");
 
-    await treasure.updateRenderer(
-      await thc.getAddress(),
-      await renderer.getAddress()
-    );
+      await treasure.updateRenderer(
+        await thc.getAddress(),
+        await renderer.getAddress()
+      );
 
-    if (verify) {
-      // It is recommended to wait for 5 confirmations before issuing the verification request
-      console.log("Verfication in progress...");
-      await hre.run("verify", {
-        address: await renderer.getAddress(),
-        constructorArgs: argsFile,
-        contract: "contracts/Renderers/DisappearRenderer.sol:DisappearRenderer",
-      });
+      if (verify) {
+        // It is recommended to wait for 5 confirmations before issuing the verification request
+        console.log("Verfication in progress...");
+        await hre.run("verify", {
+          address: await renderer.getAddress(),
+          constructorArgs: argsFile,
+          contract: `contracts/Renderers/${rendererName}.sol:${rendererName}`,
+        });
+      }
     }
-  });
+  );
