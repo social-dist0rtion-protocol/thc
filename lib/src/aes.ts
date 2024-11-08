@@ -76,7 +76,7 @@ export async function decrypt(encryptedText: string, key: string) {
 }
 
 function uint8ArrayToBase64(bytes: Uint8Array) {
-  const binary = String.fromCharCode(...bytes);
+  const binary = new TextDecoder().decode(bytes);
   return btoa(binary);
 }
 
