@@ -172,12 +172,12 @@ task("setup:thc", "Setup THC to network")
   .addFlag("verify", "Verify")
   .setAction(
     async (
-      { rendererName, verify }: { rendererName: string; verify: boolean },
+      { renderer, verify }: { renderer: string; verify: boolean },
       hre
     ) => {
-      const [renderer, , argsFile] = await deployContract(
+      const [rendererContract, , argsFile] = await deployContract(
         hre,
-        rendererName,
+        renderer,
         {},
         []
       );
@@ -186,16 +186,16 @@ task("setup:thc", "Setup THC to network")
 
       await treasure.updateRenderer(
         await thc.getAddress(),
-        await renderer.getAddress()
+        await rendererContract.getAddress()
       );
 
       if (verify) {
         // It is recommended to wait for 5 confirmations before issuing the verification request
         console.log("Verfication in progress...");
         await hre.run("verify", {
-          address: await renderer.getAddress(),
+          address: await rendererContract.getAddress(),
           constructorArgs: argsFile,
-          contract: `contracts/Renderers/${rendererName}.sol:${rendererName}`,
+          contract: `contracts/Renderers/${renderer}.sol:${renderer}`,
         });
       }
     }

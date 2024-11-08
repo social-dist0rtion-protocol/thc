@@ -20,7 +20,6 @@ task("root-set", "Set root CID")
     console.log(`  Root CID successfully set. Receipt: ${receipt?.hash}`);
   });
 
-/*
 import * as readline from "readline";
 const rl = readline.createInterface({
   input: process.stdin,
@@ -56,7 +55,7 @@ task("root-set-from-chapters", "Set root CID from chapters file")
     console.log(`  Root CID successfully set. Receipt: ${receipt?.hash}`);
   });
 
-task("master-add", "Add a game master")
+task("master:add", "Add a game master")
   .addPositionalParam("address", "The address of the game master")
   .setAction(async ({ address }: { address: string }, hre) => {
     const thcContract = await loadContract(hre, "TreasureHuntCreator");
@@ -86,4 +85,3 @@ task("leaderboard", "Check leaderboard")
     const leaderboard = await thcContract.getLeaderboard(page);
     console.log(leaderboard);
   });
-*/

@@ -1,7 +1,8 @@
 {
   "11155111": {
-    "TreasureHuntCreator": "0x92f0cF7206e242A8b19cE661bc813b9D4dF8d43E",
-    "Treasure": "0x7D55276A078913a58026887Cf9287F2E172aFA92",
-    "DisappearRenderer": "0xf8FFA738841ebe63DB0e431207C7e0Af13DBbB5a"
+    "TreasureHuntCreator": "0xccF877a6D3a42270785dFF9D145c23831FdcBbDb",
+    "Treasure": "0xF880f19335fC4f03F09953070c1E13F67C8E3A6E",
+    "DisappearRenderer": "0xf8FFA738841ebe63DB0e431207C7e0Af13DBbB5a",
+    "SybilDefenseRenderer": "0x2DAd985fD5ba041318787A5ECcAF8a04183215A1"
   }
 }

@@ -3,6 +3,7 @@ import { readFile, writeFile } from "fs/promises";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import {
   DisappearRenderer__factory,
+  SybilDefenseRenderer__factory,
   TreasureHuntCreator__factory,
   Treasure__factory,
 } from "../typechain";
@@ -22,6 +23,7 @@ const FACTORIES: Record<string, any> = {
   TreasureHuntCreator: TreasureHuntCreator__factory,
   Treasure: Treasure__factory,
   DisappearRenderer: DisappearRenderer__factory,
+  SybilDefenseRenderer: SybilDefenseRenderer__factory,
 };
 
 type Chapter = {
