@@ -39,6 +39,7 @@ function Puzzle(props: PuzzleProps) {
         isClosable: true,
       });
       setPassword("");
+      console.log("reset password");
     } else if (gelatoStatus === "pending") {
       toast({
         title: "Waiting...",

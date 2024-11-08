@@ -74,10 +74,14 @@ export function useSubmitSolution(
       functionName: submitFunctionName,
     });
 
-    setStatus("pending");
-    const response = await relayRequest(encodedCall, address, signer);
-    setTaskId(response.taskId);
-    await fetchTaskStatus(response.taskId);
+    try {
+      const response = await relayRequest(encodedCall, address, signer);
+      setStatus("pending");
+      setTaskId(response.taskId);
+      await fetchTaskStatus(response.taskId);
+    } catch (e) {
+      finalize("error", { error: "cannot relay. check your connection" });
+    }
   }
 
   async function poll() {
@@ -127,6 +131,7 @@ export function useSubmitSolution(
   }
 
   useEffect(() => {
+    console.log("solution", solution);
     if (
       solution !== "" &&
       address &&

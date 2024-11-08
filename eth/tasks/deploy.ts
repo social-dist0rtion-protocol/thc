@@ -167,7 +167,7 @@ task("verify:tokens", "Verify Tokens").setAction(
   }
 );
 
-task("setup:disappear", "Push Disappear to network")
+task("setup:thc", "Setup THC")
   .addParam("renderer", "Verify")
   .addFlag("verify", "Verify")
   .setAction(
