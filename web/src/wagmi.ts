@@ -1,10 +1,10 @@
 import { http, createConfig } from "wagmi";
-import { /* localhost, mainnet, */ optimism } from "wagmi/chains";
+import { /* localhost, mainnet, */ sepolia } from "wagmi/chains";
 import { coinbaseWallet, injected, walletConnect } from "wagmi/connectors";
 import { RPC_NODE_URL, WALLET_CONNECT_PROJECT_ID } from "./env";
 
 export const config = createConfig({
-  chains: [optimism],
+  chains: [sepolia],
   connectors: [
     injected(),
     coinbaseWallet(),
@@ -13,7 +13,7 @@ export const config = createConfig({
     }),
   ],
   transports: {
-    [optimism.id]: http(RPC_NODE_URL),
+    [sepolia.id]: http(RPC_NODE_URL),
   },
 });
 
