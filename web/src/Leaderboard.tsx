@@ -9,7 +9,7 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { formatDistance } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 import { ENSName } from "ethereum-ens-name";
 import { useEffect, useState } from "react";
 import { useReadContract } from "wagmi";
@@ -90,11 +90,9 @@ function LeaderboardComponent() {
                     />
                     <br />
                     <Text fontSize="xs">
-                      {formatDistance(
-                        new Date(entry.timestamp * 1000).toLocaleString(),
-                        new Date(),
-                        { addSuffix: true }
-                      )}
+                      {formatDistanceToNow(new Date(entry.timestamp * 1000), {
+                        addSuffix: true,
+                      })}
                     </Text>
                   </Td>
                   <Td isNumeric>{entry.chapter}</Td>
