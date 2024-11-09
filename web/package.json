@@ -9,7 +9,7 @@
     "lint": "biome check .",
     "preview": "vite preview",
     "deploy": "npm build && gh-pages -d dist",
-    "wagmi-generate": "npm wagmi generate"
+    "wagmi-generate": "npx wagmi generate"
   },
   "dependencies": {
     "@chakra-ui/anatomy": "^2.2.2",
