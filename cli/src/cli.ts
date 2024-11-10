@@ -2,7 +2,7 @@
 import { Command } from "commander";
 import { cp, mkdir, writeFile } from "fs/promises";
 import { load, main } from "./utils";
-import { setRootHash, getLeaderboard } from "./evm";
+import { setRootHash, getLeaderboard, getRootHash } from "./evm";
 import { isHexString } from "./types";
 import path from "path";
 import packageJson from "../package.json";
@@ -41,7 +41,7 @@ program
   .command("set-root-hash <cbd>")
   .description("Update root hash")
   .action(async (cbd: string) => {
-    const { wallet, client, thcAddress, chainId } = await load(cbd);
+    const { wallet, client, thcAddress } = await load(cbd);
     const rootHash = await readRootHash(cbd);
 
     if (!isHexString(rootHash)) {
@@ -49,14 +49,33 @@ program
       process.exit(1);
     }
 
+    const oldRootHash = await getRootHash(client, thcAddress);
+
     console.log("Wallet address", await wallet.getAddresses());
-    console.log("Root hash", rootHash);
+    console.log("Old root hash", oldRootHash);
+    console.log("New root hash", rootHash);
 
-    const txHash = await setRootHash(wallet, thcAddress, rootHash);
-    console.log("Tx hash", txHash);
+    if (rootHash !== oldRootHash) {
+      const txHash = await setRootHash(wallet, thcAddress, rootHash);
+      console.log("Tx hash", txHash);
 
-    const receipt = await client.waitForTransactionReceipt({ hash: txHash });
-    console.log("Tx included in block", receipt.blockNumber.toString());
+      const receipt = await client.waitForTransactionReceipt({ hash: txHash });
+      console.log("Tx included in block", receipt.blockNumber.toString());
+    } else {
+      console.log("Root hash is already up-to-date");
+    }
+  });
+
+program
+  .command("get-root-hash <cbd>")
+  .description("Retrieve the root hash from the smart contract")
+  .action(async (cbd: string) => {
+    const { client, thcAddress } = await load(cbd);
+    const rootHash = await getRootHash(client, thcAddress);
+    const localRootHash = await readRootHash(cbd);
+
+    console.log("Contract root hash:", rootHash);
+    console.log("Local root hash:   ", localRootHash);
   });
 
 program
@@ -70,7 +89,15 @@ program
       metadata.keys.length,
       metadata.keys.map((x) => x.emoji)
     );
-    console.log(leaderboard);
+
+    const now = Math.round(Date.now() / 1000);
+
+    for (const { account, timestamp, chapter, keys } of leaderboard) {
+      const diff = now - timestamp;
+      console.log(
+        `${account} is at chapter ${chapter}, last solution was ${diff}s ago. Keys collected: ${keys}`
+      );
+    }
   });
 
 program

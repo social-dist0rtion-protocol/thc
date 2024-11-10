@@ -47,6 +47,16 @@ export function getPublicClient(chainId: number, endpoint: string) {
   });
 }
 
+export async function getRootHash(client: Client, address: Hex) {
+  const contract = getContract({
+    address,
+    abi: TreasureHuntCreatorAbi.abi,
+    client,
+  });
+
+  return await contract.read.getQuestsRootCID();
+}
+
 export async function setRootHash(client: Client, address: Hex, rootHash: Hex) {
   const contract = getContract({
     address,
