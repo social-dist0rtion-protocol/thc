@@ -48,7 +48,12 @@ function Puzzle(props: PuzzleProps) {
       : "Pending transaction for side-quest";
 
   useEffect(() => {
-    console.log("Gelato status", gelatoStatus);
+    return () => {
+      toast.closeAll();
+    };
+  }, []); // Empty dependency array ensures it only runs on mount/unmount
+
+  useEffect(() => {
     if (gelatoStatus !== undefined && toastIdRef.current !== undefined) {
       toast.close(toastIdRef.current);
     }
@@ -62,7 +67,6 @@ function Puzzle(props: PuzzleProps) {
         isClosable: true,
       });
       props.setPassword("");
-      console.log("reset password");
     } else if (gelatoStatus === "pending") {
       toastIdRef.current = toast({
         title: "Waiting...",
@@ -119,7 +123,6 @@ function Puzzle(props: PuzzleProps) {
       });
     } else if (props.index !== undefined && inputRef.current !== null) {
       const inputPassword = inputRef.current.value;
-      console.log(inputPassword);
       if (!props.solutionMatcher(inputPassword)) {
         toast({
           title: "Error",
