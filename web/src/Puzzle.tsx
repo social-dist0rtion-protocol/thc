@@ -1,12 +1,21 @@
-import { Button, Input, useToast, VStack } from "@chakra-ui/react";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { Button, Input, ToastId, useToast, VStack } from "@chakra-ui/react";
+import {
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useSubmitSolution } from "./hooks/gelato";
 import { useAccount } from "./hooks/useAccount";
-import { useLocalStorage } from "@uidotdev/usehooks";
 
 type PuzzleProps = {
   index: number | undefined;
-  setPasswordAtIndex: (index: number, password: string) => void;
+  setPassword: Dispatch<SetStateAction<string>>;
+  setIsLoading: Dispatch<SetStateAction<boolean>>;
+  isLoading: boolean;
+  password: string;
   solutionMatcher: (solution: string) => boolean;
   submitFunctionName: "submit" | "submitKey";
   children: ReactNode;
@@ -15,25 +24,33 @@ type PuzzleProps = {
 
 function Puzzle(props: PuzzleProps) {
   const toast = useToast();
+  const toastIdRef = useRef<ToastId>();
   const account = useAccount();
   const inputRef = useRef<HTMLInputElement>(null);
-  const [password, setPassword] = useLocalStorage(
-    `password_${props.submitFunctionName}`,
-    ""
-  );
+
   const [currentChapter, setCurrentChapter] = useState<number | undefined>();
   const { status: gelatoStatus, error: gelatoError } = useSubmitSolution(
-    password,
+    props.password,
     account?.address as `0x${string}`,
     account,
     currentChapter,
     props.submitFunctionName
   );
 
+  const transactionSuccessMessage =
+    props.submitFunctionName === "submit"
+      ? "Transaction for chapter finalized!"
+      : "Transaction for side quest finalized!";
+
+  const transactionPendingMessage =
+    props.submitFunctionName === "submit"
+      ? "Pending transaction for chapter..."
+      : "Pending transaction for side-quest";
+
   useEffect(() => {
     console.log("Gelato status", gelatoStatus);
-    if (gelatoStatus !== undefined) {
-      toast.closeAll();
+    if (gelatoStatus !== undefined && toastIdRef.current !== undefined) {
+      toast.close(toastIdRef.current);
     }
 
     if (gelatoStatus === "error") {
@@ -44,43 +61,49 @@ function Puzzle(props: PuzzleProps) {
         duration: 9000,
         isClosable: true,
       });
-      setPassword("");
+      props.setPassword("");
       console.log("reset password");
     } else if (gelatoStatus === "pending") {
-      toast({
+      toastIdRef.current = toast({
         title: "Waiting...",
-        description: `Transaction is being finalized`,
+        description: transactionPendingMessage,
         status: "info",
         duration: null,
         isClosable: true,
       });
+      props.setIsLoading(true);
     } else if (gelatoStatus === "success") {
       toast({
         title: "Success!",
-        description: `Transaction finalized. Congrats!`,
+        description: transactionSuccessMessage,
         status: "success",
         duration: 9000,
         isClosable: true,
       });
+      if (inputRef.current) {
+        inputRef.current.value = "";
+      }
     }
   }, [gelatoStatus]);
 
   useEffect(() => {
     if (props.index !== undefined && props.index !== currentChapter) {
-      if (password !== "" && currentChapter != undefined) {
-        toast.closeAll();
+      if (toastIdRef.current !== undefined) {
+        toast.close(toastIdRef.current);
+      }
+      if (currentChapter !== undefined) {
         toast({
           title: "Success!",
-          description: `Transaction finalized. Congrats!`,
+          description: transactionSuccessMessage,
           status: "success",
           duration: 9000,
           isClosable: true,
         });
-        setPassword("");
         if (inputRef.current) {
           inputRef.current.value = "";
         }
       }
+      props.setIsLoading(false);
       setCurrentChapter(props.index);
     }
   }, [props.index]);
@@ -96,6 +119,7 @@ function Puzzle(props: PuzzleProps) {
       });
     } else if (props.index !== undefined && inputRef.current !== null) {
       const inputPassword = inputRef.current.value;
+      console.log(inputPassword);
       if (!props.solutionMatcher(inputPassword)) {
         toast({
           title: "Error",
@@ -112,9 +136,7 @@ function Puzzle(props: PuzzleProps) {
           duration: 5000,
           isClosable: true,
         });
-
-        props.setPasswordAtIndex(props.index, inputPassword);
-        setPassword(inputPassword);
+        props.setPassword(inputPassword);
       }
     }
   }
@@ -125,10 +147,7 @@ function Puzzle(props: PuzzleProps) {
       {!props.isLast && (
         <>
           <Input ref={inputRef} placeholder="password" />
-          <Button
-            isDisabled={gelatoStatus === "pending"}
-            onClick={() => submitPassword()}
-          >
+          <Button isDisabled={props.isLoading} onClick={() => submitPassword()}>
             Submit
           </Button>
         </>

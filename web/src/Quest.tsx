@@ -6,24 +6,30 @@ import rehypeRaw from "rehype-raw";
 import { checkSolutionMatch } from "./lib";
 import CenteredSpinner from "./CenteredSpinner";
 import "./markdown.css";
+import { useState } from "react";
 
 function Quest() {
   const {
     currentSmartContractChapterIndex,
     currentChapterContent,
     setChapterPassword,
+    chapterPassword,
     isLast,
   } = useChapter();
 
-  const isLoading =
+  const [isLoading, setIsLoading] = useState(
     currentSmartContractChapterIndex === undefined ||
-    currentChapterContent.length === 0;
+      currentChapterContent.length === 0
+  );
 
   return (
     <Puzzle
       isLast={isLast}
       index={currentSmartContractChapterIndex}
-      setPasswordAtIndex={setChapterPassword}
+      setPassword={setChapterPassword}
+      password={chapterPassword}
+      setIsLoading={setIsLoading}
+      isLoading={isLoading}
       submitFunctionName="submit"
       solutionMatcher={(solution: string) =>
         checkSolutionMatch(solution, currentSmartContractChapterIndex)

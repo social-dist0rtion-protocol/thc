@@ -4,13 +4,20 @@ import { useSideQuest } from "./hooks/useSideQuest";
 import { checkKeyMatch } from "./lib";
 
 function SideQuest() {
-  const { currentSmartContractSideQuestIndex } = useSideQuest();
+  const {
+    currentSmartContractSideQuestIndex,
+    sideQuestPassword,
+    setSideQuestPassword,
+  } = useSideQuest();
 
   return (
     <Puzzle
       isLast={false}
       index={currentSmartContractSideQuestIndex}
-      setPasswordAtIndex={() => {}}
+      setPassword={setSideQuestPassword}
+      setIsLoading={() => {}}
+      isLoading={false}
+      password={sideQuestPassword}
       submitFunctionName="submitKey"
       solutionMatcher={(solution: string) => checkKeyMatch(solution)}
     >

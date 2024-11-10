@@ -23,7 +23,7 @@ export function useSubmitSolution(
   solution: string,
   address: `0x${string}` | undefined,
   signer: SignerOrProvider | undefined,
-  index: number | undefined,
+  chapter: number | undefined,
   submitFunctionName: "submit" | "submitKey"
 ) {
   const [error, setError] = useState<string>();
@@ -31,8 +31,9 @@ export function useSubmitSolution(
   const [taskStatus, setTaskStatus] = useLocalStorage<
     TransactionStatusResponse | undefined
   >(
-    `${CONTRACT_ADDRESS}/taskStatus/${submitFunctionName}/${(index !== undefined
-      ? index.toString()
+    `${CONTRACT_ADDRESS}/taskStatus/${submitFunctionName}/${(chapter !==
+    undefined
+      ? chapter.toString()
       : "unknown"
     ).toString()}`
   );
@@ -74,18 +75,20 @@ export function useSubmitSolution(
     });
 
     try {
-      const response = await relayRequest(encodedCall, address, signer);
       setStatus("pending");
+      console.log("getting response");
+      const response = await relayRequest(encodedCall, address, signer);
+      console.log("got response");
       setTaskId(response.taskId);
-      await fetchTaskStatus(response.taskId);
     } catch (e) {
       finalize("error", { error: "cannot relay. check your connection" });
     }
   }
 
   async function poll() {
-    if (taskStatus && polling) {
-      await fetchTaskStatus(taskStatus.taskId);
+    console.log();
+    if (taskId && polling) {
+      await fetchTaskStatus(taskId);
     }
   }
 
@@ -95,12 +98,12 @@ export function useSubmitSolution(
 
   async function fetchTaskStatus(taskId: string) {
     const relay = new GelatoRelay();
-    let taskStatus: TransactionStatusResponse | undefined;
+    let newTaskStatus: TransactionStatusResponse | undefined;
     let retries = 10;
     while (retries > 0) {
       try {
-        taskStatus = await relay.getTaskStatus(taskId);
-        setTaskStatus(taskStatus);
+        newTaskStatus = await relay.getTaskStatus(taskId);
+        setTaskStatus(newTaskStatus);
         break;
       } catch (e: any) {
         await sleep(1000);
@@ -135,12 +138,12 @@ export function useSubmitSolution(
       address &&
       signer &&
       !taskStatus &&
-      index !== undefined
+      chapter !== undefined
     ) {
       console.log("relaying");
       relay();
     }
-  }, [solution, address, signer, index]);
+  }, [solution, address, signer, chapter]);
 
   useEffect(() => {
     if (taskStatus) {
@@ -156,20 +159,19 @@ export function useSubmitSolution(
       setStatus(undefined);
       setPolling(false);
     } else {
-      poll();
+      console.log("poll starts");
       setPolling(true);
     }
   }, [taskId]);
 
   useEffect(() => {
-    if (rounds === 0) {
-      return;
-    }
-
-    if (rounds > TOTAL_ATTEMPTS) {
-      finalize("error", { error: "too many failed attempt with gelato" });
-    } else {
-      poll();
+    if (rounds !== undefined) {
+      if (rounds > TOTAL_ATTEMPTS) {
+        finalize("error", { error: "too many failed attempt with gelato" });
+      } else {
+        console.log("actual poll");
+        poll();
+      }
     }
   }, [rounds]);
 

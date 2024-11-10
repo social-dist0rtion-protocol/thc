@@ -69,7 +69,6 @@ export async function encrypt(data: string, key: string) {
 }
 
 export async function decrypt(encryptedText: string, key: string) {
-  console.log("decrypt", encryptedText, key);
   const rawKey = await importKey(key);
   const encryptedData = base64ToUint8Array(encryptedText);
   const decrypted = await decryptRaw(encryptedData, rawKey);

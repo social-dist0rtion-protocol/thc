@@ -4,8 +4,10 @@ import {
   treasureHuntCreatorAbi,
   treasureHuntCreatorAddress,
 } from "../generated";
-import { CHAIN_ID } from "../env";
+import { CHAIN_ID, CONTRACT_ADDRESS } from "../env";
 import { useAccount } from "./useAccount";
+import { useLocalStorage } from "@uidotdev/usehooks";
+import { CURRENT_SIDE_QUEST_PASSWORD_KEY } from "./storage";
 
 function useCurrentSmartContractSideQuestIndex(address?: string) {
   const [sideQuest, setSideQuest] = useState<number>();
@@ -46,8 +48,14 @@ export function useSideQuest() {
   const account = useAccount();
   const currentSmartContractSideQuestIndex =
     useCurrentSmartContractSideQuestIndex(account?.address);
+  const [sideQuestPassword, setSideQuestPassword] = useLocalStorage(
+    `${CONTRACT_ADDRESS}/${CURRENT_SIDE_QUEST_PASSWORD_KEY}/${currentSmartContractSideQuestIndex}/`,
+    ""
+  );
 
   return {
     currentSmartContractSideQuestIndex,
+    sideQuestPassword,
+    setSideQuestPassword,
   };
 }
