@@ -35,7 +35,7 @@ contract SybilDefenseRenderer is Ownable {
                         abi.encodePacked(
                             '{"name":"Sybil Defense - ',
                             names[id - 1],
-                            '", "description":"Commendetations for the Treasure Hunt **Sybil Defense**, run at Devcon7, Bangkok. Kindly created by Eto Vassi, follow him at https://twitter.com/EtoVass"',
+                            '", "description":"Commendetations for the Treasure Hunt **Sybil Defense**, run at Devcon7, Bangkok. Kindly created by Eto Vass, follow him at https://twitter.com/EtoVass"',
                             ',"image":"data:image/svg+xml;base64,',
                             Base64.encode(
                                 abi.encodePacked(
@@ -48,7 +48,7 @@ contract SybilDefenseRenderer is Ownable {
                             '","attributes":',
                             '[{"trait_type":"Position","value":"',
                             positions[id - 1],
-                            '"},{"trait_type":"Treasure Hunt","value":"Sybil Defense"},{"trait_type":"Host","value":"Devcon7"},{"trait_type":"Location","value":"Bangkok"},{"trait_type":"Artist","value":"Eto Vassi"}]}'
+                            '"},{"trait_type":"Treasure Hunt","value":"Sybil Defense"},{"trait_type":"Host","value":"Devcon7"},{"trait_type":"Location","value":"Bangkok"},{"trait_type":"Artist","value":"Eto Vass"}]}'
                         )
                     )
                 )
