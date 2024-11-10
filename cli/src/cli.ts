@@ -4,6 +4,7 @@ import { cp, mkdir, writeFile } from "fs/promises";
 import { load, main } from "./utils";
 import { setRootHash, getLeaderboard, getRootHash } from "./evm";
 import { isHexString } from "./types";
+import { formatDistanceToNow } from "date-fns";
 import path from "path";
 import packageJson from "../package.json";
 import {
@@ -93,9 +94,14 @@ program
     const now = Math.round(Date.now() / 1000);
 
     for (const { account, timestamp, chapter, keys } of leaderboard) {
-      const diff = now - timestamp;
+      const emojis = keys.map((k) => (k === null ? "x" : k));
+      const diff = formatDistanceToNow(new Date(timestamp * 1000), {
+        addSuffix: true,
+      });
       console.log(
-        `${account} is at chapter ${chapter}, last solution was ${diff}s ago. Keys collected: ${keys}`
+        `${account}: chapter ${chapter}.`,
+        `Last submission ${diff}.`,
+        `Keys collected: ${emojis.join(", ")}`
       );
     }
   });

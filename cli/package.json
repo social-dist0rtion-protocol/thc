@@ -1,6 +1,6 @@
 {
   "name": "@dist0rtion/thc",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Treasure Hunt CLI",
   "main": "./dist/cli/src/cli.js",
   "scripts": {
@@ -16,7 +16,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "@types/node": "^22.5.4",
@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "commander": "^12.1.0",
+    "date-fns": "^4.1.0",
     "dotenv": "^16.4.5",
     "viem": "^2.21.3"
   }
