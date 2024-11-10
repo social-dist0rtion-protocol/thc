@@ -167,6 +167,22 @@ task("verify:tokens", "Verify Tokens").setAction(
   }
 );
 
+task("get:token", "Get Tokens").setAction(
+  async ({ passwords, keys }: { passwords: string; keys: string }, hre) => {
+    const treasure = await loadContract(hre, "Treasure");
+    const thc = await loadContract(hre, "TreasureHuntCreator");
+
+    const [deployer] = await hre.ethers.getSigners();
+
+    const base64Content = await treasure.uri(
+      encodeTokenId(await thc.getAddress(), 1)
+    );
+    console.log(atob(base64Content.slice(29)));
+    const content = JSON.parse(atob(base64Content.slice(29)));
+    console.log(content);
+  }
+);
+
 task("setup:thc", "Setup THC")
   .addParam("renderer", "Renderer name")
   .addFlag("verify", "Verify")

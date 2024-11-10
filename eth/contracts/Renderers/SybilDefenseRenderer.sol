@@ -36,10 +36,14 @@ contract SybilDefenseRenderer is Ownable {
                             '{"name":"Sybil Defense - ',
                             names[id - 1],
                             '", "description":"Commendetations for the Treasure Hunt **Sybil Defense**, run at Devcon7, Bangkok. Kindly created by Eto Vassi, follow him at https://twitter.com/EtoVass"',
-                            ',"image":"data:image/svg+xml,',
-                            _etovassRenderer.renderSVG(
-                                id - 1,
-                                block.timestamp / (1 days)
+                            ',"image":"data:image/svg+xml;base64,',
+                            Base64.encode(
+                                abi.encodePacked(
+                                    _etovassRenderer.renderSVG(
+                                        id - 1,
+                                        block.timestamp / (1 days)
+                                    )
+                                )
                             ),
                             '","attributes":',
                             '[{"trait_type":"Position","value":"',

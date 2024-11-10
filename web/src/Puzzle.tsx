@@ -17,7 +17,10 @@ function Puzzle(props: PuzzleProps) {
   const toast = useToast();
   const account = useAccount();
   const inputRef = useRef<HTMLInputElement>(null);
-  const [password, setPassword] = useLocalStorage("password", "");
+  const [password, setPassword] = useLocalStorage(
+    `password_${props.submitFunctionName}`,
+    ""
+  );
   const [currentChapter, setCurrentChapter] = useState<number | undefined>();
   const { status: gelatoStatus, error: gelatoError } = useSubmitSolution(
     password,
@@ -29,8 +32,11 @@ function Puzzle(props: PuzzleProps) {
 
   useEffect(() => {
     console.log("Gelato status", gelatoStatus);
-    if (gelatoStatus === "error") {
+    if (gelatoStatus !== undefined) {
       toast.closeAll();
+    }
+
+    if (gelatoStatus === "error") {
       toast({
         title: "Error",
         description: `An error occurred: ${gelatoError}`,
@@ -49,7 +55,6 @@ function Puzzle(props: PuzzleProps) {
         isClosable: true,
       });
     } else if (gelatoStatus === "success") {
-      toast.closeAll();
       toast({
         title: "Success!",
         description: `Transaction finalized. Congrats!`,

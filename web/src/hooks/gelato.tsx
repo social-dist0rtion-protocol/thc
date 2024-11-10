@@ -43,8 +43,7 @@ export function useSubmitSolution(
 
   function handleTaskStateChange() {
     const taskState = taskStatus?.taskState as string;
-
-    console.log("Task state change", taskState);
+    console.log("Task state change", taskStatus);
     if (
       ["CheckPending", "ExecPending", "WaitingForConfirmation"].includes(
         taskState
@@ -85,9 +84,8 @@ export function useSubmitSolution(
   }
 
   async function poll() {
-    if (taskStatus) {
+    if (taskStatus && polling) {
       await fetchTaskStatus(taskStatus.taskId);
-      handleTaskStateChange();
     }
   }
 
@@ -103,16 +101,17 @@ export function useSubmitSolution(
       try {
         taskStatus = await relay.getTaskStatus(taskId);
         setTaskStatus(taskStatus);
-        return;
+        break;
       } catch (e: any) {
-        console.log(e);
         await sleep(1000);
         retries--;
       }
     }
 
     if (retries === 0) {
-      finalize("error", { error: "error fetching status" });
+      finalize("error", {
+        error: "error fetching status. check your connection",
+      });
     }
   }
 
@@ -120,7 +119,7 @@ export function useSubmitSolution(
     status: Status | undefined,
     info?: { data?: string; error?: string }
   ) {
-    console.log("Task status", status);
+    console.log("Finalize task status", status);
     setStatus(status);
     setError(info?.error);
     setData(info?.data);
@@ -131,7 +130,6 @@ export function useSubmitSolution(
   }
 
   useEffect(() => {
-    console.log("solution", solution);
     if (
       solution !== "" &&
       address &&
@@ -139,6 +137,7 @@ export function useSubmitSolution(
       !taskStatus &&
       index !== undefined
     ) {
+      console.log("relaying");
       relay();
     }
   }, [solution, address, signer, index]);
@@ -146,6 +145,7 @@ export function useSubmitSolution(
   useEffect(() => {
     if (taskStatus) {
       setTaskId(taskStatus.taskId);
+      handleTaskStateChange();
     } else {
       setTaskId(undefined);
     }
