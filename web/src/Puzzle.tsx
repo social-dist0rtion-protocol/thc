@@ -67,6 +67,7 @@ function Puzzle(props: PuzzleProps) {
         isClosable: true,
       });
       props.setPassword("");
+      props.setIsLoading(false);
     } else if (gelatoStatus === "pending") {
       toastIdRef.current = toast({
         title: "Waiting...",
