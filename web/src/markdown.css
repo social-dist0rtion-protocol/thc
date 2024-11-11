@@ -8,8 +8,16 @@
   font-weight: bold;
 }
 
+.markdown a {
+  text-decoration: underline;
+}
+
 .markdown p {
   margin-bottom: 1rem;
+}
+
+.markdown .monospace {
+  font-family: monospace;
 }
 
 .markdown pre {
