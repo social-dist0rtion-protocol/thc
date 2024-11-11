@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RESET</title>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        document
+          .getElementById("hard-reset")
+          .addEventListener("click", function () {
+            localStorage.clear();
+            alert("All local storage has been reset.");
+          });
+      });
+    </script>
+  </head>
+  <body>
+    <button id="hard-reset">Angus this is your reset button press it</button>
+  </body>
+</html>
