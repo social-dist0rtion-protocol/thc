@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { CURRENT_CHAPTER_PASSWORD_KEY } from "./storage";
+import { CURRENT_CHAPTER_PASSWORD_KEY, ROOT_HASH_KEY } from "./storage";
 import { decrypt } from "../lib";
 import { useReadContract } from "wagmi";
 import { treasureHuntCreatorAbi } from "../generated";
@@ -14,7 +14,9 @@ function prefixedPasswordKey(key: string) {
 
 function useRootCID() {
   const toast = useToast();
-  const [root, setRoot] = useState("");
+  const [root, setRoot] = useLocalStorage(ROOT_HASH_KEY, "");
+  const [newestRootHash, setNewestRootHash] = useState<string>();
+
   const result = useReadContract({
     abi: treasureHuntCreatorAbi,
     address: CONTRACT_ADDRESS,
@@ -25,10 +27,12 @@ function useRootCID() {
     },
   });
 
-  // fix: use only sporadically, not at every mount and check when it changes
-  useEffect(() => {
-    if (result.data !== root) {
-      if (root !== "" && root !== undefined) {
+  async function updateIfAvailable() {
+    if (newestRootHash !== undefined && newestRootHash !== root) {
+      const nwestContent = await fetch(`game-data/${newestRootHash}/0`);
+      const data = await nwestContent.text();
+      if (data.indexOf("<html") === -1) {
+        setRoot(newestRootHash);
         toast({
           title: "Info",
           description: "Chapters have been updated!",
@@ -36,11 +40,25 @@ function useRootCID() {
           duration: 9000,
           isClosable: true,
         });
+      } else {
+        // try next round
+        console.log("not updating");
+        setNewestRootHash(undefined);
       }
+    }
+  }
 
-      setRoot(result.data as string);
+  useEffect(() => {
+    if (result.data !== undefined) {
+      console.log(result.data);
+      console.log(root);
+      setNewestRootHash(result.data as string);
     }
   }, [result.data]);
+
+  useEffect(() => {
+    updateIfAvailable();
+  }, [newestRootHash]);
 
   return root;
 }

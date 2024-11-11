@@ -77,13 +77,6 @@ function Settings() {
         {wallet?.address}
       </Text>
       {wallet !== undefined && <QRCode value={wallet?.address} />}
-      {/*
-      account.isConnected ? (
-        <ConnectButton label="use burner wallet" />
-      ) : (
-        <ConnectButton label="connect injected wallet" />
-      )
-      */}
       <Heading variant="h2" marginTop="40px">
         Network
       </Heading>
