@@ -28,15 +28,10 @@ export function useBurnerWallet() {
   }
 
   useEffect(() => {
-    console.log("Mnemonic", mnemonic);
-    if (mnemonic === "") {
-      validateAndSetMnemonic(generateMnemonic(english));
-    } else {
-      const wallet = Wallet.fromPhrase(mnemonic).connect(
-        new JsonRpcProvider(RPC_NODE_URL)
-      );
-      setBurnerWallet(wallet);
-    }
+    const wallet = Wallet.fromPhrase(mnemonic).connect(
+      new JsonRpcProvider(RPC_NODE_URL)
+    );
+    setBurnerWallet(wallet);
   }, [mnemonic]);
 
   return {

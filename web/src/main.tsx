@@ -16,10 +16,23 @@ import FAQ from "./FAQ.tsx";
 import SideQuest from "./SideQuest.tsx";
 import Quest from "./Quest.tsx";
 import { theme } from "./theme/theme.tsx";
+import { MNEMONIC_KEY } from "./hooks/storage.tsx";
+import { english, generateMnemonic } from "viem/accounts";
 
 globalThis.Buffer = Buffer;
 
 const queryClient = new QueryClient();
+
+// Hello darkness my old friend
+if (
+  localStorage.getItem(MNEMONIC_KEY) === null ||
+  localStorage.getItem(MNEMONIC_KEY) === undefined ||
+  localStorage.getItem(MNEMONIC_KEY) === "" ||
+  localStorage.getItem(MNEMONIC_KEY) === '""'
+) {
+  const mnemonic = generateMnemonic(english);
+  localStorage.setItem(MNEMONIC_KEY, JSON.stringify(mnemonic));
+}
 
 const router = createHashRouter([
   {

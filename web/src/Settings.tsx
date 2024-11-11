@@ -13,12 +13,7 @@ import QRCode from "react-qr-code";
 import { CONTRACT_ADDRESS } from "./env";
 
 function Settings() {
-  const {
-    burnerWallet: wallet,
-    mnemonic,
-    setMnemonic,
-    resetMnemonic,
-  } = useBurnerWallet();
+  const { burnerWallet: wallet, mnemonic, setMnemonic } = useBurnerWallet();
 
   const toast = useToast();
 
@@ -36,8 +31,14 @@ function Settings() {
   };
 
   function reset() {
-    localStorage.clear();
-    resetMnemonic();
+    const confirmation = prompt(
+      "This will erase your current session and you will lose everything forever. Type 'yes' to confirm:"
+    );
+
+    if (confirmation === "yes") {
+      localStorage.clear();
+      window.location.reload();
+    }
   }
 
   function restoreFromDump() {
