@@ -5,9 +5,9 @@ import {
   treasureHuntCreatorAddress,
 } from "../generated";
 import { CHAIN_ID, CONTRACT_ADDRESS } from "../env";
-import { useAccount } from "./useAccount";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { CURRENT_SIDE_QUEST_PASSWORD_KEY } from "./storage";
+import { useBurnerWallet } from "./useBurnerWallet";
 
 function useCurrentSmartContractSideQuestIndex(address?: string) {
   const [sideQuest, setSideQuest] = useState<number>();
@@ -45,7 +45,7 @@ function useCurrentSmartContractSideQuestIndex(address?: string) {
 }
 
 export function useSideQuest() {
-  const account = useAccount();
+  const { burnerWallet: account } = useBurnerWallet();
   const currentSmartContractSideQuestIndex =
     useCurrentSmartContractSideQuestIndex(account?.address);
   const [sideQuestPassword, setSideQuestPassword] = useLocalStorage(

@@ -8,7 +8,7 @@ import {
   useState,
 } from "react";
 import { useSubmitSolution } from "./hooks/gelato";
-import { useAccount } from "./hooks/useAccount";
+import { useBurnerWallet } from "./hooks/useBurnerWallet";
 
 type PuzzleProps = {
   index: number | undefined;
@@ -25,7 +25,7 @@ type PuzzleProps = {
 function Puzzle(props: PuzzleProps) {
   const toast = useToast();
   const toastIdRef = useRef<ToastId>();
-  const account = useAccount();
+  const { burnerWallet: account } = useBurnerWallet();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [currentChapter, setCurrentChapter] = useState<number | undefined>();

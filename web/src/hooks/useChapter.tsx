@@ -4,9 +4,9 @@ import { decrypt } from "../lib";
 import { useReadContract } from "wagmi";
 import { treasureHuntCreatorAbi } from "../generated";
 import { CONTRACT_ADDRESS } from "../env";
-import { useAccount } from "./useAccount";
 import { useToast } from "@chakra-ui/react";
 import { useLocalStorage } from "@uidotdev/usehooks";
+import { useBurnerWallet } from "./useBurnerWallet";
 
 function prefixedPasswordKey(key: string) {
   return `${CONTRACT_ADDRESS}/${key}`;
@@ -79,7 +79,7 @@ function getPreviousPasswordKey(chapter: number | undefined) {
 }
 
 export function useChapter() {
-  const account = useAccount();
+  const { burnerWallet: account } = useBurnerWallet();
   const [currentChapterContent, setCurrentChapterContent] =
     useState<string>("");
   const rootCID = useRootCID();
