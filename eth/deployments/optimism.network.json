@@ -1,7 +1,8 @@
 {
   "10": {
     "Treasure": "0x8aa64EF9FD4B9Bfa8A0ef3a2C745a10763461351",
-    "TreasureHuntCreator": "0xa602e08C4Ef757Ed98C15527E417249bAc98CB20",
-    "DisappearRenderer": "0xA49C53020554F16A30C0CB9d92107F2feb3B14AC"
+    "TreasureHuntCreator": "0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E",
+    "DisappearRenderer": "0xA49C53020554F16A30C0CB9d92107F2feb3B14AC",
+    "SybilDefenseRenderer": "0x508aF4A1913459E1A87386A4764c70A5BFe5B93c"
   }
 }
