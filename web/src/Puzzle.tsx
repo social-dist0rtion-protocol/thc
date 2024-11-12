@@ -140,7 +140,7 @@ function Puzzle(props: PuzzleProps) {
           duration: 5000,
           isClosable: true,
         });
-        props.setPassword(inputPassword);
+        props.setPassword(inputPassword.trim().toLowerCase());
       }
     }
   }
