@@ -1,7 +1,5 @@
 import { Box, Center, Heading, Image, VStack } from "@chakra-ui/react";
-import HeaderMenu from "./HeaderMenu";
 import useIsMobile from "./hooks/useIsMobile";
-import { Outlet } from "react-router-dom";
 import OfflineAlert from "./OfflineAlert";
 
 function App() {
