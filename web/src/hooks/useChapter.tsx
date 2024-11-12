@@ -42,7 +42,6 @@ function useRootCID() {
         });
       } else {
         // try next round
-        console.log("not updating");
         setNewestRootHash(undefined);
       }
     }
@@ -50,8 +49,6 @@ function useRootCID() {
 
   useEffect(() => {
     if (result.data !== undefined) {
-      console.log(result.data);
-      console.log(root);
       setNewestRootHash(result.data as string);
     }
   }, [result.data]);
