@@ -2691,7 +2691,7 @@ export const treasureAbi = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const treasureHuntCreatorAbi = [
   {
@@ -3144,14 +3144,14 @@ export const treasureHuntCreatorAbi = [
 ] as const
 
 /**
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const treasureHuntCreatorAddress = {
-  11155111: '0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4',
+  10: '0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E',
 } as const
 
 /**
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const treasureHuntCreatorConfig = {
   address: treasureHuntCreatorAddress,
@@ -6231,7 +6231,7 @@ export const useWatchTreasureUriEvent =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useReadTreasureHuntCreator = /*#__PURE__*/ createUseReadContract({
   abi: treasureHuntCreatorAbi,
@@ -6241,7 +6241,7 @@ export const useReadTreasureHuntCreator = /*#__PURE__*/ createUseReadContract({
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"DEFAULT_ADMIN_ROLE"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useReadTreasureHuntCreatorDefaultAdminRole =
   /*#__PURE__*/ createUseReadContract({
@@ -6253,7 +6253,7 @@ export const useReadTreasureHuntCreatorDefaultAdminRole =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"GAME_MASTER_ROLE"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useReadTreasureHuntCreatorGameMasterRole =
   /*#__PURE__*/ createUseReadContract({
@@ -6265,7 +6265,7 @@ export const useReadTreasureHuntCreatorGameMasterRole =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"PAGE_SIZE"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useReadTreasureHuntCreatorPageSize =
   /*#__PURE__*/ createUseReadContract({
@@ -6277,7 +6277,7 @@ export const useReadTreasureHuntCreatorPageSize =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"chapterToPlayers"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useReadTreasureHuntCreatorChapterToPlayers =
   /*#__PURE__*/ createUseReadContract({
@@ -6289,7 +6289,7 @@ export const useReadTreasureHuntCreatorChapterToPlayers =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"contextCounter"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useReadTreasureHuntCreatorContextCounter =
   /*#__PURE__*/ createUseReadContract({
@@ -6301,7 +6301,7 @@ export const useReadTreasureHuntCreatorContextCounter =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"currentChapter"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useReadTreasureHuntCreatorCurrentChapter =
   /*#__PURE__*/ createUseReadContract({
@@ -6313,7 +6313,7 @@ export const useReadTreasureHuntCreatorCurrentChapter =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"gameMasters"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useReadTreasureHuntCreatorGameMasters =
   /*#__PURE__*/ createUseReadContract({
@@ -6325,7 +6325,7 @@ export const useReadTreasureHuntCreatorGameMasters =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"getAddressHash"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useReadTreasureHuntCreatorGetAddressHash =
   /*#__PURE__*/ createUseReadContract({
@@ -6337,7 +6337,7 @@ export const useReadTreasureHuntCreatorGetAddressHash =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"getLeaderboard"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useReadTreasureHuntCreatorGetLeaderboard =
   /*#__PURE__*/ createUseReadContract({
@@ -6349,7 +6349,7 @@ export const useReadTreasureHuntCreatorGetLeaderboard =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"getQuestsRootCID"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useReadTreasureHuntCreatorGetQuestsRootCid =
   /*#__PURE__*/ createUseReadContract({
@@ -6361,7 +6361,7 @@ export const useReadTreasureHuntCreatorGetQuestsRootCid =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"getRoleAdmin"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useReadTreasureHuntCreatorGetRoleAdmin =
   /*#__PURE__*/ createUseReadContract({
@@ -6373,7 +6373,7 @@ export const useReadTreasureHuntCreatorGetRoleAdmin =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"hasRole"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useReadTreasureHuntCreatorHasRole =
   /*#__PURE__*/ createUseReadContract({
@@ -6385,7 +6385,7 @@ export const useReadTreasureHuntCreatorHasRole =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"keyToPos"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useReadTreasureHuntCreatorKeyToPos =
   /*#__PURE__*/ createUseReadContract({
@@ -6397,7 +6397,7 @@ export const useReadTreasureHuntCreatorKeyToPos =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"owner"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useReadTreasureHuntCreatorOwner =
   /*#__PURE__*/ createUseReadContract({
@@ -6409,7 +6409,7 @@ export const useReadTreasureHuntCreatorOwner =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"playerToCurrentChapter"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useReadTreasureHuntCreatorPlayerToCurrentChapter =
   /*#__PURE__*/ createUseReadContract({
@@ -6421,7 +6421,7 @@ export const useReadTreasureHuntCreatorPlayerToCurrentChapter =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"playerToKeys"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useReadTreasureHuntCreatorPlayerToKeys =
   /*#__PURE__*/ createUseReadContract({
@@ -6433,7 +6433,7 @@ export const useReadTreasureHuntCreatorPlayerToKeys =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"playerToTimestamp"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useReadTreasureHuntCreatorPlayerToTimestamp =
   /*#__PURE__*/ createUseReadContract({
@@ -6445,7 +6445,7 @@ export const useReadTreasureHuntCreatorPlayerToTimestamp =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"players"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useReadTreasureHuntCreatorPlayers =
   /*#__PURE__*/ createUseReadContract({
@@ -6457,7 +6457,7 @@ export const useReadTreasureHuntCreatorPlayers =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"prize"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useReadTreasureHuntCreatorPrize =
   /*#__PURE__*/ createUseReadContract({
@@ -6469,7 +6469,7 @@ export const useReadTreasureHuntCreatorPrize =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"questsRootCid"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useReadTreasureHuntCreatorQuestsRootCid =
   /*#__PURE__*/ createUseReadContract({
@@ -6481,7 +6481,7 @@ export const useReadTreasureHuntCreatorQuestsRootCid =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"solutions"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useReadTreasureHuntCreatorSolutions =
   /*#__PURE__*/ createUseReadContract({
@@ -6493,7 +6493,7 @@ export const useReadTreasureHuntCreatorSolutions =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"supportsInterface"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useReadTreasureHuntCreatorSupportsInterface =
   /*#__PURE__*/ createUseReadContract({
@@ -6505,7 +6505,7 @@ export const useReadTreasureHuntCreatorSupportsInterface =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"totalChapters"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useReadTreasureHuntCreatorTotalChapters =
   /*#__PURE__*/ createUseReadContract({
@@ -6517,7 +6517,7 @@ export const useReadTreasureHuntCreatorTotalChapters =
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"totalKeys"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useReadTreasureHuntCreatorTotalKeys =
   /*#__PURE__*/ createUseReadContract({
@@ -6529,7 +6529,7 @@ export const useReadTreasureHuntCreatorTotalKeys =
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useWriteTreasureHuntCreator = /*#__PURE__*/ createUseWriteContract(
   { abi: treasureHuntCreatorAbi, address: treasureHuntCreatorAddress },
@@ -6538,7 +6538,7 @@ export const useWriteTreasureHuntCreator = /*#__PURE__*/ createUseWriteContract(
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"addSolution"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useWriteTreasureHuntCreatorAddSolution =
   /*#__PURE__*/ createUseWriteContract({
@@ -6550,7 +6550,7 @@ export const useWriteTreasureHuntCreatorAddSolution =
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"grantRole"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useWriteTreasureHuntCreatorGrantRole =
   /*#__PURE__*/ createUseWriteContract({
@@ -6562,7 +6562,7 @@ export const useWriteTreasureHuntCreatorGrantRole =
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"renounceOwnership"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useWriteTreasureHuntCreatorRenounceOwnership =
   /*#__PURE__*/ createUseWriteContract({
@@ -6574,7 +6574,7 @@ export const useWriteTreasureHuntCreatorRenounceOwnership =
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"renounceRole"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useWriteTreasureHuntCreatorRenounceRole =
   /*#__PURE__*/ createUseWriteContract({
@@ -6586,7 +6586,7 @@ export const useWriteTreasureHuntCreatorRenounceRole =
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"revokeRole"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useWriteTreasureHuntCreatorRevokeRole =
   /*#__PURE__*/ createUseWriteContract({
@@ -6598,7 +6598,7 @@ export const useWriteTreasureHuntCreatorRevokeRole =
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"setup"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useWriteTreasureHuntCreatorSetup =
   /*#__PURE__*/ createUseWriteContract({
@@ -6610,7 +6610,7 @@ export const useWriteTreasureHuntCreatorSetup =
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"submit"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useWriteTreasureHuntCreatorSubmit =
   /*#__PURE__*/ createUseWriteContract({
@@ -6622,7 +6622,7 @@ export const useWriteTreasureHuntCreatorSubmit =
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"submitKey"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useWriteTreasureHuntCreatorSubmitKey =
   /*#__PURE__*/ createUseWriteContract({
@@ -6634,7 +6634,7 @@ export const useWriteTreasureHuntCreatorSubmitKey =
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"transferOwnership"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useWriteTreasureHuntCreatorTransferOwnership =
   /*#__PURE__*/ createUseWriteContract({
@@ -6646,7 +6646,7 @@ export const useWriteTreasureHuntCreatorTransferOwnership =
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"withdraw"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useWriteTreasureHuntCreatorWithdraw =
   /*#__PURE__*/ createUseWriteContract({
@@ -6658,7 +6658,7 @@ export const useWriteTreasureHuntCreatorWithdraw =
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"withdrawERC20"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useWriteTreasureHuntCreatorWithdrawErc20 =
   /*#__PURE__*/ createUseWriteContract({
@@ -6670,7 +6670,7 @@ export const useWriteTreasureHuntCreatorWithdrawErc20 =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useSimulateTreasureHuntCreator =
   /*#__PURE__*/ createUseSimulateContract({
@@ -6681,7 +6681,7 @@ export const useSimulateTreasureHuntCreator =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"addSolution"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useSimulateTreasureHuntCreatorAddSolution =
   /*#__PURE__*/ createUseSimulateContract({
@@ -6693,7 +6693,7 @@ export const useSimulateTreasureHuntCreatorAddSolution =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"grantRole"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useSimulateTreasureHuntCreatorGrantRole =
   /*#__PURE__*/ createUseSimulateContract({
@@ -6705,7 +6705,7 @@ export const useSimulateTreasureHuntCreatorGrantRole =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"renounceOwnership"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useSimulateTreasureHuntCreatorRenounceOwnership =
   /*#__PURE__*/ createUseSimulateContract({
@@ -6717,7 +6717,7 @@ export const useSimulateTreasureHuntCreatorRenounceOwnership =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"renounceRole"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useSimulateTreasureHuntCreatorRenounceRole =
   /*#__PURE__*/ createUseSimulateContract({
@@ -6729,7 +6729,7 @@ export const useSimulateTreasureHuntCreatorRenounceRole =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"revokeRole"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useSimulateTreasureHuntCreatorRevokeRole =
   /*#__PURE__*/ createUseSimulateContract({
@@ -6741,7 +6741,7 @@ export const useSimulateTreasureHuntCreatorRevokeRole =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"setup"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useSimulateTreasureHuntCreatorSetup =
   /*#__PURE__*/ createUseSimulateContract({
@@ -6753,7 +6753,7 @@ export const useSimulateTreasureHuntCreatorSetup =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"submit"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useSimulateTreasureHuntCreatorSubmit =
   /*#__PURE__*/ createUseSimulateContract({
@@ -6765,7 +6765,7 @@ export const useSimulateTreasureHuntCreatorSubmit =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"submitKey"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useSimulateTreasureHuntCreatorSubmitKey =
   /*#__PURE__*/ createUseSimulateContract({
@@ -6777,7 +6777,7 @@ export const useSimulateTreasureHuntCreatorSubmitKey =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"transferOwnership"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useSimulateTreasureHuntCreatorTransferOwnership =
   /*#__PURE__*/ createUseSimulateContract({
@@ -6789,7 +6789,7 @@ export const useSimulateTreasureHuntCreatorTransferOwnership =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"withdraw"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useSimulateTreasureHuntCreatorWithdraw =
   /*#__PURE__*/ createUseSimulateContract({
@@ -6801,7 +6801,7 @@ export const useSimulateTreasureHuntCreatorWithdraw =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `functionName` set to `"withdrawERC20"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useSimulateTreasureHuntCreatorWithdrawErc20 =
   /*#__PURE__*/ createUseSimulateContract({
@@ -6813,7 +6813,7 @@ export const useSimulateTreasureHuntCreatorWithdrawErc20 =
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link treasureHuntCreatorAbi}__
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useWatchTreasureHuntCreatorEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
@@ -6824,7 +6824,7 @@ export const useWatchTreasureHuntCreatorEvent =
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `eventName` set to `"ChapterCompleted"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useWatchTreasureHuntCreatorChapterCompletedEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
@@ -6836,7 +6836,7 @@ export const useWatchTreasureHuntCreatorChapterCompletedEvent =
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `eventName` set to `"IncrementCounter"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useWatchTreasureHuntCreatorIncrementCounterEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
@@ -6848,7 +6848,7 @@ export const useWatchTreasureHuntCreatorIncrementCounterEvent =
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `eventName` set to `"KeyCompleted"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useWatchTreasureHuntCreatorKeyCompletedEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
@@ -6860,7 +6860,7 @@ export const useWatchTreasureHuntCreatorKeyCompletedEvent =
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `eventName` set to `"OwnershipTransferred"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useWatchTreasureHuntCreatorOwnershipTransferredEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
@@ -6872,7 +6872,7 @@ export const useWatchTreasureHuntCreatorOwnershipTransferredEvent =
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `eventName` set to `"PrizeMinted"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useWatchTreasureHuntCreatorPrizeMintedEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
@@ -6884,7 +6884,7 @@ export const useWatchTreasureHuntCreatorPrizeMintedEvent =
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `eventName` set to `"RoleAdminChanged"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useWatchTreasureHuntCreatorRoleAdminChangedEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
@@ -6896,7 +6896,7 @@ export const useWatchTreasureHuntCreatorRoleAdminChangedEvent =
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `eventName` set to `"RoleGranted"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useWatchTreasureHuntCreatorRoleGrantedEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
@@ -6908,7 +6908,7 @@ export const useWatchTreasureHuntCreatorRoleGrantedEvent =
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link treasureHuntCreatorAbi}__ and `eventName` set to `"RoleRevoked"`
  *
- * [__View Contract on Sepolia Etherscan__](https://sepolia.etherscan.io/address/0xdD5D8b92Cf4888316a1475983A9835e76D03A1E4)
+ * [__View Contract on Op Mainnet Optimism Explorer__](https://optimistic.etherscan.io/address/0x9428986bF37B4dD5EFfEE27F7e7988c797Fad73E)
  */
 export const useWatchTreasureHuntCreatorRoleRevokedEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
