@@ -15,7 +15,7 @@ interface EtovassRenderer {
 
 contract SybilDefenseRenderer is Ownable {
     EtovassRenderer internal _etovassRenderer =
-        EtovassRenderer(0x933a92a5032BB84f5B12F005a8560cd272BC9d45);
+        EtovassRenderer(0x6EE8a25C09497B5D538B83Da26E261e3d92Bf679);
 
     string[5] names = ["Gold", "Silver", "Bronze", "Finisher", "Investigator"];
     string[5] positions = ["1st", "2nd", "3rd", "Nth", "-"];

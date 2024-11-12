@@ -55,12 +55,6 @@ task("deploy:thc", "Push THC to network")
       await treasure.getAddress()
     );
 
-    const receipt = await treasure.grantRole(
-      await treasure.TREASURE_HUNT_ROLE(),
-      await contract.getAddress()
-    );
-    await receipt.wait(5);
-
     const thcContract = contract as unknown as TreasureHuntCreator;
     await thcContract.setup(rootHash);
 
@@ -74,6 +68,17 @@ task("deploy:thc", "Push THC to network")
       });
     }
   });
+
+task("grant:treasure", "").setAction(async (_, hre) => {
+  const treasure = await loadContract(hre, "Treasure");
+  const thc = await loadContract(hre, "TreasureHuntCreator");
+
+  const receipt = await treasure.grantRole(
+    await treasure.TREASURE_HUNT_ROLE(),
+    await thc.getAddress()
+  );
+  await receipt.wait(5);
+});
 
 task("solve", "Solve")
   .addParam("passwords", "The file with all passwords")
