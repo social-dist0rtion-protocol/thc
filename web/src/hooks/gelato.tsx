@@ -17,7 +17,7 @@ import { useLocalStorage } from "@uidotdev/usehooks";
 
 type Status = "pending" | "success" | "error";
 
-const TOTAL_ATTEMPTS = 10;
+const TOTAL_ATTEMPTS = 15;
 
 export function useSubmitSolution(
   solution: string,
