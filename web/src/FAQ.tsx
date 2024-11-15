@@ -25,7 +25,11 @@ function FAQ() {
           </ListItem>
           <ListItem>
             Or write us on{" "}
-            <Link href="https://x.com/dist0rtionproto" isExternal>
+            <Link
+              href="https://x.com/dist0rtionproto"
+              isExternal
+              textDecoration="underline"
+            >
               X
             </Link>
             , we will do our best to be responsive.
@@ -47,15 +51,27 @@ function FAQ() {
         <Heading variant="h3">I want to speak to the manager</Heading>
         <Text>
           is a Treasure Hunt Challenge (THC for short) created by
-          <Link href="https://dist0rtion.com/" isExternal>
+          <Link
+            href="https://dist0rtion.com/"
+            isExternal
+            textDecoration="underline"
+          >
             Social Dist0rtion Protocol (SDP)
           </Link>{" "}
-          and
-          <Link href="https://dedalus.industries/" isExternal>
+          and{" "}
+          <Link
+            href="https://daedalus.industries/"
+            isExternal
+            textDecoration="underline"
+          >
             daedalus.industries
           </Link>
           . If you feel social follow SDP on X:
-          <Link href="https://x.com/dist0rtionproto" isExternal>
+          <Link
+            href="https://x.com/dist0rtionproto"
+            isExternal
+            textDecoration="underline"
+          >
             @dist0rtionporoto
           </Link>
         </Text>
@@ -68,6 +84,7 @@ function FAQ() {
           <Link
             href="https://github.com/social-dist0rtion-protocol/thc"
             isExternal
+            textDecoration="underline"
           >
             GitHub
           </Link>
